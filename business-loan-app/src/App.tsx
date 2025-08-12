@@ -26,10 +26,10 @@ const navItems = [
   { label: 'Dashboard', path: '/dashboard' },
   { label: 'Loan Applications', path: '/loans' },
   { label: 'Lead Management', path: '/lead' }, // <-- Added this line
-  { label: 'Appraisal Memos', path: '/memos' },
-  { label: 'Financial Analysis', path: '/reports' },
-  { label: 'Risk Assessment', path: '/risk' },
   { label: 'Quality Check (QC)', path: '/qc' },
+  { label: 'Financial Analysis', path: '/reports' },
+  { label: 'Appraisal Memos', path: '/memos' },
+  { label: 'Risk Assessment', path: '/risk' },
 ];
 
 const Layout: React.FC = () => {
