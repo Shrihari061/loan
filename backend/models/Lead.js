@@ -11,6 +11,7 @@ const LeadSchema = new mongoose.Schema({
     default: 'Draft'
   },
   loan_id: { type: String, unique: true },
+  user_id: { type: String, default: 'default_rm' }, // RM/BM assigned to this lead
   contact_person: String,
   contact_email: String,
   contact_phone: String,

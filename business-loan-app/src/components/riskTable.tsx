@@ -125,10 +125,7 @@ const RiskTable: React.FC = () => {
   if (loading) return <div style={{ padding: '20px', textAlign: 'center' }}>Loading...</div>;
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'Inter, system-ui, sans-serif' }}>
-      <h1 style={{ fontSize: '24px', fontWeight: '600', marginBottom: '24px', color: '#111827' }}>
-        Risk Assessment
-      </h1>
+    <div style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
       
       {/* Search and Filter Bar */}
       <div style={{ 
