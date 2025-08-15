@@ -1,8 +1,14 @@
 const express = require('express');
-const router = express.Router();
+const multer = require('multer');
 const Lead = require('../models/Lead');
 
-// Get all leads
+const router = express.Router();
+
+// Multer setup - store files in memory to save directly in MongoDB
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+// -------------------- GET ALL LEADS --------------------
 router.get('/', async (req, res) => {
   try {
     const leads = await Lead.find({}).sort({ created_date: -1 });
@@ -12,7 +18,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Get lead by ID
+// -------------------- GET LEAD BY ID --------------------
 router.get('/:id', async (req, res) => {
   try {
     const lead = await Lead.findById(req.params.id);
@@ -25,25 +31,104 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Create new lead
-router.post('/', async (req, res) => {
-  try {
-    const newLead = new Lead(req.body);
-    await newLead.save();
-    res.status(201).json(newLead);
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to create lead' });
-  }
-});
+// -------------------- CREATE NEW LEAD --------------------
+router.post(
+  '/',
+  upload.fields([
+    { name: 'financialDocuments', maxCount: 10 },
+    { name: 'signature', maxCount: 1 }
+  ]),
+  async (req, res) => {
+    try {
+      let leadData = {};
 
-// Update lead
-router.put('/:id', async (req, res) => {
+      // If JSON is sent in body as "data" string (multipart/form-data with files)
+      if (req.body.data) {
+        try {
+          leadData = JSON.parse(req.body.data);
+        } catch {
+          return res.status(400).json({ error: 'Invalid JSON in data field' });
+        }
+      } else {
+        // If JSON is sent normally (application/json without files)
+        leadData = req.body;
+      }
+
+      // -------------------- Ensure proper structured fields --------------------
+      if (leadData.address && typeof leadData.address === 'string') {
+        try {
+          leadData.address = JSON.parse(leadData.address);
+        } catch {}
+      }
+
+      if (leadData.directors && typeof leadData.directors === 'string') {
+        try {
+          leadData.directors = JSON.parse(leadData.directors);
+        } catch {
+          leadData.directors = [];
+        }
+      }
+
+      leadData.aml_company_status = leadData.aml_company_status || 'idle';
+      leadData.aml_director_status = leadData.aml_director_status || 'idle';
+      leadData.last_updated = new Date().toISOString();
+
+      // -------------------- Handle uploaded files --------------------
+      if (req.files?.financialDocuments) {
+        leadData.financialDocuments = req.files.financialDocuments.map(file => ({
+          fileName: file.originalname,
+          fileType: file.mimetype,
+          fileSize: file.size,
+          fileData: file.buffer
+        }));
+      }
+
+      if (req.files?.signature?.[0]) {
+        leadData.signature = {
+          fileName: req.files.signature[0].originalname,
+          fileType: req.files.signature[0].mimetype,
+          fileSize: req.files.signature[0].size,
+          fileData: req.files.signature[0].buffer
+        };
+      }
+
+      const newLead = new Lead(leadData);
+      await newLead.save();
+      res.status(201).json(newLead);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Failed to create lead' });
+    }
+  }
+);
+
+// -------------------- UPDATE LEAD --------------------
+router.put('/:id', upload.none(), async (req, res) => {
   try {
-    const updatedLead = await Lead.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
+    let updateData = req.body;
+
+    // If body contains JSON strings for structured fields, parse them
+    if (updateData.address && typeof updateData.address === 'string') {
+      try {
+        updateData.address = JSON.parse(updateData.address);
+      } catch {}
+    }
+
+    if (updateData.directors && typeof updateData.directors === 'string') {
+      try {
+        updateData.directors = JSON.parse(updateData.directors);
+      } catch {
+        updateData.directors = [];
+      }
+    }
+
+    // Update last_updated timestamp
+    updateData.last_updated = new Date().toISOString();
+
+    const updatedLead = await Lead.findByIdAndUpdate(req.params.id, updateData, {
+      new: true
+    });
+
     if (!updatedLead) {
       return res.status(404).json({ error: 'Lead not found' });
     }
@@ -53,7 +138,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// Delete lead
+// -------------------- DELETE LEAD --------------------
 router.delete('/:id', async (req, res) => {
   try {
     const deletedLead = await Lead.findByIdAndDelete(req.params.id);
@@ -66,4 +151,4 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-module.exports = router; 
+module.exports = router;

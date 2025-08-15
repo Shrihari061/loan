@@ -1,4 +1,6 @@
 import { useState, type ChangeEvent } from "react";
+import axios from "axios";
+
 
 const documentTypes = [
   { label: "Balance Sheet", audited: true, icon: "📊" },
@@ -8,14 +10,20 @@ const documentTypes = [
 
 const years = ["2021", "2022", "2023", "2024", "2025"];
 
-export default function Step2() {
-  const [consent, setConsent] = useState(false);
+export default function Step2({
+  leadData,
+  setLeadData,
+}: {
+  leadData: any;
+  setLeadData: React.Dispatch<React.SetStateAction<any>>;
+}) {
+  const [consent, setConsent] = useState(true);
   const [uploadedFiles, setUploadedFiles] = useState<Record<string, File[]>>({});
   const [selectedDocument, setSelectedDocument] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedYear, setSelectedYear] = useState<string>("");
   const [auditorVerified, setAuditorVerified] = useState<Record<string, boolean>>({});
-  
+
   // Review & Submit state
   const [declarations, setDeclarations] = useState({
     allDocumentsComplete: false,
@@ -82,9 +90,61 @@ export default function Step2() {
     }
   };
 
-  const handleSubmit = () => {
-    console.log("Submitted with data:", declarations, signatureFile);
-    // Add your actual submission logic here
+  const handleSubmit = async () => {
+    if (!leadData) return;
+
+    // Merge uploaded files and signature into leadData
+    const finalLeadData = {
+      ...leadData,
+      financialDocuments: Object.entries(uploadedFiles).flatMap(([label, files]) =>
+        files.map(file => file) // actual File object
+      ),
+      signature: signatureFile || null,
+      reviewDeclarations: declarations,
+    };
+
+    console.log("Final Lead Data ready for upload:", finalLeadData);
+
+    // Update parent state
+    setLeadData(finalLeadData);
+
+    try {
+      const formData = new FormData();
+
+      // Append all lead text data (excluding files/signature)
+      Object.entries(finalLeadData).forEach(([key, value]) => {
+        if (key !== "financialDocuments" && key !== "signature") {
+          if (value !== null && value !== undefined) {
+            if (typeof value === "object") {
+              formData.append(key, JSON.stringify(value));
+            } else {
+              formData.append(key, String(value));
+            }
+          }
+        }
+      });
+
+      // Append financial documents
+      finalLeadData.financialDocuments.forEach((file: File) => {
+        formData.append("financialDocuments", file, file.name);
+      });
+
+      // Append signature
+      if (finalLeadData.signature) {
+        formData.append("signature", finalLeadData.signature, finalLeadData.signature.name);
+      }
+
+      // Send to backend
+      const response = await axios.post("http://localhost:5000/leads", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      console.log("Lead uploaded successfully:", response.data);
+      alert("Application submitted successfully!");
+    } catch (error) {
+      console.error("Error submitting lead:", error);
+      alert("Failed to submit application. Check console for details.");
+    }
   };
 
   return (
@@ -155,7 +215,7 @@ export default function Step2() {
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Financial Year
           </label>
-          <select 
+          <select
             value={selectedYear}
             onChange={(e) => setSelectedYear(e.target.value)}
             className="w-full max-w-xs border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -168,7 +228,7 @@ export default function Step2() {
         </div>
       </div>
 
-      
+
 
       {/* Upload Modal */}
       {isModalOpen && selectedDocument && (
@@ -199,10 +259,10 @@ export default function Step2() {
                     type="file"
                     multiple
                     className="hidden"
-                    id="file-upload"
+                    id={`file-upload-${selectedDocument}`}
                     onChange={(e) => handleFileChange(e.target.files)}
                   />
-                  <label htmlFor="file-upload" className="cursor-pointer">
+                  <label htmlFor={`file-upload-${selectedDocument}`} className="cursor-pointer">
                     <div className="text-4xl mb-2">📁</div>
                     <p className="text-gray-600 mb-1">Click to upload or drag and drop</p>
                     <p className="text-sm text-gray-500">PDF, DOC, DOCX, XLS, XLSX (Max 10MB each)</p>
@@ -369,11 +429,10 @@ export default function Step2() {
         <button
           onClick={handleSubmit}
           disabled={!consent || !declarations.finalConfirmation}
-          className={`px-6 py-3 rounded text-white transition ${
-            consent && declarations.finalConfirmation 
-              ? "bg-blue-600 hover:bg-blue-700" 
+          className={`px-6 py-3 rounded text-white transition ${consent && declarations.finalConfirmation
+              ? "bg-blue-600 hover:bg-blue-700"
               : "bg-gray-400 cursor-not-allowed"
-          }`}
+            }`}
         >
           Submit Application
         </button>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+
 interface CompanyDetails {
   name: string;
   registrationNo: string;
@@ -11,6 +12,7 @@ interface CompanyDetails {
     state: string;
     country: string;
   };
+  lead_id?: string;
 }
 
 interface DirectorDetails {
@@ -19,7 +21,15 @@ interface DirectorDetails {
   lastName: string;
 }
 
-export default function Step1() {
+export default function Step1({
+  setLeadData,
+  leadData,
+  goToNextStep,
+}: {
+  setLeadData: React.Dispatch<React.SetStateAction<any>>;
+  leadData: any;
+  goToNextStep: () => void;
+}) {
   const [cin, setCIN] = useState('');
   const [cinValid, setCinValid] = useState<boolean | null>(null);
   const [companyDetails, setCompanyDetails] = useState<CompanyDetails | null>(null);
@@ -28,13 +38,13 @@ export default function Step1() {
   const [amlCompanyStatus, setAmlCompanyStatus] = useState<'idle' | 'initiated' | 'pending' | 'done' | 'failed'>('idle');
   const [amlDirectorStatus, setAmlDirectorStatus] = useState<'idle' | 'initiated' | 'pending' | 'done' | 'failed'>('idle');
 
-  // Updated state for designation and contact person
   const [designation, setDesignation] = useState<string>('');
   const [contactPerson, setContactPerson] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
-  
-  // Contact person data with phone numbers and designations
-  const [contactPersonData] = useState<Array<{name: string, phone: string, designation: string}>>([
+  const [loanType, setLoanType] = useState<string>('');
+  const [loanAmount, setLoanAmount] = useState<number | undefined>();
+
+  const [contactPersonData] = useState<Array<{ name: string, phone: string, designation: string }>>([
     { name: 'Ashwini Shekhawat', phone: '+91-98765-43210', designation: 'RM' },
     { name: 'Sarah Johnson', phone: '+1-555-0123', designation: 'BM' },
     { name: 'Shrihari Rao', phone: '+91-87654-32109', designation: 'RM' },
@@ -50,11 +60,9 @@ export default function Step1() {
     { name: 'Chandler Bing', phone: '+1-555-0132', designation: 'RM' },
     { name: 'Rachel Green', phone: '+1-555-0133', designation: 'BM' },
   ]);
-  
-  // Extract just the names for the dropdown
+
   const availableContactPersons = contactPersonData.map(person => person.name);
 
-  // Function to handle contact person selection and auto-populate phone number and designation
   const handleContactPersonChange = (selectedPerson: string) => {
     setContactPerson(selectedPerson);
     if (selectedPerson) {
@@ -78,13 +86,17 @@ export default function Step1() {
     setAmlDirectorStatus('idle');
   };
 
+  // Utility to generate a random lead ID
+  const generateLeadId = () => {
+    return 'LEAD-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+  };
+
   const validateCIN = () => {
     const regex = /^[A-Z][0-9]{5}[A-Z]{2}[0-9]{4}[A-Z]{3}[0-9]{6}$/;
     const isValid = regex.test(cin);
     setCinValid(isValid);
     if (!isValid) return;
 
-    // Mocked Data
     const mockData = {
       company: {
         name: 'Acme Tech Solutions Pvt Ltd',
@@ -97,6 +109,7 @@ export default function Step1() {
           state: 'Karnataka',
           country: 'India',
         },
+        lead_id: generateLeadId(),
       },
       directors: [
         { din: '10020030', firstName: 'Ravi', lastName: 'Sharma' },
@@ -107,7 +120,6 @@ export default function Step1() {
     setCompanyDetails(mockData.company);
     setDirectorDetails(mockData.directors);
 
-    // Simulate AML Statuses
     startAMLCheckForCompany(mockData.company.name);
 
     const incorporatedYear = parseInt(mockData.company.incorporatedDate.split('-')[2], 10);
@@ -132,6 +144,30 @@ export default function Step1() {
       const passed = Math.random() > 0.1;
       setAmlDirectorStatus(passed ? 'done' : 'failed');
     }, 3000);
+  };
+
+  const handleSaveAndContinue = () => {
+    if (!companyDetails) return;
+
+    setLeadData({
+      lead_id: companyDetails.lead_id,
+      cin: cin,
+      registration_no: companyDetails.registrationNo,
+      business_name: companyDetails.name,
+      incorporated_date: companyDetails.incorporatedDate,
+      contact_email: companyDetails.email,
+      address: companyDetails.address,
+      directors: directorDetails,
+      contact_person: contactPerson,
+      contact_phone: phoneNumber,
+      designation: designation,
+      loan_type: loanType,
+      loan_amount: loanAmount,
+      aml_company_status: amlCompanyStatus,
+      aml_director_status: amlDirectorStatus,
+    });
+
+    goToNextStep();
   };
 
   return (
@@ -174,8 +210,8 @@ export default function Step1() {
             <input value={companyDetails.name} readOnly className="w-full border px-3 py-2 rounded bg-gray-100" />
           </div>
           <div>
-            <label className="text-sm font-medium">CIN</label>
-            <input value={companyDetails.registrationNo} readOnly className="w-full border px-3 py-2 rounded bg-gray-100" />
+            <label className="text-sm font-medium">Lead ID</label>
+            <input value={companyDetails.lead_id} readOnly className="w-full border px-3 py-2 rounded bg-gray-100" />
           </div>
           <div>
             <label className="text-sm font-medium">Incorporation Date</label>
@@ -228,13 +264,12 @@ export default function Step1() {
             <div>
               Company AML:{" "}
               <span
-                className={`font-semibold ${
-                  amlCompanyStatus === 'done'
+                className={`font-semibold ${amlCompanyStatus === 'done'
                     ? 'text-green-600'
                     : amlCompanyStatus === 'failed'
-                    ? 'text-red-600'
-                    : 'text-yellow-600'
-                }`}
+                      ? 'text-red-600'
+                      : 'text-yellow-600'
+                  }`}
               >
                 {amlCompanyStatus.toUpperCase()}
               </span>
@@ -244,13 +279,12 @@ export default function Step1() {
             <div>
               Director AML:{" "}
               <span
-                className={`font-semibold ${
-                  amlDirectorStatus === 'done'
+                className={`font-semibold ${amlDirectorStatus === 'done'
                     ? 'text-green-600'
                     : amlDirectorStatus === 'failed'
-                    ? 'text-red-600'
-                    : 'text-yellow-600'
-                }`}
+                      ? 'text-red-600'
+                      : 'text-yellow-600'
+                  }`}
               >
                 {amlDirectorStatus.toUpperCase()}
               </span>
@@ -263,7 +297,7 @@ export default function Step1() {
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="text-sm font-medium">Contact Person</label>
-          <select 
+          <select
             value={contactPerson}
             onChange={(e) => handleContactPersonChange(e.target.value)}
             className="w-full border px-3 py-2 rounded"
@@ -276,7 +310,7 @@ export default function Step1() {
         </div>
         <div>
           <label className="text-sm font-medium">Phone Number</label>
-          <input 
+          <input
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
             className="w-full border px-3 py-2 rounded"
@@ -285,20 +319,30 @@ export default function Step1() {
         </div>
         <div>
           <label className="text-sm font-medium">Loan Type</label>
-          <select className="w-full border px-3 py-2 rounded">
-            <option>Term Loan</option>
-            <option>OD/CC</option>
-            <option>LC</option>
-            <option>BG</option>
+          <select
+            value={loanType} // <- Added binding
+            onChange={(e) => setLoanType(e.target.value)} // <- Added handler
+            className="w-full border px-3 py-2 rounded"
+          >
+            <option value="">Select Loan Type</option>
+            <option value="Term Loan">Term Loan</option>
+            <option value="OD/CC">OD/CC</option>
+            <option value="LC">LC</option>
+            <option value="BG">BG</option>
           </select>
         </div>
         <div>
           <label className="text-sm font-medium">Loan Amount</label>
-          <input type="number" className="w-full border px-3 py-2 rounded" />
+          <input
+            type="number"
+            value={loanAmount ?? ''} // <- Added binding
+            onChange={(e) => setLoanAmount(Number(e.target.value))} // <- Added handler
+            className="w-full border px-3 py-2 rounded"
+          />
         </div>
         <div>
           <label className="text-sm font-medium">Designation</label>
-          <input 
+          <input
             value={designation}
             onChange={(e) => setDesignation(e.target.value)}
             className="w-full border px-3 py-2 rounded"
@@ -311,6 +355,7 @@ export default function Step1() {
       <div className="mt-8">
         <button
           disabled={amlCompanyStatus !== 'done' || (amlDirectorStatus && amlDirectorStatus !== 'done')}
+          onClick={handleSaveAndContinue}
           className="bg-green-600 text-white px-6 py-2 rounded shadow disabled:bg-gray-400"
         >
           Save & Continue
