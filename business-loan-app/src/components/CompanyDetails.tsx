@@ -129,8 +129,6 @@ const CompanyDetails: React.FC = () => {
         </div>
         <div>
           <p><strong>Net Worth:</strong> ₹{formatValue(company.net_worth)}</p>
-          <p><strong>Debt to Equity:</strong> {company.debt_to_equity}</p>
-          <p><strong>DSCR:</strong> {company.dscr}</p>
           <p><strong>Ratio Health:</strong> {company.ratio_health}</p>
         </div>
       </div>

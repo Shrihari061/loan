@@ -351,7 +351,7 @@ export default function Step2({
               onChange={() => handleCheckboxChange("auditedSigned")}
             />
             <span className="text-gray-700">
-              Audited financials are signed by a Chartered Accountant
+              Audited financial documents are signed by a Chartered Accountant
             </span>
           </label>
 
@@ -363,7 +363,7 @@ export default function Step2({
               onChange={() => handleCheckboxChange("financialsConsistent")}
             />
             <span className="text-gray-700">
-              Financials are consistent across ITR, GST, and financial statements
+              Financial data is consistent across ITR, GST, and financial statements
             </span>
           </label>
 
@@ -420,7 +420,7 @@ export default function Step2({
               onChange={() => handleCheckboxChange("finalConfirmation")}
             />
             <span className="text-gray-700">
-              I confirm that the above knowledge is true to the best of my knowledge
+              I confirm that the above is true to the best of my knowledge
             </span>
           </label>
         </div>

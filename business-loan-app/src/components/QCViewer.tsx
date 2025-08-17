@@ -28,7 +28,7 @@ const QCViewer: React.FC = () => {
 
   // NEW: collection selector
   const [selectedCollection, setSelectedCollection] = useState<string>('');
-  const collections = ['extracted_values', 'risk'];
+  const collections = ['extracted_values'];
 
   const extractedDataToText = (obj?: ExtractedData) => {
     if (!obj) return '';
