@@ -17,7 +17,12 @@ const cqSchema = new mongoose.Schema({
   customer_id: String,
   customer_name: String,
   loan_id: String,
-  documents: [documentSchema]
+  // documents: [documentSchema],
+  status: {
+    type: String,
+    enum: ['Pending', 'Approved', 'Declined'],
+    default: 'Pending'
+  }
 });
 
 module.exports = mongoose.model('cq', cqSchema);

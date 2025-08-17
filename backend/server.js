@@ -8,7 +8,7 @@ const riskRoutes = require("./routes/riskRoutes")
 const dashboardRoutes = require('./routes/dashboardRoutes');
 const qcRoutes = require('./routes/qcRoutes'); // ⬅️ Add this at the top with other routes
 const leadRoutes = require('./routes/leadRoutes');
-const notificationRoutes = require('./routes/notificationRoutes');
+// const leads = require('./routes/leads')
 
 
 dotenv.config();
@@ -39,7 +39,6 @@ app.use('/risk', riskRoutes);
 app.use('/dashboard', dashboardRoutes);
 app.use('/cq', qcRoutes); // ⬅️ Add this with other route usages
 app.use('/leads', leadRoutes);
-app.use('/notifications', notificationRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

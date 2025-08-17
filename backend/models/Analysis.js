@@ -1,15 +1,49 @@
+// models/ExtractedValues.js
 const mongoose = require('mongoose');
 
-const analysisSchema = new mongoose.Schema({
-  company_name: { type: String, required: true },
+const extractedValuesSchema = new mongoose.Schema({
+  customer_name: { type: String, required: true }, // old "company_name"
   loan_id: { type: String, required: true },
-  last_updated: { type: String }, // or Date if you're storing as ISO
-  net_worth: Number,
-  debt_to_equity: Number,
-  dscr: Number,
-  year_range: String,
-  ratio_health: String,
 
+  // These are extracted metrics from your JSON
+  "Shareholder's Equity": {
+    value_latest: Number,
+    source: String,
+    confidence: Number,
+    unit: String
+  },
+  "Total Debt": {
+    value_latest: Number,
+    source: String,
+    confidence: Number,
+    unit: String
+  },
+  "EBIT": {
+    value_latest: Number,
+    source: String,
+    confidence: Number,
+    unit: String
+  },
+  "Depreciation": {
+    value_latest: Number,
+    source: String,
+    confidence: Number,
+    unit: String
+  },
+  "Interest Expense": {
+    value_latest: Number,
+    source: String,
+    confidence: Number,
+    unit: String
+  },
+  "Principal": {
+    value_latest: Number,
+    source: String,
+    confidence: Number,
+    unit: String
+  },
+
+  // Optional: if you want to store balance sheet, P/L, cash flow separately
   balance_sheet: [
     {
       item: String,
@@ -19,7 +53,6 @@ const analysisSchema = new mongoose.Schema({
       FY2025: Number
     }
   ],
-
   profit_loss: [
     {
       item: String,
@@ -29,7 +62,6 @@ const analysisSchema = new mongoose.Schema({
       FY2025: Number
     }
   ],
-
   cash_flow: [
     {
       item: String,
@@ -39,7 +71,9 @@ const analysisSchema = new mongoose.Schema({
       FY2025: Number
     }
   ]
+}, {
+  collection: 'extracted_values', // match your current collection
+  timestamps: true // adds createdAt & updatedAt for last_updated
+});
 
-}, { collection: 'analysis' });
-
-module.exports = mongoose.model('Analysis', analysisSchema);
+module.exports = mongoose.model('ExtractedValues', extractedValuesSchema);

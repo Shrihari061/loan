@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 type ExtractedData = Record<string, string>;
 
 type DocumentEntry = {
-  _id?: string; // optional because some docs might be missing it
+  _id?: string;
   filename: string;
   upload_date?: string;
   status?: string;
@@ -14,7 +14,7 @@ type DocumentEntry = {
 
 type QCEntry = {
   _id: string;
-  customer_id?: string;
+  // customer_id?: string;
   customer_name?: string;
   loan_id?: string;
   documents: DocumentEntry[];
@@ -23,16 +23,13 @@ type QCEntry = {
 const QCViewer: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [data, setData] = useState<QCEntry | null>(null);
-
-  // mappedDocs ensures each option has a stable unique id even if doc._id is missing
-  const [mappedDocs, setMappedDocs] = useState<
-    { id: string; originalIndex: number; doc: DocumentEntry }[]
-  >([]);
-  const [selectedDocId, setSelectedDocId] = useState<string>('');
   const [textValue, setTextValue] = useState<string>('');
   const [isEditing, setIsEditing] = useState(false);
 
-  // Helper: convert extracted_data object -> pretty lines "Key: Value"
+  // NEW: collection selector
+  const [selectedCollection, setSelectedCollection] = useState<string>('');
+  const collections = ['extracted_values', 'risk'];
+
   const extractedDataToText = (obj?: ExtractedData) => {
     if (!obj) return '';
     return Object.entries(obj)
@@ -40,7 +37,6 @@ const QCViewer: React.FC = () => {
       .join('\n');
   };
 
-  // Helper: parse textarea lines back to extracted_data object
   const textToExtractedData = (text: string) => {
     const lines = text.split('\n');
     const out: ExtractedData = {};
@@ -49,7 +45,6 @@ const QCViewer: React.FC = () => {
       if (!line) continue;
       const idx = line.indexOf(':');
       if (idx === -1) {
-        // No colon -> treat entire line as key with empty value
         out[line] = '';
       } else {
         const key = line.slice(0, idx).trim();
@@ -60,7 +55,7 @@ const QCViewer: React.FC = () => {
     return out;
   };
 
-  // Fetch customer entry
+  // Fetch CQ entry
   useEffect(() => {
     if (!id) return;
     fetch(`http://localhost:5000/cq/${id}`)
@@ -70,86 +65,48 @@ const QCViewer: React.FC = () => {
       })
       .then((entry: QCEntry) => {
         setData(entry);
-
-        // Map docs to stable ids
-        const mapped = (entry.documents || []).map((doc, idx) => {
-          const fallbackId = `${entry._id}_doc_${idx}`;
-          const docId = doc._id ?? fallbackId;
-          return { id: docId, originalIndex: idx, doc };
-        });
-        setMappedDocs(mapped);
-
-        if (mapped.length > 0) {
-          setSelectedDocId(mapped[0].id);
-          setTextValue(extractedDataToText(mapped[0].doc.extracted_data));
+        if (entry.documents?.length > 0) {
+          setTextValue(extractedDataToText(entry.documents[0].extracted_data));
         } else {
-          setSelectedDocId('');
           setTextValue('');
         }
       })
       .catch((err) => {
         console.error('Failed to load customer data:', err);
         setData(null);
-        setMappedDocs([]);
       });
   }, [id]);
 
-  // Whenever selectedDocId or mappedDocs changes, update textValue (unless editing)
+  // Fetch selected collection
   useEffect(() => {
-    if (isEditing) return; // don't overwrite while editing
-    if (!selectedDocId || mappedDocs.length === 0) return;
-    const entry = mappedDocs.find((m) => m.id === selectedDocId);
-    if (entry) {
-      setTextValue(extractedDataToText(entry.doc.extracted_data));
-    } else {
-      setTextValue('');
-    }
-  }, [selectedDocId, mappedDocs, isEditing]);
+    if (!selectedCollection || !id) return;
+    fetch(`http://localhost:5000/cq/${id}/collection/${selectedCollection}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && Object.keys(data).length > 0) {
+          setTextValue(JSON.stringify(data, null, 2));
+        } else {
+          setTextValue('No data found for this collection.');
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to load collection data:', err);
+        setTextValue('Error loading collection data.');
+      });
+  }, [selectedCollection, id]);
 
-  // Handle dropdown change
-  const handleSelect = (value: string) => {
-    setSelectedDocId(value);
-    setIsEditing(false); // viewing mode
-  };
-
-  // Save: update local state (and optionally sync to backend later)
   const handleSave = () => {
-    if (!data || !selectedDocId) return;
-    const entryIndex = mappedDocs.findIndex((m) => m.id === selectedDocId);
-    if (entryIndex === -1) return;
-
+    if (!data) return;
     const parsed = textToExtractedData(textValue);
-
-    // Update mappedDocs
-    const newMapped = [...mappedDocs];
-    newMapped[entryIndex] = {
-      ...newMapped[entryIndex],
-      doc: {
-        ...newMapped[entryIndex].doc,
-        extracted_data: parsed,
-      },
-    };
-    setMappedDocs(newMapped);
-
-    // Also update `data.documents` so UI stays consistent
     const newData = { ...data };
-    newData.documents = [...newData.documents];
-    newData.documents[newMapped[entryIndex].originalIndex] = {
-      ...newData.documents[newMapped[entryIndex].originalIndex],
-      extracted_data: parsed,
-    };
+    if (newData.documents.length > 0) {
+      newData.documents[0].extracted_data = parsed;
+    }
     setData(newData);
-
     setIsEditing(false);
 
-    // NOTE: if you want to persist this change to MongoDB, call your PUT endpoint here.
-    // Example:
-    // fetch(`http://localhost:5000/cq/${data._id}/document/${originalDocId}`, {
-    //   method: 'PUT',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ extracted_data: parsed })
-    // })
-    // ...
+    // Persist changes to backend if needed
+    // fetch(`http://localhost:5000/cq/${data._id}/document/...`, { method: 'PUT', ... })
   };
 
   if (!data) {
@@ -161,50 +118,44 @@ const QCViewer: React.FC = () => {
       {/* Header */}
       <div className="border-b pb-4">
         <h2 className="text-xl font-semibold mb-2">Customer Details</h2>
-        <p><strong>Customer ID:</strong> {data.customer_id ?? '-'}</p>
+        {/* <p><strong>Customer ID:</strong> {data.customer_id ?? '-'}</p> */}
         <p><strong>Customer Name:</strong> {data.customer_name ?? '-'}</p>
         <p><strong>Loan ID:</strong> {data.loan_id ?? '-'}</p>
       </div>
 
-      {/* Document dropdown */}
+      {/* Collection dropdown */}
       <div>
-        <label className="block mb-2 font-medium">Select a Document:</label>
-
-        {mappedDocs.length === 0 ? (
-          <div className="text-sm text-gray-600">No documents available.</div>
-        ) : (
-          <select
-            className="border p-2 rounded w-full max-w-md"
-            value={selectedDocId}
-            onChange={(e) => handleSelect(e.target.value)}
-          >
-            {mappedDocs.map((m) => (
-              <option key={m.id} value={m.id}>
-                {m.doc.filename ?? `Document ${m.originalIndex + 1}`}
-              </option>
-            ))}
-          </select>
-        )}
+        <label className="block mb-2 font-medium">Select a Collection:</label>
+        <select
+          className="border p-2 rounded w-full max-w-md"
+          value={selectedCollection}
+          onChange={(e) => setSelectedCollection(e.target.value)}
+        >
+          <option value="">-- Choose Collection --</option>
+          {collections.map((col) => (
+            <option key={col} value={col}>{col}</option>
+          ))}
+        </select>
       </div>
 
-      {/* Extracted data */}
+      {/* Data display */}
       <div>
         <label className="block mb-2 font-medium">Extracted Data:</label>
         <textarea
           className="w-full h-64 border rounded p-3 font-mono text-sm"
           value={textValue}
-          readOnly={!isEditing}
+          readOnly={!isEditing && !selectedCollection}
           onChange={(e) => setTextValue(e.target.value)}
         />
         <div className="mt-3 flex gap-2">
-          {!isEditing ? (
+          {!isEditing && !selectedCollection ? (
             <button
               onClick={() => setIsEditing(true)}
               className="bg-yellow-500 text-white px-4 py-2 rounded"
             >
               Edit
             </button>
-          ) : (
+          ) : !selectedCollection && (
             <button
               onClick={handleSave}
               className="bg-blue-600 text-white px-4 py-2 rounded"

@@ -83,7 +83,7 @@ const Dashboard: React.FC = () => {
   }));
 
   return (
-    <div className="space-y-10">
+    <div className="p-6 space-y-10">
       {/* ---- Top Cards ---- */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {topCards.map((card, idx) => (

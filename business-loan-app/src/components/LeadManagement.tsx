@@ -183,13 +183,17 @@ const LeadManagement: React.FC = () => {
   if (loading) return <div style={{ padding: '20px', textAlign: 'center' }}>Loading...</div>;
 
   return (
-    <div style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
-      {/* Generate New Lead Button */}
+    <div style={{ padding: '20px', fontFamily: 'Inter, system-ui, sans-serif' }}>
+      {/* Header */}
       <div style={{ 
         display: 'flex', 
-        justifyContent: 'flex-end', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
         marginBottom: '24px' 
       }}>
+        <h1 style={{ fontSize: '24px', fontWeight: '600', color: '#111827' }}>
+          Lead Management
+        </h1>
         <button
           onClick={handleGenerateLead}
           style={{
