@@ -86,12 +86,12 @@ const QCViewer: React.FC = () => {
         if (data && Object.keys(data).length > 0) {
           setTextValue(JSON.stringify(data, null, 2));
         } else {
-          setTextValue('No data found for this collection.');
+          setTextValue('No data found.');
         }
       })
       .catch((err) => {
-        console.error('Failed to load collection data:', err);
-        setTextValue('Error loading collection data.');
+        console.error('Failed to load data:', err);
+        setTextValue('Error loading data.');
       });
   }, [selectedCollection, id]);
 
@@ -125,13 +125,13 @@ const QCViewer: React.FC = () => {
 
       {/* Collection dropdown */}
       <div>
-        <label className="block mb-2 font-medium">Select a Collection:</label>
+        <label className="block mb-2 font-medium">Select the type of financial document:</label>
         <select
           className="border p-2 rounded w-full max-w-md"
           value={selectedCollection}
           onChange={(e) => setSelectedCollection(e.target.value)}
         >
-          <option value="">-- Choose Collection --</option>
+          <option value=""> Choose the document</option>
           {collections.map((col) => (
             <option key={col} value={col}>{col}</option>
           ))}

@@ -99,7 +99,7 @@ export default function Step1({
 
     const mockData = {
       company: {
-        name: 'Acme Tech Solutions Pvt Ltd',
+        name: 'Infosys',
         registrationNo: cin,
         incorporatedDate: '12-05-2021',
         email: 'contact@acmetech.com',

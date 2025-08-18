@@ -4,11 +4,11 @@ const Memo = require('../models/Memo');
 const Summary = require('../models/Summary'); // make sure model exists
 
 // 🔹 Normalize: works for both objects & arrays
-const normalizeToArray = (data) => {
-  if (!data) return [];
-  if (Array.isArray(data)) return data;      // already array
-  return Object.values(data);                // numbered object → array
-};
+// const normalizeToArray = (data) => {
+//   if (!data) return [];
+//   if (Array.isArray(data)) return data;      // already array
+//   return Object.values(data);                // numbered object → array
+// };
 
 // 🔹 Get all memos
 router.get('/', async (req, res) => {
@@ -31,6 +31,36 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+// 🔹 Utility: normalize a field to always be an array of clean strings
+function normalizeToArray(field) {
+  if (!field) return [];
+
+  if (Array.isArray(field)) {
+    return field.map(v => String(v).trim()).filter(Boolean);
+  }
+
+  if (typeof field === "string") {
+    return field
+      .split(/\r?\n|\d+\.\s|[-•]\s/)  // handles new lines, numbered points, bullets
+      .map(v => v.trim())
+      .filter(Boolean);
+  }
+
+  return [String(field)];
+}
+
+// 🔹 Normalize the whole financial_summary_&_ratios object dynamically
+function normalizeFinancialSummary(finSummary) {
+  const out = {};
+  if (!finSummary || typeof finSummary !== "object") return out;
+
+  for (const [header, value] of Object.entries(finSummary)) {
+    out[header] = normalizeToArray(value);
+  }
+
+  return out;
+}
+
 // 🔹 Create a new memo
 router.post('/create', async (req, res) => {
   try {
@@ -47,8 +77,11 @@ router.post('/create', async (req, res) => {
     const memoData = {
       ...rest,
       loan_id,
+      customer_name,
       executive_summary: summaryObj.executive_summary,
-      financial_summary_and_ratios: summaryObj["financial_summary_&_ratios"],
+
+      // 🔹 Dynamic normalization
+      financial_summary_and_ratios: normalizeFinancialSummary(summaryObj["financial_summary_&_ratios"]),
       loan_purpose: normalizeToArray(summaryObj.loan_purpose),
       swot_analysis: summaryObj.swot_analysis,
       security_offered: summaryObj.security_offered,
@@ -64,5 +97,6 @@ router.post('/create', async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 });
+
 
 module.exports = router;

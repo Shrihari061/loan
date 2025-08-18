@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const memoSchema = new mongoose.Schema({
   memo_id: { type: String },
   loan_id: { type: String },           // 🔹 link to loan
-  customer_name: { type: String },   // 🔹 Add this
+  customer_name: { type: String },     // 🔹 Add this
   created_by: { type: String },        // user/system creating it
   date: { type: String },
   last_updated: { type: String },
@@ -15,10 +15,10 @@ const memoSchema = new mongoose.Schema({
   // Enriched data from summaries
   executive_summary: { type: String },
 
+  // 🔹 Dynamic financial summary (flexible headers + arrays of bullet points)
   financial_summary_and_ratios: {
-    "Revenue and Profitability": { type: String },
-    "Operational Efficiency": { type: String },
-    "Leverage and Liquidity": { type: String }
+    type: Map,
+    of: [String]   // each header → array of bullet points
   },
 
   loan_purpose: [{ type: String }],   // 🔹 dynamic array
