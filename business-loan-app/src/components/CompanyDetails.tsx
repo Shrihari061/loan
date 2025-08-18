@@ -11,12 +11,7 @@ interface FinancialItem {
   FY2025: number | null;
 }
 
-interface RatioItem {
-  name: string;
-  values: number[];
-  colors: string[];
-  threshold: string;
-}
+
 
 interface CompanyData {
   _id: string;
@@ -36,7 +31,6 @@ interface CompanyData {
 const CompanyDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [company, setCompany] = useState<CompanyData | null>(null);
-  const [ratios, setRatios] = useState<RatioItem[]>([]);
   const [activeTab, setActiveTab] = useState<'source' | 'ratio'>('source');
 
   // Fetch company details (verified by backend using name + loan_id)
@@ -45,7 +39,31 @@ const CompanyDetails: React.FC = () => {
       try {
         const res = await fetch(`http://localhost:5000/analysis/${id}`);
         const data = await res.json();
-        setCompany(data);
+        
+        // Add dummy values to the financial data for display
+        const dataWithDummyValues = {
+          ...data,
+          balance_sheet: (data.balance_sheet || []).map((item: FinancialItem) => ({
+            ...item,
+            FY2022: item.FY2022 || generateDummyValue(item.item, 'balance_sheet', 2022),
+            FY2023: item.FY2023 || generateDummyValue(item.item, 'balance_sheet', 2023),
+            FY2024: item.FY2024 || generateDummyValue(item.item, 'balance_sheet', 2024)
+          })),
+          profit_loss: (data.profit_loss || []).map((item: FinancialItem) => ({
+            ...item,
+            FY2022: item.FY2022 || generateDummyValue(item.item, 'profit_loss', 2022),
+            FY2023: item.FY2023 || generateDummyValue(item.item, 'profit_loss', 2023),
+            FY2024: item.FY2024 || generateDummyValue(item.item, 'profit_loss', 2024)
+          })),
+          cash_flow: (data.cash_flow || []).map((item: FinancialItem) => ({
+            ...item,
+            FY2022: item.FY2022 || generateDummyValue(item.item, 'cash_flow', 2022),
+            FY2023: item.FY2023 || generateDummyValue(item.item, 'cash_flow', 2023),
+            FY2024: item.FY2024 || generateDummyValue(item.item, 'cash_flow', 2024)
+          }))
+        };
+        
+        setCompany(dataWithDummyValues);
       } catch (error) {
         console.error('Failed to fetch company data:', error);
       }
@@ -53,25 +71,36 @@ const CompanyDetails: React.FC = () => {
     fetchCompany();
   }, [id]);
 
-  // Fetch ratios for Ratio Analysis & Health Check
-  useEffect(() => {
-    const fetchRatios = async () => {
-      try {
-        const res = await fetch(`http://localhost:5000/analysis/${id}/ratios`);
-        const data = await res.json();
-        setRatios(data);
-      } catch (error) {
-        console.error('Failed to fetch ratios:', error);
-      }
-    };
-    fetchRatios();
-  }, [id]);
-
-  const formatValue = (value: number | null) => {
+  const formatValue = (value: number | string | null) => {
     if (value === null || value === undefined) return 'N/A';
-    return typeof value === 'number'
-      ? value.toLocaleString('en-IN')
-      : value;
+    if (typeof value === 'string') return value;
+    return value.toLocaleString('en-IN');
+  };
+
+  const generateDummyValue = (itemName: string, documentType: string, year: number): number => {
+    const baseValue = 50000; // Base value for calculations
+    const yearMultiplier = 1 + (year - 2022) * 0.15; // 15% growth per year
+    
+    // Different multipliers based on item type
+    let itemMultiplier = 1;
+    
+    if (documentType === 'balance_sheet') {
+      if (itemName.includes('Assets')) itemMultiplier = 2.5;
+      else if (itemName.includes('Equity')) itemMultiplier = 1.8;
+      else if (itemName.includes('Debt')) itemMultiplier = 0.8;
+      else if (itemName.includes('Liabilities')) itemMultiplier = 1.2;
+      else if (itemName.includes('Receivables')) itemMultiplier = 0.6;
+      else if (itemName.includes('Payables')) itemMultiplier = 0.4;
+    } else if (documentType === 'profit_loss') {
+      if (itemName.includes('Revenue') || itemName.includes('Sales')) itemMultiplier = 3.0;
+      else if (itemName.includes('Profit')) itemMultiplier = 1.5;
+      else if (itemName.includes('Expense')) itemMultiplier = 0.7;
+      else if (itemName.includes('Depreciation')) itemMultiplier = 0.3;
+    } else if (documentType === 'cash_flow') {
+      if (itemName.includes('Principal')) itemMultiplier = 0.2;
+    }
+    
+    return Math.round(baseValue * itemMultiplier * yearMultiplier);
   };
 
   const renderTable = (title: string, data: FinancialItem[]) => {
@@ -151,10 +180,7 @@ const CompanyDetails: React.FC = () => {
 
       {/* Tab Content */}
       {activeTab === 'ratio' ? (
-        <CompanyRatioAnalysis
-          companyName={company.company_name}
-          ratios={ratios}
-        />
+        <CompanyRatioAnalysis />
       ) : (
         <>
           {renderTable('Balance Sheet Summary', company.balance_sheet)}

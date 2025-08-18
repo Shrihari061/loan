@@ -172,4 +172,58 @@ router.get('/:id/ratios', async (req, res) => {
   }
 });
 
+// 🔹 Update analysis data
+router.put('/:id', async (req, res) => {
+  try {
+    const { balance_sheet, profit_loss, cash_flow } = req.body;
+    
+    // Find the document to update
+    const doc = await ExtractedValues.findById(req.params.id);
+    if (!doc) {
+      return res.status(404).json({ message: 'Analysis not found' });
+    }
+
+    // Create update object
+    const updateData = {};
+    
+    // Helper function to update field values
+    const updateField = (item, source) => {
+      if (item.item && doc[item.item]) {
+        updateData[item.item] = {
+          ...doc[item.item],
+          FY2022: item.FY2022,
+          FY2023: item.FY2023,
+          FY2024: item.FY2024,
+          FY2025: item.FY2025,
+          value_latest: item.FY2025 || item.FY2024 || item.FY2023 || item.FY2022,
+          source: source
+        };
+      }
+    };
+
+    // Update balance sheet data
+    if (balance_sheet) {
+      balance_sheet.forEach(item => updateField(item, 'bs'));
+    }
+
+    // Update profit & loss data
+    if (profit_loss) {
+      profit_loss.forEach(item => updateField(item, 'pl'));
+    }
+
+    // Update cash flow data
+    if (cash_flow) {
+      cash_flow.forEach(item => updateField(item, 'cf'));
+    }
+
+    // Apply the updates
+    await ExtractedValues.findByIdAndUpdate(req.params.id, updateData, { new: true });
+    
+    res.json({ message: 'Analysis data updated successfully' });
+  } catch (err) {
+    console.error('Error updating analysis:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 module.exports = router;
