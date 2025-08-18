@@ -26,7 +26,7 @@ import NotificationBell from './components/NotificationBell';
 // Add new nav item here
 const navItems = [
   { label: 'Dashboard', path: '/dashboard' },
-  { label: 'Loan Applications', path: '/loans' },
+  // { label: 'Loan Applications', path: '/loans' },
   { label: 'Lead Management', path: '/lead' }, // <-- Added this line
   { label: 'Quality Check (QC)', path: '/qc' },
   { label: 'Financial Analysis', path: '/reports' },

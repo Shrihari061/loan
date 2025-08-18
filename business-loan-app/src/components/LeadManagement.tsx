@@ -300,7 +300,7 @@ const LeadManagement: React.FC = () => {
               <tr key={lead._id} style={{ borderBottom: '1px solid #f3f4f6', position: 'relative' }}>
                 <td style={cellStyle}>{lead.business_name}</td>
                 <td style={cellStyle}>{lead.loan_type}</td>
-                <td style={cellStyle}>${lead.loan_amount.toLocaleString()}</td>
+                <td style={cellStyle}>₹{lead.loan_amount.toLocaleString()}</td>
                 <td style={cellStyle}>
                   {new Date(lead.last_updated).toLocaleDateString('en-GB', {
                     day: '2-digit',
