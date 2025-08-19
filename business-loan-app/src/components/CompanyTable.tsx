@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 type CompanyData = {
   _id: string;
   company_name: string;
-  loan_id: string;
+  lead_id: string;
   last_updated: string;
   net_worth: number | string;
   debt_to_equity: number | string;
@@ -65,7 +65,7 @@ const CompanyTable: React.FC = () => {
             <tr>
               {[
                 'Company Name',
-                'Loan ID',
+                'Lead ID',
                 'Last Updated',
                 'Net Worth',
                 'Debt to Equity',
@@ -93,7 +93,7 @@ const CompanyTable: React.FC = () => {
                   {company.company_name}
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">
-                  {company.loan_id}
+                  {company.lead_id}
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">
                   {company.last_updated}

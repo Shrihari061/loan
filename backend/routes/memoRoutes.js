@@ -64,25 +64,26 @@ function normalizeFinancialSummary(finSummary) {
 // 🔹 Create a new memo
 router.post('/create', async (req, res) => {
   try {
-    const { customer_name, loan_id, ...rest } = req.body;
+    const { customer_name, lead_id, loan_type, ...rest } = req.body;
 
     // Find matching summary
-    const summaryData = await Summary.findOne({ customer_name, loan_id });
+    const summaryData = await Summary.findOne({ customer_name, lead_id });
     if (!summaryData) {
-      return res.status(404).json({ message: "No summary found for this customer/loan" });
+      return res.status(404).json({ message: "No summary found for this customer/lead" });
     }
 
     const summaryObj = summaryData.toObject();
 
     const memoData = {
       ...rest,
-      loan_id,
+      lead_id,
       customer_name,
+      loan_type,
       executive_summary: summaryObj.executive_summary,
 
       // 🔹 Dynamic normalization
       financial_summary_and_ratios: normalizeFinancialSummary(summaryObj["financial_summary_&_ratios"]),
-      loan_purpose: normalizeToArray(summaryObj.loan_purpose),
+      // loan_purpose: normalizeToArray(summaryObj.loan_purpose),
       swot_analysis: summaryObj.swot_analysis,
       security_offered: summaryObj.security_offered,
       recommendation: normalizeToArray(summaryObj.recommendation),

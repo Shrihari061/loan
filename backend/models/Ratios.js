@@ -8,7 +8,7 @@ const RatioDetailSchema = new mongoose.Schema({
 
 const RatiosSchema = new mongoose.Schema({
   customer_name: { type: String, required: true },
-  loan_id: { type: String, required: true },
+  lead_id: { type: String, required: true },
   DSCR: { type: RatioDetailSchema, required: true },
   DebtEquity: { type: RatioDetailSchema, required: true },
   PATMargin: { type: RatioDetailSchema, required: true },

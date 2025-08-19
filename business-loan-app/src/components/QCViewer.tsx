@@ -21,7 +21,7 @@ type FinancialItem = {
 type AnalysisEntry = {
   _id: string;
   company_name: string;
-  loan_id: string;
+  lead_id: string;
   last_updated: string;
   net_worth: number;
   debt_to_equity: string;
@@ -42,7 +42,7 @@ type FinancialData = {
 type QCEntry = {
   _id: string;
   customer_name?: string;
-  loan_id?: string;
+  lead_id?: string;
   documents: DocumentEntry[];
   status?: string;
 };
@@ -137,9 +137,9 @@ const QCViewer: React.FC = () => {
     fetch(`http://localhost:5000/analysis/`)
       .then((res) => res.json())
       .then((analysisEntries) => {
-        const matchingEntry = analysisEntries.find((entry: AnalysisEntry) => entry.loan_id === data.loan_id);
+        const matchingEntry = analysisEntries.find((entry: AnalysisEntry) => entry.lead_id === data.lead_id);
         if (!matchingEntry) {
-          setTextValue('No financial analysis data found for this loan.');
+          setTextValue('No financial analysis data found for this lead.');
           return;
         }
         return fetch(`http://localhost:5000/analysis/${matchingEntry._id}`);
@@ -214,7 +214,7 @@ const QCViewer: React.FC = () => {
     try {
       const analysisResponse = await fetch(`http://localhost:5000/analysis/`);
       const analysisEntries = await analysisResponse.json();
-      const matchingEntry = analysisEntries.find((entry: AnalysisEntry) => entry.loan_id === data.loan_id);
+      const matchingEntry = analysisEntries.find((entry: AnalysisEntry) => entry.lead_id === data.lead_id);
       if (!matchingEntry) {
         alert('No matching analysis entry found to save changes.');
         return;
@@ -362,7 +362,7 @@ const QCViewer: React.FC = () => {
       <div className="border-b pb-4">
         <h2 className="text-xl font-semibold mb-2">Customer Details</h2>
         <p><strong>Customer Name:</strong> {data.customer_name ?? '-'}</p>
-        <p><strong>Loan ID:</strong> {data.loan_id ?? '-'}</p>
+        <p><strong>lead ID:</strong> {data.lead_id ?? '-'}</p>
         <p><strong>Status:</strong> {data.status ?? 'Pending'}</p>
       </div>
 

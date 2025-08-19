@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 interface RiskEntry {
   _id: string;
   customer_name: string;
-  loan_id: string;
+  lead_id: string;
   total_score?: number;
   risk_bucket?: string;
   red_flags?: string[];
@@ -72,7 +72,7 @@ const RiskTable: React.FC = () => {
   const filteredData = riskData.filter((entry) => {
     const matchesSearch =
       entry.customer_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      entry.loan_id?.toLowerCase().includes(searchTerm.toLowerCase());
+      entry.lead_id?.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesRisk =
       riskFilter === "All" ||
@@ -93,7 +93,7 @@ const RiskTable: React.FC = () => {
       <div className="flex items-center gap-4 mb-4">
         <input
           type="text"
-          placeholder="Search by Borrower / Loan ID"
+          placeholder="Search by Borrower / lead ID"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring focus:ring-blue-200"
@@ -116,7 +116,7 @@ const RiskTable: React.FC = () => {
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
               <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Borrower</th>
-              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Loan ID</th>
+              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Lead ID</th>
               <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Total Score</th>
               <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Red Flags</th>
               <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Risk Bucket</th>
@@ -135,7 +135,7 @@ const RiskTable: React.FC = () => {
             {filteredData.map((entry) => (
               <tr key={entry._id} className="border-b border-gray-100 hover:bg-gray-50">
                 <td className="px-4 py-2 text-gray-800">{entry.customer_name}</td>
-                <td className="px-4 py-2 text-gray-800">{entry.loan_id}</td>
+                <td className="px-4 py-2 text-gray-800">{entry.lead_id}</td>
                 <td className="px-4 py-2">{entry.total_score ?? "N/A"}</td>
                 <td className="px-4 py-2">{entry.red_flags?.length || 0}</td>
                 <td className="px-4 py-2">

@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
 const memoSchema = new mongoose.Schema({
-  memo_id: { type: String },
-  loan_id: { type: String },           // 🔹 link to loan
-  customer_name: { type: String },     // 🔹 Add this
+  lead_id: { type: String },           // 🔹 link to lead
+  customer_name: { type: String },     // 🔹 customer name
+  loan_type: { type: String },         // 🔹 NEW: loan type from cq
   created_by: { type: String },        // user/system creating it
   date: { type: String },
   last_updated: { type: String },

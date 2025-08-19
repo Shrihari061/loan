@@ -6,7 +6,7 @@ const CQ = require("../models/Cq");
 // 🔹 Get ALL QC entries (minimal info for listing)
 router.get('/', async (req, res) => {
   try {
-    const records = await CQ.find({}, 'customer_id customer_name loan_id status');
+    const records = await CQ.find({}, 'customer_id customer_name lead_id loan_type status');
     res.json(records);
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch QC records.' });

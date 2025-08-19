@@ -112,8 +112,9 @@ export default function Step1({
         lead_id: generateLeadId(),
       },
       directors: [
-        { din: '10020030', firstName: 'Ravi', lastName: 'Sharma' },
-        { din: '20030040', firstName: 'Priya', lastName: 'Kumar' },
+        { din: '00041245', firstName: 'Nandan', lastName: 'Nilekani' },
+        { din: '01876159', firstName: 'Salil', lastName: 'Parekh' },
+        { din: '00019437', firstName: 'Bobby', lastName: 'Parekh' },
       ],
     };
 

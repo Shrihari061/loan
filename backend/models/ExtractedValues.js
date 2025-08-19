@@ -28,7 +28,7 @@ const WeightsSchema = new mongoose.Schema({
 const ExtractedValuesSchema = new mongoose.Schema(
   {
     customer_name: { type: String, required: true },
-    loan_id: { type: String, required: true },
+    lead_id: { type: String, required: true },
     weights: { type: WeightsSchema, default: () => ({}) },
     financial_strength: { type: FinancialStrengthSchema, default: () => ({}) },
     management_quality: {

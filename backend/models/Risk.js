@@ -46,7 +46,7 @@ const WeightsSchema = new mongoose.Schema(
 const RiskSchema = new mongoose.Schema(
   {
     customer_name: { type: String, required: true },
-    loan_id: { type: String, required: true },
+    lead_id: { type: String, required: true },
     weights: WeightsSchema,
     financial_strength: FinancialStrengthSchema,
     management_quality: ManagementQualitySchema,

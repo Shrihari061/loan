@@ -9,8 +9,8 @@ interface QCEntry {
   _id: string;
   customer_id: string;
   customer_name: string;
-  loan_id: string;
-  status: 'Pending' | 'Approved' | 'Declined';
+  lead_id: string;  // 🔹 changed from loan_id → lead_id
+  status: 'In progress' | 'Approved' | 'Declined';
   documents?: DocumentStatus[];
 }
 
@@ -48,7 +48,7 @@ const QCTable: React.FC = () => {
           <thead>
             <tr className="border-b border-gray-200">
               <th className="text-left py-4 px-6 font-semibold text-gray-900">Customer Name</th>
-              <th className="text-left py-4 px-6 font-semibold text-gray-900">Loan ID</th>
+              <th className="text-left py-4 px-6 font-semibold text-gray-900">Lead ID</th> {/* 🔹 updated */}
               <th className="text-left py-4 px-6 font-semibold text-gray-900">Status</th>
               <th className="text-left py-4 px-6 font-semibold text-gray-900">Actions</th>
             </tr>
@@ -61,7 +61,7 @@ const QCTable: React.FC = () => {
                   className={`${index !== data.length - 1 ? 'border-b border-gray-200' : ''} hover:bg-gray-50`}
                 >
                   <td className="py-4 px-6 text-gray-900">{entry.customer_name}</td>
-                  <td className="py-4 px-6 text-gray-900">{entry.loan_id}</td>
+                  <td className="py-4 px-6 text-gray-900">{entry.lead_id}</td> {/* 🔹 updated */}
                   <td className="py-4 px-6 text-gray-900">{entry.status}</td>
                   <td className="py-4 px-6 text-gray-900 relative">
                     <span

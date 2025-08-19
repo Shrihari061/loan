@@ -37,7 +37,7 @@ router.get('/', async (req, res) => {
       return {
         _id: doc._id,
         company_name: doc.customer_name || 'N/A',
-        loan_id: doc.loan_id || 'N/A',
+        lead_id: doc.lead_id || 'N/A',
         last_updated: doc.updatedAt
           ? new Date(doc.updatedAt).toISOString().split('T')[0]
           : 'N/A',
@@ -56,18 +56,18 @@ router.get('/', async (req, res) => {
   }
 });
 
-// 🔹 Get SINGLE company details by customer_name & loan_id (verified)
+// 🔹 Get SINGLE company details by customer_name & lead_id (verified)
 router.get('/:id', async (req, res) => {
   try {
     const baseDoc = await ExtractedValues.findById(req.params.id, {
       customer_name: 1,
-      loan_id: 1
+      lead_id: 1
     });
     if (!baseDoc) return res.status(404).json({ message: 'Company not found' });
 
     const doc = await ExtractedValues.findOne({
       customer_name: baseDoc.customer_name,
-      loan_id: baseDoc.loan_id
+      lead_id: baseDoc.lead_id
     });
     if (!doc) return res.status(404).json({ message: 'Matching company not found' });
 
@@ -117,7 +117,7 @@ router.get('/:id', async (req, res) => {
     res.json({
       _id: doc._id,
       company_name: doc.customer_name || 'N/A',
-      loan_id: doc.loan_id || 'N/A',
+      lead_id: doc.lead_id || 'N/A',
       last_updated: doc.updatedAt
         ? new Date(doc.updatedAt).toISOString().split('T')[0]
         : 'N/A',
@@ -137,18 +137,18 @@ router.get('/:id', async (req, res) => {
 });
 
 
-// 🔹 Get Ratios by customer_name & loan_id
+// 🔹 Get Ratios by customer_name & lead_id
 router.get('/:id/ratios', async (req, res) => {
   try {
     const baseDoc = await ExtractedValues.findById(req.params.id, {
       customer_name: 1,
-      loan_id: 1
+      lead_id: 1
     });
     if (!baseDoc) return res.status(404).json({ message: 'Company not found' });
 
     const ratioDoc = await Ratios.findOne({
       customer_name: baseDoc.customer_name,
-      loan_id: baseDoc.loan_id
+      lead_id: baseDoc.lead_id
     });
 
     if (!ratioDoc) {
@@ -157,7 +157,7 @@ router.get('/:id/ratios', async (req, res) => {
 
     // Convert ratioDoc to array format for frontend
     const ratiosArray = Object.entries(ratioDoc._doc)
-      .filter(([key]) => !['_id', 'customer_name', 'loan_id', '__v'].includes(key))
+      .filter(([key]) => !['_id', 'customer_name', 'lead_id', '__v'].includes(key))
       .map(([key, val]) => ({
         name: key,
         value: val.value,

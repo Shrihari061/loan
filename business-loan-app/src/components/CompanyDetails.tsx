@@ -16,7 +16,7 @@ interface FinancialItem {
 interface CompanyData {
   _id: string;
   company_name: string;
-  loan_id: string;
+  lead_id: string;
   last_updated: string;
   net_worth: number | string;
   debt_to_equity: number | string;
@@ -33,7 +33,7 @@ const CompanyDetails: React.FC = () => {
   const [company, setCompany] = useState<CompanyData | null>(null);
   const [activeTab, setActiveTab] = useState<'source' | 'ratio'>('source');
 
-  // Fetch company details (verified by backend using name + loan_id)
+  // Fetch company details (verified by backend using name + lead_id)
   useEffect(() => {
     const fetchCompany = async () => {
       try {
@@ -161,7 +161,7 @@ const CompanyDetails: React.FC = () => {
       {/* Company Info */}
       <div className="grid grid-cols-2 gap-4 mb-6">
         <div>
-          <p><strong>Loan ID:</strong> {company.loan_id}</p>
+          <p><strong>lead ID:</strong> {company.lead_id}</p>
           <p><strong>Last Updated:</strong> {company.last_updated}</p>
           <p><strong>Year Range:</strong> {company.year_range}</p>
         </div>

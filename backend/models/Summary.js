@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const SummarySchema = new mongoose.Schema({
   customer_name: { type: String, required: false }, // some records may not have it
-  loan_id: { type: String, required: false },
+  lead_id: { type: String, required: false },
 
   financial_summary: { type: String, required: false },
   executive_summary: { type: String, required: false },

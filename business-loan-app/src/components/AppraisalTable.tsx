@@ -61,9 +61,10 @@ export default function AppraisalTable() {
       const customer = customers.find((c) => c._id === selectedCustomerId);
 
       await axios.post("http://localhost:5000/memos/create", {
-        loan_id: customer.loan_id,
+        lead_id: customer.lead_id,
         customer_name: customer.customer_name,
-        status: "Draft",
+        loan_type: customer.loan_type, // ✅ use loan_type directly from cqs
+        status: "In progres",
         created_by: "CurrentUser",
         last_updated: new Date().toISOString(),
         loan_purpose_table: "To be filled",
@@ -99,9 +100,9 @@ export default function AppraisalTable() {
           <thead className="bg-gray-50">
             <tr>
               {[
-                "Memo ID",
-                "Loan ID",
-                "Loan Purpose",
+                "Customer Name",
+                "Lead ID",
+                "Loan Type", // ✅ show loan_type
                 "Created By",
                 "Last Updated",
                 "Status",
@@ -119,12 +120,10 @@ export default function AppraisalTable() {
           <tbody className="divide-y divide-gray-200">
             {memos.map((memo: any, idx) => (
               <tr key={memo._id} className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                <td className="px-4 py-3 text-sm text-gray-700">{memo.customer_name}</td>
+                <td className="px-4 py-3 text-sm text-gray-700">{memo.lead_id}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">
-                  {memo.memo_id || memo._id}
-                </td>
-                <td className="px-4 py-3 text-sm text-gray-700">{memo.loan_id}</td>
-                <td className="px-4 py-3 text-sm text-gray-700">
-                  {memo.loan_purpose_table}
+                  {memo.loan_type || "N/A"} {/* ✅ directly display loan_type */}
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-700">{memo.created_by}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">{memo.last_updated}</td>
@@ -143,7 +142,7 @@ export default function AppraisalTable() {
         </table>
       </div>
 
-      {/* Floating Menu rendered via Portal */}
+      {/* Floating Menu */}
       {openMenuId && menuPosition &&
         createPortal(
           <div
@@ -182,10 +181,10 @@ export default function AppraisalTable() {
             >
               <option value="">-- Select Customer --</option>
               {customers
-                .filter((c) => c.status === "Approved") // ✅ Only approved customers
+                .filter((c) => c.status === "Approved")
                 .map((c) => (
                   <option key={c._id} value={c._id}>
-                    {c.customer_name} – {c.loan_id}
+                    {c.customer_name} – {c.lead_id} – {c.loan_type} {/* ✅ show loan_type */}
                   </option>
                 ))}
             </select>

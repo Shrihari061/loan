@@ -78,8 +78,8 @@ export default function MemoDetails() {
             <p className="font-medium">{String(memo.customer_name)}</p>
           </div>
           <div>
-            <p className="text-sm text-gray-500">Loan ID</p>
-            <p className="font-medium">{String(memo.loan_id)}</p>
+            <p className="text-sm text-gray-500">Lead ID</p>
+            <p className="font-medium">{String(memo.lead_id)}</p>
           </div>
           <div>
             <p className="text-sm text-gray-500">Created By</p>
@@ -190,7 +190,7 @@ export default function MemoDetails() {
             [
               "_id",
               "memo_id",
-              "loan_id",
+              "lead_id",
               "customer_name",
               "created_by",
               "last_updated",

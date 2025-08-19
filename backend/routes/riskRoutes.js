@@ -23,10 +23,10 @@ router.get('/:id', async (req, res) => {
       return res.status(404).json({ message: 'Risk record not found' });
     }
 
-    // 2️⃣ Find matching extracted_values record by customer_name + loan_id
+    // 2️⃣ Find matching extracted_values record by customer_name + lead_id
     const extractedDoc = await ExtractedValues.findOne({
       customer_name: riskRecord.customer_name, // ✅ corrected
-      loan_id: riskRecord.loan_id
+      lead_id: riskRecord.lead_id
     });
 
     if (!extractedDoc) {
@@ -39,7 +39,7 @@ router.get('/:id', async (req, res) => {
     const response = {
       _id: riskRecord._id,
       customer_name: riskRecord.customer_name,
-      loan_id: riskRecord.loan_id,
+      lead_id: riskRecord.lead_id,
       total_score: riskRecord.total_score,
       risk_bucket: riskRecord.risk_bucket,
       red_flags: riskRecord.red_flags,
