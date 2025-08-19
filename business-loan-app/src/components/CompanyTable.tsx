@@ -6,7 +6,6 @@ type CompanyData = {
   _id: string;
   company_name: string;
   lead_id: string;
-  last_updated: string;
   net_worth: number | string;
   debt_to_equity: number | string;
   dscr: number | string;
@@ -66,7 +65,6 @@ const CompanyTable: React.FC = () => {
               {[
                 'Company Name',
                 'Lead ID',
-                'Last Updated',
                 'Net Worth',
                 'Debt to Equity',
                 'DSCR',
@@ -94,9 +92,6 @@ const CompanyTable: React.FC = () => {
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">
                   {company.lead_id}
-                </td>
-                <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">
-                  {company.last_updated}
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">
                   {formatNumber(company.net_worth)}

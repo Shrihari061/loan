@@ -11,13 +11,10 @@ interface FinancialItem {
   FY2025: number | null;
 }
 
-
-
 interface CompanyData {
   _id: string;
   company_name: string;
   lead_id: string;
-  last_updated: string;
   net_worth: number | string;
   debt_to_equity: number | string;
   dscr: number | string;
@@ -162,7 +159,6 @@ const CompanyDetails: React.FC = () => {
       <div className="grid grid-cols-2 gap-4 mb-6">
         <div>
           <p><strong>lead ID:</strong> {company.lead_id}</p>
-          <p><strong>Last Updated:</strong> {company.last_updated}</p>
           <p><strong>Year Range:</strong> {company.year_range}</p>
         </div>
         <div>

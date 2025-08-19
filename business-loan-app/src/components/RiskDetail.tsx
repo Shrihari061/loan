@@ -34,7 +34,7 @@ interface Weights {
 interface RiskDetailData {
   _id: string;
   customer_name: string;
-  loan_id: string;
+  lead_id: string;
   total_score: number;
   risk_bucket: string;
   red_flags: string[];
@@ -42,9 +42,6 @@ interface RiskDetailData {
   financial_strength: FinancialStrength;
   management_quality: ManagementQuality;
   industry_risk: IndustryRisk;
-  revenue: number | null;
-  net_profit: number | null;
-  total_assets: number | null;
 }
 
 const RiskDetail: React.FC = () => {
@@ -75,10 +72,7 @@ const RiskDetail: React.FC = () => {
       {/* Company Info */}
       <div className="bg-white p-4 rounded-lg shadow-sm space-y-2">
         <p><span className="font-medium">Customer:</span> {data.customer_name}</p>
-        <p><span className="font-medium">Loan ID:</span> {data.loan_id}</p>
-        <p><span className="font-medium">Revenue:</span> ₹{data.revenue?.toLocaleString() ?? "N/A"}</p>
-        <p><span className="font-medium">Net Profit:</span> ₹{data.net_profit?.toLocaleString() ?? "N/A"}</p>
-        <p><span className="font-medium">Total Assets:</span> ₹{data.total_assets?.toLocaleString() ?? "N/A"}</p>
+        <p><span className="font-medium">Lead ID:</span> {data.lead_id}</p>
         <p>
           <span className="font-medium">Total Score:</span> {data.total_score} / 100
         </p>

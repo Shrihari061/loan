@@ -124,7 +124,7 @@ router.get('/:id', async (req, res) => {
       net_worth: shareholderEquity,
       debt_to_equity: debtToEquity !== null ? debtToEquity.toFixed(2) : 'N/A',
       dscr: dscr !== null ? dscr.toFixed(2) : 'N/A',
-      year_range: '2024-2025',
+      year_range: '2022-2025',
       ratio_health: ratioHealth,
       balance_sheet,
       profit_loss,

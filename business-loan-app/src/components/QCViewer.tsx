@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom'; // ⬅️ added useNavigate
 
 type ExtractedData = Record<string, string>;
 
@@ -49,6 +49,7 @@ type QCEntry = {
 
 const QCViewer: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate(); // ⬅️ initialize navigate
   const [data, setData] = useState<QCEntry | null>(null);
   const [textValue, setTextValue] = useState<string>('');
   const [isEditing, setIsEditing] = useState(false);
@@ -438,7 +439,12 @@ const QCViewer: React.FC = () => {
 
       {/* Bottom-right buttons */}
       <div className="fixed bottom-4 right-6 flex space-x-4 z-50">
-        <button className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Cancel</button>
+        <button 
+          className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
+          onClick={() => navigate('/qc')} // ⬅️ redirect to QC Table
+        >
+          Cancel
+        </button>
         <button
           onClick={handleDecline}
           className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"

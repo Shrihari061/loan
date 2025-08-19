@@ -120,14 +120,13 @@ const RiskTable: React.FC = () => {
               <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Total Score</th>
               <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Red Flags</th>
               <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Risk Bucket</th>
-              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Last Updated</th>
               <th className="px-4 py-2"></th>
             </tr>
           </thead>
           <tbody>
             {filteredData.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-4 py-6 text-center text-gray-500">
+                <td colSpan={6} className="px-4 py-6 text-center text-gray-500">
                   No matching records found.
                 </td>
               </tr>
@@ -144,9 +143,6 @@ const RiskTable: React.FC = () => {
                   >
                     {entry.risk_bucket ?? "—"}
                   </span>
-                </td>
-                <td className="px-4 py-2 text-gray-600">
-                  {entry.updatedAt ? new Date(entry.updatedAt).toLocaleDateString("en-GB") : "—"}
                 </td>
                 <td className="px-4 py-2 text-right">
                   <button
