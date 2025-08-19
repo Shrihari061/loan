@@ -127,7 +127,11 @@ const CompanyDetails: React.FC = () => {
             <tbody>
               {data.map((row) => (
                 <tr key={row._id}>
-                  <td className="border px-4 py-2">{row.item}</td>
+                  <td className="border px-4 py-2">
+                    {title === 'Cash Flow Summary' && row.item === 'Principal' 
+                      ? 'Payment of lease liabilities' 
+                      : row.item}
+                  </td>
                   {showFY2022 && <td className="border px-4 py-2">{formatValue(row.FY2022)}</td>}
                   {showFY2023 && <td className="border px-4 py-2">{formatValue(row.FY2023)}</td>}
                   {showFY2024 && <td className="border px-4 py-2">{formatValue(row.FY2024)}</td>}
@@ -136,6 +140,11 @@ const CompanyDetails: React.FC = () => {
               ))}
             </tbody>
           </table>
+        </div>
+        
+        {/* Footnote */}
+        <div className="mt-4 text-sm text-gray-600 italic">
+          The values displayed above are those extracted to calculate the ratios.
         </div>
       </div>
     );
