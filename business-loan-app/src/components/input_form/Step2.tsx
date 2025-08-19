@@ -166,11 +166,24 @@ export default function Step2({
                 </div>
               </div>
 
-              {/* File Count Display */}
+              {/* File Name Display */}
               <div className="mb-4 flex-shrink-0">
                 {uploadedFiles[doc.label]?.length > 0 ? (
                   <div className="text-sm text-gray-600">
-                    <span className="font-medium">{uploadedFiles[doc.label].length}</span> file(s) uploaded
+                    {uploadedFiles[doc.label].length === 1 ? (
+                      <span className="font-medium">{uploadedFiles[doc.label][0].name}</span>
+                    ) : (
+                      <div>
+                        <span className="font-medium">{uploadedFiles[doc.label].length} files uploaded:</span>
+                        <div className="mt-1 space-y-1">
+                          {uploadedFiles[doc.label].map((file, index) => (
+                            <div key={index} className="text-xs text-gray-500 truncate">
+                              • {file.name}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="text-sm text-gray-500">No files uploaded</div>

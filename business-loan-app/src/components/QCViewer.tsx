@@ -53,7 +53,7 @@ const QCViewer: React.FC = () => {
   const [textValue, setTextValue] = useState<string>('');
   const [isEditing, setIsEditing] = useState(false);
 
-  // NEW: collection selector
+  // Collection selector
   const [selectedCollection, setSelectedCollection] = useState<string>('');
   const [financialData, setFinancialData] = useState<FinancialData | null>(null);
   const [isFinancialDataEdited, setIsFinancialDataEdited] = useState(false);
@@ -65,6 +65,8 @@ const QCViewer: React.FC = () => {
       .map(([k, v]) => `${k}: ${v}`)
       .join('\n');
   };
+
+
 
   const textToExtractedData = (text: string) => {
     const lines = text.split('\n');
@@ -319,7 +321,9 @@ const QCViewer: React.FC = () => {
             {data.map((item, index) => (
               <tr key={item._id || index} className="hover:bg-gray-50">
                 <td className="px-4 py-3 text-sm font-medium text-gray-900 border-b">
-                  {item.item}
+                  {selectedCollection === 'Cash Flow Summary' && item.item === 'Principal' 
+                    ? 'Payment of lease liabilities' 
+                    : item.item}
                 </td>
                 {yearArray.map(year => (
                   <td key={year} className="px-4 py-3 text-sm border-b">
@@ -336,6 +340,11 @@ const QCViewer: React.FC = () => {
             ))}
           </tbody>
         </table>
+        
+        {/* Footnote */}
+        <div className="mt-4 text-sm text-gray-600 italic">
+          The values displayed above are those extracted to calculate the ratios.
+        </div>
       </div>
     );
   };

@@ -4,8 +4,8 @@ import { ArrowLeft, Bell, UserCircle2 } from "lucide-react";
 import axios from "axios";
 
 export default function MemoDetails() {
-  const { id } = useParams();
-  const [memo, setMemo] = useState<any>(null);
+  const { id } = useParams<{ id: string }>();
+  const [memo, setMemo] = useState<Record<string, unknown> | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,13 +20,32 @@ export default function MemoDetails() {
   }
 
   // helper to render list-based fields
-  const renderList = (items: string[]) => (
-    <ul className="list-disc pl-5 space-y-1">
-      {items.map((item, idx) => (
-        <li key={idx}>{item}</li>
-      ))}
-    </ul>
-  );
+  const renderList = (items: unknown) => {
+    // Handle different data formats
+    let listItems: string[] = [];
+    
+    if (Array.isArray(items)) {
+      listItems = items.map(item => String(item));
+    } else if (typeof items === 'string') {
+      // If it's a string, split by newlines or commas
+      listItems = items.split(/[\n,]+/).map(item => item.trim()).filter(item => item.length > 0);
+    } else if (typeof items === 'object' && items !== null) {
+      // If it's an object, try to extract values
+      listItems = Object.values(items).map(item => String(item));
+    }
+    
+    if (listItems.length === 0) {
+      return <p className="text-gray-500">No data available</p>;
+    }
+    
+    return (
+      <ul className="list-disc pl-6 space-y-2 text-gray-700">
+        {listItems.map((item, idx) => (
+          <li key={idx} className="leading-relaxed">{item}</li>
+        ))}
+      </ul>
+    );
+  };
 
   return (
     <div className="flex flex-col w-full bg-gray-100 min-h-screen py-6">
@@ -52,27 +71,27 @@ export default function MemoDetails() {
         <div className="grid grid-cols-3 gap-6">
           <div>
             <p className="text-sm text-gray-500">Memo ID</p>
-            <p className="font-medium">{memo.memo_id || memo._id}</p>
+            <p className="font-medium">{String(memo.memo_id || memo._id)}</p>
           </div>
           <div>
             <p className="text-sm text-gray-500">Customer Name</p>
-            <p className="font-medium">{memo.customer_name}</p>
+            <p className="font-medium">{String(memo.customer_name)}</p>
           </div>
           <div>
             <p className="text-sm text-gray-500">Loan ID</p>
-            <p className="font-medium">{memo.loan_id}</p>
+            <p className="font-medium">{String(memo.loan_id)}</p>
           </div>
           <div>
             <p className="text-sm text-gray-500">Created By</p>
-            <p className="font-medium">{memo.created_by}</p>
+            <p className="font-medium">{String(memo.created_by)}</p>
           </div>
           <div>
             <p className="text-sm text-gray-500">Last Updated</p>
-            <p className="font-medium">{memo.last_updated}</p>
+            <p className="font-medium">{String(memo.last_updated)}</p>
           </div>
           <div>
             <p className="text-sm text-gray-500">Status</p>
-            <p className="font-medium">{memo.status}</p>
+            <p className="font-medium">{String(memo.status)}</p>
           </div>
         </div>
       </div>
@@ -83,19 +102,19 @@ export default function MemoDetails() {
         {memo.executive_summary && (
           <div className="bg-white p-6 shadow rounded-xl">
             <h3 className="text-lg font-semibold mb-2">Executive Summary</h3>
-            <p>{memo.executive_summary}</p>
+            <p>{String(memo.executive_summary)}</p>
           </div>
         )}
 
         {/* Financial Summary & Ratios */}
-        {memo.financial_summary_and_ratios && (
+        {memo.financial_summary_and_ratios && typeof memo.financial_summary_and_ratios === 'object' && (
           <div className="bg-white p-6 shadow rounded-xl">
             <h3 className="text-lg font-semibold mb-4">
               Financial Summary & Ratios
             </h3>
             <table className="w-full text-sm">
               <tbody>
-                {Object.entries(memo.financial_summary_and_ratios).map(
+                {Object.entries(memo.financial_summary_and_ratios as Record<string, unknown>).map(
                   ([key, value]) => (
                     <tr key={key} className="border-b last:border-none">
                       <td className="py-2 pr-4 font-medium text-gray-700 w-1/2">
@@ -112,7 +131,7 @@ export default function MemoDetails() {
 
 
         {/* Loan Purpose */}
-        {memo.loan_purpose?.length > 0 && (
+        {Array.isArray(memo.loan_purpose) && memo.loan_purpose.length > 0 && (
           <div className="bg-white p-6 shadow rounded-xl">
             <h3 className="text-lg font-semibold mb-4">Loan Purpose</h3>
             {renderList(memo.loan_purpose)}
@@ -120,45 +139,45 @@ export default function MemoDetails() {
         )}
 
         {/* SWOT Analysis */}
-        {memo.swot_analysis && (
+        {memo.swot_analysis && typeof memo.swot_analysis === 'object' && (
           <div className="bg-white p-6 shadow rounded-xl">
             <h3 className="text-lg font-semibold mb-4">SWOT Analysis</h3>
-            {Object.entries(memo.swot_analysis).map(([key, values]) => (
+            {Object.entries(memo.swot_analysis as Record<string, unknown>).map(([key, values]) => (
               <div key={key} className="mb-4">
                 <strong className="block text-gray-700 mb-1">{key}</strong>
-                {renderList(values as string[])}
+                {renderList(values)}
               </div>
             ))}
           </div>
         )}
 
         {/* Security Offered */}
-        {memo.security_offered && (
+        {memo.security_offered && typeof memo.security_offered === 'object' && (
           <div className="bg-white p-6 shadow rounded-xl">
             <h3 className="text-lg font-semibold mb-4">Security Offered</h3>
-            {memo.security_offered.primary_security?.length > 0 && (
+            {Array.isArray((memo.security_offered as any).primary_security) && (memo.security_offered as any).primary_security.length > 0 && (
               <div className="mb-3">
                 <strong className="block mb-1">Primary</strong>
-                {renderList(memo.security_offered.primary_security)}
+                {renderList((memo.security_offered as any).primary_security)}
               </div>
             )}
-            {memo.security_offered.collateral_security?.length > 0 && (
+            {Array.isArray((memo.security_offered as any).collateral_security) && (memo.security_offered as any).collateral_security.length > 0 && (
               <div className="mb-3">
                 <strong className="block mb-1">Collateral</strong>
-                {renderList(memo.security_offered.collateral_security)}
+                {renderList((memo.security_offered as any).collateral_security)}
               </div>
             )}
-            {memo.security_offered.personal_guarantees?.length > 0 && (
+            {Array.isArray((memo.security_offered as any).personal_guarantees) && (memo.security_offered as any).personal_guarantees.length > 0 && (
               <div className="mb-3">
                 <strong className="block mb-1">Personal Guarantees</strong>
-                {renderList(memo.security_offered.personal_guarantees)}
+                {renderList((memo.security_offered as any).personal_guarantees)}
               </div>
             )}
           </div>
         )}
 
         {/* Recommendation */}
-        {memo.recommendation?.length > 0 && (
+        {Array.isArray(memo.recommendation) && memo.recommendation.length > 0 && (
           <div className="bg-white p-6 shadow rounded-xl">
             <h3 className="text-lg font-semibold mb-4">Recommendation</h3>
             {renderList(memo.recommendation)}

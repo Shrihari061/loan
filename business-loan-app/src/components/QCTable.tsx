@@ -38,48 +38,52 @@ const QCTable: React.FC = () => {
   };
 
   return (
-    <div className="p-6 relative">
-      <h2 className="text-xl font-bold mb-4">Quality Check (QC) Table</h2>
-      <table className="w-full table-auto border">
-        <thead className="bg-gray-100 text-left">
-          <tr>
-            <th className="p-2 border">Customer Name</th>
-            <th className="p-2 border">Loan ID</th>
-            <th className="p-2 border text-center">Status</th>
-            <th className="p-2 border text-center">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((entry) => {
-            const pendingCount = entry.documents?.filter(doc => doc.status === 'Pending').length || 0;
-            return (
-              <tr key={entry._id} className="relative">
-                <td className="p-2 border">{entry.customer_name}</td>
-                <td className="p-2 border">{entry.loan_id}</td>
-                <td className="p-2 border text-center">{entry.status}</td>
-                <td className="p-2 border text-center relative">
-                  <span
-                    onClick={() => toggleMenu(entry._id)}
-                    className="cursor-pointer px-2"
-                  >
-                    &#8942;
-                  </span>
-                  {openMenuId === entry._id && (
-                    <div className="absolute right-2 top-8 bg-white border shadow-md z-10 w-48 rounded text-left">
-                      <div
-                        onClick={() => handleAction('View Data', entry._id)}
-                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                      >
-                        View Data
+    <div className="space-y-6">
+      {/* Title */}
+      <h2 className="text-xl font-bold text-gray-900">Quality Check (QC) Table</h2>
+      
+      {/* Table Container */}
+      <div className="bg-white rounded-lg shadow">
+        <table className="w-full">
+          <thead>
+            <tr className="border-b border-gray-200">
+              <th className="text-left py-4 px-6 font-semibold text-gray-900">Customer Name</th>
+              <th className="text-left py-4 px-6 font-semibold text-gray-900">Loan ID</th>
+              <th className="text-left py-4 px-6 font-semibold text-gray-900">Status</th>
+              <th className="text-left py-4 px-6 font-semibold text-gray-900">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((entry, index) => {
+              return (
+                <tr key={entry._id} className={`${index !== data.length - 1 ? 'border-b border-gray-200' : ''} hover:bg-gray-50`}>
+                  <td className="py-4 px-6 text-gray-900">{entry.customer_name}</td>
+                  <td className="py-4 px-6 text-gray-900">{entry.loan_id}</td>
+                  <td className="py-4 px-6 text-gray-900">{entry.status}</td>
+                  <td className="py-4 px-6 text-gray-900 relative">
+                    <span
+                      onClick={() => toggleMenu(entry._id)}
+                      className="cursor-pointer text-gray-500 hover:text-gray-700 text-xl"
+                    >
+                      ⋮
+                    </span>
+                    {openMenuId === entry._id && (
+                      <div className="absolute right-6 top-12 bg-white border border-gray-200 shadow-lg z-10 w-48 rounded-md text-left">
+                        <div
+                          onClick={() => handleAction('View Data', entry._id)}
+                          className="px-4 py-3 hover:bg-gray-100 cursor-pointer text-gray-700"
+                        >
+                          View Data
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
