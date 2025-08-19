@@ -45,21 +45,21 @@ export default function Step1({
   const [loanAmount, setLoanAmount] = useState<number | undefined>();
 
   const [contactPersonData] = useState<Array<{ name: string, phone: string, designation: string }>>([
-    { name: 'Ashwini Shekhawat', phone: '+91-98765-43210', designation: 'RM' },
-    { name: 'Sarah Johnson', phone: '+1-555-0123', designation: 'BM' },
-    { name: 'Shrihari Rao', phone: '+91-87654-32109', designation: 'RM' },
-    { name: 'Emily Davis', phone: '+1-555-0124', designation: 'BM' },
-    { name: 'Rajesh Kumar', phone: '+91-76543-21098', designation: 'RM' },
-    { name: 'Lisa Anderson', phone: '+1-555-0125', designation: 'BM' },
-    { name: 'Robert Taylor', phone: '+1-555-0126', designation: 'RM' },
-    { name: 'Jennifer Martinez', phone: '+1-555-0127', designation: 'BM' },
-    { name: 'David Schwimmer', phone: '+1-555-0128', designation: 'RM' },
-    { name: 'Monica Geller', phone: '+1-555-0129', designation: 'BM' },
-    { name: 'Phoebe Buffay', phone: '+1-555-0130', designation: 'RM' },
-    { name: 'Joey Tribbiani', phone: '+1-555-0131', designation: 'BM' },
-    { name: 'Chandler Bing', phone: '+1-555-0132', designation: 'RM' },
-    { name: 'Rachel Green', phone: '+1-555-0133', designation: 'BM' },
-  ]);
+  { name: 'Ashwini Shekhawat', phone: '+91-98765-43210', designation: 'RM' },
+  { name: 'Sarah Johnson', phone: '+91-91234-56780', designation: 'BM' },
+  { name: 'Shrihari Rao', phone: '+91-87654-32109', designation: 'RM' },
+  { name: 'Emily Davis', phone: '+91-92345-67890', designation: 'BM' },
+  { name: 'Rajesh Kumar', phone: '+91-76543-21098', designation: 'RM' },
+  { name: 'Lisa Anderson', phone: '+91-93456-78901', designation: 'BM' },
+  { name: 'Robert Taylor', phone: '+91-94567-89012', designation: 'RM' },
+  { name: 'Jennifer Martinez', phone: '+91-95678-90123', designation: 'BM' },
+  { name: 'David Schwimmer', phone: '+91-96789-01234', designation: 'RM' },
+  { name: 'Monica Geller', phone: '+91-97890-12345', designation: 'BM' },
+  { name: 'Phoebe Buffay', phone: '+91-98901-23456', designation: 'RM' },
+  { name: 'Joey Tribbiani', phone: '+91-99012-34567', designation: 'BM' },
+  { name: 'Chandler Bing', phone: '+91-90123-45678', designation: 'RM' },
+  { name: 'Rachel Green', phone: '+91-91234-56789', designation: 'BM' },
+]);
 
   const availableContactPersons = contactPersonData.map(person => person.name);
 
@@ -101,12 +101,12 @@ export default function Step1({
       company: {
         name: 'Infosys',
         registrationNo: cin,
-        incorporatedDate: '12-05-2021',
-        email: 'contact@acmetech.com',
+        incorporatedDate: '02-07-1981',
+        email: 'askus@infosys.com',
         address: {
-          line1: '1234 Tech Park Lane',
+          line1: 'No. 44/97 A, Next to SBI Bank, Hosur Road, Electronic City',
           city: 'Bengaluru',
-          state: 'Karnataka',
+          state: 'Karnataka-560100',
           country: 'India',
         },
         lead_id: generateLeadId(),
@@ -265,10 +265,10 @@ export default function Step1({
               Company AML:{" "}
               <span
                 className={`font-semibold ${amlCompanyStatus === 'done'
-                    ? 'text-green-600'
-                    : amlCompanyStatus === 'failed'
-                      ? 'text-red-600'
-                      : 'text-yellow-600'
+                  ? 'text-green-600'
+                  : amlCompanyStatus === 'failed'
+                    ? 'text-red-600'
+                    : 'text-yellow-600'
                   }`}
               >
                 {amlCompanyStatus.toUpperCase()}
@@ -280,10 +280,10 @@ export default function Step1({
               Director AML:{" "}
               <span
                 className={`font-semibold ${amlDirectorStatus === 'done'
-                    ? 'text-green-600'
-                    : amlDirectorStatus === 'failed'
-                      ? 'text-red-600'
-                      : 'text-yellow-600'
+                  ? 'text-green-600'
+                  : amlDirectorStatus === 'failed'
+                    ? 'text-red-600'
+                    : 'text-yellow-600'
                   }`}
               >
                 {amlDirectorStatus.toUpperCase()}
@@ -354,7 +354,10 @@ export default function Step1({
       {/* Save & Continue */}
       <div className="mt-8">
         <button
-          disabled={amlCompanyStatus !== 'done' || (amlDirectorStatus && amlDirectorStatus !== 'done')}
+          disabled={
+            amlCompanyStatus !== 'done' ||
+            (amlDirectorStatus !== 'idle' && amlDirectorStatus !== 'done')
+          }
           onClick={handleSaveAndContinue}
           className="bg-green-600 text-white px-6 py-2 rounded shadow disabled:bg-gray-400"
         >

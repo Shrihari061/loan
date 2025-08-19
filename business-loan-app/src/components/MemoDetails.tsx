@@ -183,6 +183,9 @@ export default function MemoDetails() {
               "swot_analysis",
               "security_offered",
               "recommendation",
+              "attachments",      // 🚫 exclude attachments
+              "created_at",       // 🚫 exclude created_at
+              "updated_at",       // 🚫 exclude updated_at
               "__v",
             ].includes(key)
           ) {
