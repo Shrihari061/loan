@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import ReactDOM from "react-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -18,13 +19,14 @@ const RiskTable: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [riskFilter, setRiskFilter] = useState("All");
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [menuPosition, setMenuPosition] = useState<{ top: number; left: number } | null>(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRiskData = async () => {
       try {
         const response = await axios.get("http://localhost:5000/risk/");
-        console.log("Raw data:", response.data);
         if (Array.isArray(response.data)) setRiskData(response.data);
         else setRiskData([]);
       } catch (err) {
@@ -51,11 +53,19 @@ const RiskTable: React.FC = () => {
     }
   };
 
-  const toggleMenu = (id: string) => {
-    setOpenMenuId((prev) => (prev === id ? null : id));
+  const toggleMenu = (id: string, e: React.MouseEvent<HTMLButtonElement>) => {
+    if (openMenuId === id) {
+      setOpenMenuId(null);
+      setMenuPosition(null);
+    } else {
+      const rect = e.currentTarget.getBoundingClientRect();
+      setMenuPosition({ top: rect.bottom + window.scrollY, left: rect.left + window.scrollX });
+      setOpenMenuId(id);
+    }
   };
 
   const handleViewDetail = (id: string) => {
+    setOpenMenuId(null);
     navigate(`/risk/${id}`);
   };
 
@@ -72,18 +82,14 @@ const RiskTable: React.FC = () => {
   });
 
   if (loading) {
-    return (
-      <div className="p-6 text-center text-gray-600">Loading risk data...</div>
-    );
+    return <div className="p-6 text-center text-gray-600">Loading risk data...</div>;
   }
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-semibold mb-6 text-gray-900">
-        Risk Assessment
-      </h1>
+    <div className="p-6 relative">
+      <h1 className="text-2xl font-semibold mb-6 text-gray-900">Risk Assessment</h1>
 
-      {/* Search + Filter outside table */}
+      {/* Search + Filter */}
       <div className="flex items-center gap-4 mb-4">
         <input
           type="text"
@@ -109,24 +115,12 @@ const RiskTable: React.FC = () => {
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
-              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">
-                Borrower
-              </th>
-              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">
-                Loan ID
-              </th>
-              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">
-                Total Score
-              </th>
-              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">
-                Red Flags
-              </th>
-              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">
-                Risk Bucket
-              </th>
-              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">
-                Last Updated
-              </th>
+              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Borrower</th>
+              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Loan ID</th>
+              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Total Score</th>
+              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Red Flags</th>
+              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Risk Bucket</th>
+              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Last Updated</th>
               <th className="px-4 py-2"></th>
             </tr>
           </thead>
@@ -139,31 +133,24 @@ const RiskTable: React.FC = () => {
               </tr>
             )}
             {filteredData.map((entry) => (
-              <tr
-                key={entry._id}
-                className="border-b border-gray-100 hover:bg-gray-50"
-              >
+              <tr key={entry._id} className="border-b border-gray-100 hover:bg-gray-50">
                 <td className="px-4 py-2 text-gray-800">{entry.customer_name}</td>
                 <td className="px-4 py-2 text-gray-800">{entry.loan_id}</td>
                 <td className="px-4 py-2">{entry.total_score ?? "N/A"}</td>
                 <td className="px-4 py-2">{entry.red_flags?.length || 0}</td>
                 <td className="px-4 py-2">
                   <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium ${getRiskPillColor(
-                      entry.risk_bucket
-                    )}`}
+                    className={`px-3 py-1 rounded-full text-xs font-medium ${getRiskPillColor(entry.risk_bucket)}`}
                   >
                     {entry.risk_bucket ?? "—"}
                   </span>
                 </td>
                 <td className="px-4 py-2 text-gray-600">
-                  {entry.updatedAt
-                    ? new Date(entry.updatedAt).toLocaleDateString("en-GB")
-                    : "—"}
+                  {entry.updatedAt ? new Date(entry.updatedAt).toLocaleDateString("en-GB") : "—"}
                 </td>
-                <td className="px-4 py-2 relative">
+                <td className="px-4 py-2 text-right">
                   <button
-                    onClick={() => toggleMenu(entry._id)}
+                    onClick={(e) => toggleMenu(entry._id, e)}
                     className="p-2 rounded hover:bg-gray-100"
                   >
                     <svg
@@ -175,23 +162,34 @@ const RiskTable: React.FC = () => {
                       <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm0 5.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm0 5.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z" />
                     </svg>
                   </button>
-
-                  {openMenuId === entry._id && (
-                    <div className="absolute z-50 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg right-0">
-                      <button
-                        onClick={() => handleViewDetail(entry._id)}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        View Detail
-                      </button>
-                    </div>
-                  )}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      {/* Floating dropdown menu */}
+      {openMenuId && menuPosition &&
+        ReactDOM.createPortal(
+          <div
+            style={{
+              position: "absolute",
+              top: menuPosition.top + 8,
+              left: menuPosition.left,
+              zIndex: 1000,
+            }}
+            className="w-48 bg-white border rounded-xl shadow-lg transform -translate-x-full"
+          >
+            <button
+              onClick={() => handleViewDetail(openMenuId)}
+              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              View Detail
+            </button>
+          </div>,
+          document.body
+        )}
     </div>
   );
 };

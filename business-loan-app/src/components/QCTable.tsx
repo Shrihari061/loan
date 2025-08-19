@@ -56,7 +56,10 @@ const QCTable: React.FC = () => {
           <tbody>
             {data.map((entry, index) => {
               return (
-                <tr key={entry._id} className={`${index !== data.length - 1 ? 'border-b border-gray-200' : ''} hover:bg-gray-50`}>
+                <tr
+                  key={entry._id}
+                  className={`${index !== data.length - 1 ? 'border-b border-gray-200' : ''} hover:bg-gray-50`}
+                >
                   <td className="py-4 px-6 text-gray-900">{entry.customer_name}</td>
                   <td className="py-4 px-6 text-gray-900">{entry.loan_id}</td>
                   <td className="py-4 px-6 text-gray-900">{entry.status}</td>
@@ -68,7 +71,9 @@ const QCTable: React.FC = () => {
                       ⋮
                     </span>
                     {openMenuId === entry._id && (
-                      <div className="absolute right-6 top-12 bg-white border border-gray-200 shadow-lg z-10 w-48 rounded-md text-left">
+                      <div
+                        className="absolute right-0 mt-2 bg-white border border-gray-200 shadow-lg z-10 w-48 rounded-md text-left"
+                      >
                         <div
                           onClick={() => handleAction('View Data', entry._id)}
                           className="px-4 py-3 hover:bg-gray-100 cursor-pointer text-gray-700"

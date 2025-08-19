@@ -30,8 +30,8 @@ const navItems = [
   { label: 'Lead Management', path: '/lead' }, // <-- Added this line
   { label: 'Quality Check (QC)', path: '/qc' },
   { label: 'Financial Analysis', path: '/reports' },
-  { label: 'Appraisal Memos', path: '/memos' },
   { label: 'Risk Assessment', path: '/risk' },
+  { label: 'Appraisal Memos', path: '/memos' },
 ];
 
 const Layout: React.FC = () => {

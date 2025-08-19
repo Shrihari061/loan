@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { createPortal } from "react-dom";
 
 export default function AppraisalTable() {
   const [memos, setMemos] = useState<any[]>([]);
-  const [customers, setCustomers] = useState<any[]>([]); // cqs data
+  const [customers, setCustomers] = useState<any[]>([]);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [menuPosition, setMenuPosition] = useState<{ x: number; y: number } | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedCustomerId, setSelectedCustomerId] = useState("");
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
-  // fetch memos
   useEffect(() => {
     fetchMemos();
   }, []);
@@ -26,7 +27,6 @@ export default function AppraisalTable() {
     }
   };
 
-  // fetch customers from cqs
   useEffect(() => {
     axios
       .get("http://localhost:5000/cq/")
@@ -34,8 +34,15 @@ export default function AppraisalTable() {
       .catch((err) => console.error("Error fetching cqs:", err));
   }, []);
 
-  const toggleMenu = (id: string) => {
-    setOpenMenuId(openMenuId === id ? null : id);
+  const toggleMenu = (id: string, e: React.MouseEvent) => {
+    if (openMenuId === id) {
+      setOpenMenuId(null);
+      setMenuPosition(null);
+    } else {
+      const rect = (e.target as HTMLElement).getBoundingClientRect();
+      setOpenMenuId(id);
+      setMenuPosition({ x: rect.right, y: rect.bottom });
+    }
   };
 
   const handleViewDetail = (id: string) => {
@@ -51,20 +58,17 @@ export default function AppraisalTable() {
     setLoading(true);
 
     try {
-      // 🔹 Find selected customer object
       const customer = customers.find((c) => c._id === selectedCustomerId);
 
-      // 🔹 Create new memo (backend will enrich it with summaries)
       await axios.post("http://localhost:5000/memos/create", {
         loan_id: customer.loan_id,
         customer_name: customer.customer_name,
         status: "Draft",
-        created_by: "CurrentUser", // later replace with auth user
+        created_by: "CurrentUser",
         last_updated: new Date().toISOString(),
         loan_purpose_table: "To be filled",
       });
 
-      // refresh memos
       await fetchMemos();
 
       setLoading(false);
@@ -96,7 +100,6 @@ export default function AppraisalTable() {
             <tr>
               {[
                 "Memo ID",
-                // "Customer Name",
                 "Loan ID",
                 "Loan Purpose",
                 "Created By",
@@ -110,69 +113,60 @@ export default function AppraisalTable() {
                   {header}
                 </th>
               ))}
+              <th />
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
             {memos.map((memo: any, idx) => (
-              <tr
-                key={memo._id}
-                className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}
-              >
+              <tr key={memo._id} className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}>
                 <td className="px-4 py-3 text-sm text-gray-700">
                   {memo.memo_id || memo._id}
                 </td>
-                {/* <td className="px-4 py-3 text-sm text-gray-700">
-                  {memo.customer_name}
-                </td> */}
-                <td className="px-4 py-3 text-sm text-gray-700">
-                  {memo.loan_id}
-                </td>
+                <td className="px-4 py-3 text-sm text-gray-700">{memo.loan_id}</td>
                 <td className="px-4 py-3 text-sm text-gray-700">
                   {memo.loan_purpose_table}
                 </td>
-                <td className="px-4 py-3 text-sm text-gray-700">
-                  {memo.created_by}
-                </td>
-                <td className="px-4 py-3 text-sm text-gray-700">
-                  {memo.last_updated}
-                </td>
-                <td className="px-4 py-3 text-sm text-gray-700">
-                  {memo.status}
-                </td>
-                <td className="px-4 py-3 text-right relative">
+                <td className="px-4 py-3 text-sm text-gray-700">{memo.created_by}</td>
+                <td className="px-4 py-3 text-sm text-gray-700">{memo.last_updated}</td>
+                <td className="px-4 py-3 text-sm text-gray-700">{memo.status}</td>
+                <td className="px-4 py-3 text-right">
                   <span
-                    onClick={() => toggleMenu(memo._id)}
+                    onClick={(e) => toggleMenu(memo._id, e)}
                     className="cursor-pointer px-2 py-1 rounded hover:bg-gray-200"
                   >
                     &#8942;
                   </span>
-                  {openMenuId === memo._id && (
-                    <div className="absolute right-0 mt-2 w-44 bg-white border rounded-lg shadow-lg z-50">
-                      {[
-                        "View Detail",
-                        "Export",
-                        "Edit",
-                        "Submit",
-                        "Change Status",
-                      ].map((action) => (
-                        <div
-                          key={action}
-                          onClick={() =>
-                            action === "View Detail" && handleViewDetail(memo._id)
-                          }
-                          className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
-                        >
-                          {action}
-                        </div>
-                      ))}
-                    </div>
-                  )}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      {/* Floating Menu rendered via Portal */}
+      {openMenuId && menuPosition &&
+        createPortal(
+          <div
+            className="fixed z-50 bg-white border rounded-lg shadow-lg"
+            style={{ top: menuPosition.y + 4, left: menuPosition.x - 150, width: "150px" }}
+          >
+            {["View Detail", "Export", "Edit", "Submit", "Change Status"].map(
+              (action) => (
+                <div
+                  key={action}
+                  onClick={() => {
+                    if (action === "View Detail") handleViewDetail(openMenuId);
+                    setOpenMenuId(null);
+                  }}
+                  className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+                >
+                  {action}
+                </div>
+              )
+            )}
+          </div>,
+          document.body
+        )}
 
       {/* Modal */}
       {showModal && (
@@ -187,11 +181,13 @@ export default function AppraisalTable() {
               onChange={(e) => setSelectedCustomerId(e.target.value)}
             >
               <option value="">-- Select Customer --</option>
-              {customers.map((c) => (
-                <option key={c._id} value={c._id}>
-                  {c.customer_name} – {c.loan_id}
-                </option>
-              ))}
+              {customers
+                .filter((c) => c.status === "Approved") // ✅ Only approved customers
+                .map((c) => (
+                  <option key={c._id} value={c._id}>
+                    {c.customer_name} – {c.loan_id}
+                  </option>
+                ))}
             </select>
 
             {loading ? (

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const CQ = require("../models/Cq")
+const CQ = require("../models/Cq");
 
 // 🔹 Get ALL QC entries (minimal info for listing)
 router.get('/', async (req, res) => {
@@ -25,42 +25,38 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-
-
-// GET data from a chosen collection for a CQ record
-router.get('/:id/collection/:collectionName', async (req, res) => {
-  const { id, collectionName } = req.params;
-
+// 🔹 Approve a CQ record (set status = "approved")
+router.put('/:id/approve', async (req, res) => {
   try {
-    const cqEntry = await CQ.findById(id);
-    if (!cqEntry) {
-      return res.status(404).json({ error: 'Customer not found' });
-    }
+    const updated = await CQ.findByIdAndUpdate(
+      req.params.id,
+      { status: 'Approved' },
+      { new: true }
+    );
 
-    const { customer_name, loan_id } = cqEntry;
+    if (!updated) return res.status(404).json({ error: 'Customer not found' });
 
-    // Use native MongoDB collection access
-    const collection = mongoose.connection.collection(collectionName);
-    if (!collection) {
-      return res.status(400).json({ error: 'Collection not found' });
-    }
-
-    // Try to find matching document
-    const record =
-      (await collection.findOne({ customer_name, loan_id })) ||
-      (await collection.findOne({ borrower: customer_name, loan_id }));
-
-    if (!record) {
-      return res.json({});
-    }
-
-    res.json(record);
+    res.json({ message: 'Customer approved successfully', record: updated });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to fetch data from collection' });
+    res.status(500).json({ error: 'Failed to update status' });
   }
 });
 
+// 🔹 Reject a CQ record (set status = "rejected")
+router.put('/:id/reject', async (req, res) => {
+  try {
+    const updated = await CQ.findByIdAndUpdate(
+      req.params.id,
+      { status: 'Rejected' },
+      { new: true }
+    );
 
+    if (!updated) return res.status(404).json({ error: 'Customer not found' });
+
+    res.json({ message: 'Customer rejected successfully', record: updated });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update status' });
+  }
+});
 
 module.exports = router;

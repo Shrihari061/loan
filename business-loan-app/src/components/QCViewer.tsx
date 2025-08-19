@@ -41,10 +41,10 @@ type FinancialData = {
 
 type QCEntry = {
   _id: string;
-  // customer_id?: string;
   customer_name?: string;
   loan_id?: string;
   documents: DocumentEntry[];
+  status?: string;
 };
 
 const QCViewer: React.FC = () => {
@@ -65,8 +65,6 @@ const QCViewer: React.FC = () => {
       .map(([k, v]) => `${k}: ${v}`)
       .join('\n');
   };
-
-
 
   const textToExtractedData = (text: string) => {
     const lines = text.split('\n');
@@ -90,9 +88,7 @@ const QCViewer: React.FC = () => {
     const baseValue = 50000; // Base value for calculations
     const yearMultiplier = 1 + (year - 2022) * 0.15; // 15% growth per year
     
-    // Different multipliers based on item type
     let itemMultiplier = 1;
-    
     if (documentType === 'balance_sheet') {
       if (itemName.includes('Assets')) itemMultiplier = 2.5;
       else if (itemName.includes('Equity')) itemMultiplier = 1.8;
@@ -138,26 +134,20 @@ const QCViewer: React.FC = () => {
   useEffect(() => {
     if (!selectedCollection || !id || !data) return;
     
-    // First, find the analysis entry using the loan_id
     fetch(`http://localhost:5000/analysis/`)
       .then((res) => res.json())
       .then((analysisEntries) => {
-        // Find the analysis entry that matches the loan_id
         const matchingEntry = analysisEntries.find((entry: AnalysisEntry) => entry.loan_id === data.loan_id);
-        
         if (!matchingEntry) {
           setTextValue('No financial analysis data found for this loan.');
           return;
         }
-        
-        // Now fetch the specific analysis data using the correct ID
         return fetch(`http://localhost:5000/analysis/${matchingEntry._id}`);
       })
       .then((res) => res?.json())
       .then((data) => {
         if (!data) return;
         
-        // Add dummy values to the financial data for display
         const dataWithDummyValues = {
           ...data,
           balance_sheet: (data.balance_sheet || []).map((item: FinancialItem) => ({
@@ -181,7 +171,6 @@ const QCViewer: React.FC = () => {
         };
         setFinancialData(dataWithDummyValues);
         
-        // Map collection names to data arrays
         let selectedData: FinancialItem[] = [];
         switch (selectedCollection) {
           case 'Balance Sheet Summary':
@@ -218,34 +207,23 @@ const QCViewer: React.FC = () => {
     }
     setData(newData);
     setIsEditing(false);
-
-    // Persist changes to backend if needed
-    // fetch(`http://localhost:5000/cq/${data._id}/document/...`, { method: 'PUT', ... })
   };
 
   const handleSaveFinancialData = async () => {
     if (!financialData || !data) return;
-    
     try {
-      // Find the analysis entry ID
       const analysisResponse = await fetch(`http://localhost:5000/analysis/`);
       const analysisEntries = await analysisResponse.json();
       const matchingEntry = analysisEntries.find((entry: AnalysisEntry) => entry.loan_id === data.loan_id);
-      
       if (!matchingEntry) {
         alert('No matching analysis entry found to save changes.');
         return;
       }
-
-      // Save the updated financial data
       const response = await fetch(`http://localhost:5000/analysis/${matchingEntry._id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(financialData),
       });
-
       if (response.ok) {
         alert('Financial data saved successfully!');
         setIsFinancialDataEdited(false);
@@ -258,29 +236,58 @@ const QCViewer: React.FC = () => {
     }
   };
 
+  // 🔹 Handle Approve/Decline actions
+  const handleApprove = async () => {
+    if (!data) return;
+    try {
+      const res = await fetch(`http://localhost:5000/cq/${data._id}/approve`, { method: 'PUT' });
+      if (res.ok) {
+        const updated = await res.json();
+        setData(updated.record);
+        alert('Customer approved successfully!');
+      } else {
+        alert('Failed to approve.');
+      }
+    } catch (err) {
+      console.error('Error approving:', err);
+      alert('Error approving.');
+    }
+  };
+
+  const handleDecline = async () => {
+    if (!data) return;
+    try {
+      const res = await fetch(`http://localhost:5000/cq/${data._id}/reject`, { method: 'PUT' });
+      if (res.ok) {
+        const updated = await res.json();
+        setData(updated.record);
+        alert('Customer rejected successfully!');
+      } else {
+        alert('Failed to reject.');
+      }
+    } catch (err) {
+      console.error('Error rejecting:', err);
+      alert('Error rejecting.');
+    }
+  };
+
   const renderFinancialTable = (data: FinancialItem[]) => {
     if (!data || data.length === 0) {
       return <div className="text-gray-500">No data available</div>;
     }
 
-    // Get all unique years from the data
     const years = new Set<string>();
     data.forEach(item => {
       Object.keys(item).forEach(key => {
-        if (key.startsWith('FY')) {
-          years.add(key);
-        }
+        if (key.startsWith('FY')) years.add(key);
       });
     });
     const yearArray = Array.from(years).sort();
 
     const handleCellEdit = (itemIndex: number, year: string, value: string) => {
       if (!financialData) return;
-      
       const newFinancialData = { ...financialData };
       let targetArray: FinancialItem[] = [];
-      
-      // Determine which array to update based on selected collection
       switch (selectedCollection) {
         case 'Balance Sheet Summary':
           targetArray = newFinancialData.balance_sheet;
@@ -292,9 +299,7 @@ const QCViewer: React.FC = () => {
           targetArray = newFinancialData.cash_flow;
           break;
       }
-      
       if (targetArray[itemIndex]) {
-        // Convert value to number if possible, otherwise keep as string
         const numValue = parseFloat(value);
         targetArray[itemIndex][year] = isNaN(numValue) ? value : numValue;
         setFinancialData(newFinancialData);
@@ -340,8 +345,6 @@ const QCViewer: React.FC = () => {
             ))}
           </tbody>
         </table>
-        
-        {/* Footnote */}
         <div className="mt-4 text-sm text-gray-600 italic">
           The values displayed above are those extracted to calculate the ratios.
         </div>
@@ -358,9 +361,9 @@ const QCViewer: React.FC = () => {
       {/* Header */}
       <div className="border-b pb-4">
         <h2 className="text-xl font-semibold mb-2">Customer Details</h2>
-        {/* <p><strong>Customer ID:</strong> {data.customer_id ?? '-'}</p> */}
         <p><strong>Customer Name:</strong> {data.customer_name ?? '-'}</p>
         <p><strong>Loan ID:</strong> {data.loan_id ?? '-'}</p>
+        <p><strong>Status:</strong> {data.status ?? 'Pending'}</p>
       </div>
 
       {/* Collection dropdown */}
@@ -383,9 +386,7 @@ const QCViewer: React.FC = () => {
         <label className="block mb-2 font-medium">
           {selectedCollection ? selectedCollection : 'Extracted Data'}:
         </label>
-        
         {selectedCollection ? (
-          // Show financial data table
           <div className="mt-4">
             {financialData && renderFinancialTable(
               selectedCollection === 'Balance Sheet Summary' ? financialData.balance_sheet || [] :
@@ -407,7 +408,6 @@ const QCViewer: React.FC = () => {
             </div>
           </div>
         ) : (
-          // Show textarea for extracted data
           <>
             <textarea
               className="w-full h-64 border rounded p-3 font-mono text-sm"
@@ -439,8 +439,18 @@ const QCViewer: React.FC = () => {
       {/* Bottom-right buttons */}
       <div className="fixed bottom-4 right-6 flex space-x-4 z-50">
         <button className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Cancel</button>
-        <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Decline</button>
-        <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Approve</button>
+        <button
+          onClick={handleDecline}
+          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+        >
+          Decline
+        </button>
+        <button
+          onClick={handleApprove}
+          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+        >
+          Approve
+        </button>
       </div>
     </div>
   );
