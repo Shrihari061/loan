@@ -107,7 +107,7 @@ export default function MemoDetails() {
 
       {/* Top Section (basic info) */}
       <div className="bg-white p-6 shadow mt-4 mx-6 rounded-xl">
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 gap-6">
           <div>
             <p className="text-sm text-gray-500">Customer Name</p>
             <p className="font-medium">{String(memo.customer_name)}</p>
@@ -117,68 +117,8 @@ export default function MemoDetails() {
             <p className="font-medium">{String(memo.lead_id)}</p>
           </div>
           <div>
-            <p className="text-sm text-gray-500">Loan Type</p>
-            <p className="font-medium">{String(memo.loan_type || 'N/A')}</p>
-          </div>
-          <div>
             <p className="text-sm text-gray-500">Created By</p>
             <p className="font-medium">{String(memo.created_by)}</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-500">Created at</p>
-            <p className="font-medium">
-              {(() => {
-                try {
-                  const date = new Date(String(memo.createdAt || memo.created_at));
-                  if (isNaN(date.getTime())) {
-                    return String(memo.createdAt || memo.created_at || 'N/A');
-                  }
-                  
-                  // Convert to IST (UTC+5:30)
-                  const istDate = new Date(date.getTime() + (5.5 * 60 * 60 * 1000));
-                  
-                  // Format as YYYY-MM-DD HH:MM:SS
-                  const year = istDate.getFullYear();
-                  const month = String(istDate.getMonth() + 1).padStart(2, '0');
-                  const day = String(istDate.getDate()).padStart(2, '0');
-                  const hours = String(istDate.getHours()).padStart(2, '0');
-                  const minutes = String(istDate.getMinutes()).padStart(2, '0');
-                  const seconds = String(istDate.getSeconds()).padStart(2, '0');
-                  
-                  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-                } catch (error) {
-                  return String(memo.createdAt || memo.created_at || 'N/A');
-                }
-              })()}
-            </p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-500">Updated at</p>
-            <p className="font-medium">
-              {(() => {
-                try {
-                  const date = new Date(String(memo.updatedAt || memo.updated_at || memo.last_updated));
-                  if (isNaN(date.getTime())) {
-                    return String(memo.updatedAt || memo.updated_at || memo.last_updated || 'N/A');
-                  }
-                  
-                  // Convert to IST (UTC+5:30)
-                  const istDate = new Date(date.getTime() + (5.5 * 60 * 60 * 1000));
-                  
-                  // Format as YYYY-MM-DD HH:MM:SS
-                  const year = istDate.getFullYear();
-                  const month = String(istDate.getMonth() + 1).padStart(2, '0');
-                  const day = String(istDate.getDate()).padStart(2, '0');
-                  const hours = String(istDate.getHours()).padStart(2, '0');
-                  const minutes = String(istDate.getMinutes()).padStart(2, '0');
-                  const seconds = String(istDate.getSeconds()).padStart(2, '0');
-                  
-                  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-                } catch (error) {
-                  return String(memo.updatedAt || memo.updated_at || memo.last_updated || 'N/A');
-                }
-              })()}
-            </p>
           </div>
           <div>
             <p className="text-sm text-gray-500">Status</p>
@@ -275,6 +215,78 @@ export default function MemoDetails() {
           </div>
         )}
 
+        {/* Loan Type */}
+        {memo.loan_type && (
+          <div className="bg-white p-6 shadow rounded-xl">
+            <h3 className="text-lg font-semibold mb-4">Loan Type</h3>
+            <p className="text-gray-700">{String(memo.loan_type)}</p>
+          </div>
+        )}
+
+        {/* Created at */}
+        {(memo.createdAt || memo.created_at) && (
+          <div className="bg-white p-6 shadow rounded-xl">
+            <h3 className="text-lg font-semibold mb-4">Created at</h3>
+            <p className="text-gray-700">
+              {(() => {
+                try {
+                  const date = new Date(String(memo.createdAt || memo.created_at));
+                  if (isNaN(date.getTime())) {
+                    return String(memo.createdAt || memo.created_at || 'N/A');
+                  }
+                  
+                  // Convert to IST (UTC+5:30)
+                  const istDate = new Date(date.getTime() + (5.5 * 60 * 60 * 1000));
+                  
+                  // Format as YYYY-MM-DD HH:MM:SS
+                  const year = istDate.getFullYear();
+                  const month = String(istDate.getMonth() + 1).padStart(2, '0');
+                  const day = String(istDate.getDate()).padStart(2, '0');
+                  const hours = String(istDate.getHours()).padStart(2, '0');
+                  const minutes = String(istDate.getMinutes()).padStart(2, '0');
+                  const seconds = String(istDate.getSeconds()).padStart(2, '0');
+                  
+                  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+                } catch {
+                  return String(memo.createdAt || memo.created_at || 'N/A');
+                }
+              })()}
+            </p>
+          </div>
+        )}
+
+        {/* Updated at */}
+        {(memo.updatedAt || memo.updated_at || memo.last_updated) && (
+          <div className="bg-white p-6 shadow rounded-xl">
+            <h3 className="text-lg font-semibold mb-4">Updated at</h3>
+            <p className="text-gray-700">
+              {(() => {
+                try {
+                  const date = new Date(String(memo.updatedAt || memo.updated_at || memo.last_updated));
+                  if (isNaN(date.getTime())) {
+                    return String(memo.updatedAt || memo.updated_at || memo.last_updated || 'N/A');
+                  }
+                  
+                  // Convert to IST (UTC+5:30)
+                  const istDate = new Date(date.getTime() + (5.5 * 60 * 60 * 1000));
+                  
+                  // Format as YYYY-MM-DD HH:MM:SS
+                  const year = istDate.getFullYear();
+                  const month = String(istDate.getMonth() + 1).padStart(2, '0');
+                  const day = String(istDate.getDate()).padStart(2, '0');
+                  const hours = String(istDate.getHours()).padStart(2, '0');
+                  const minutes = String(istDate.getMinutes()).padStart(2, '0');
+                  const seconds = String(istDate.getSeconds()).padStart(2, '0');
+                  
+                  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+                } catch {
+                  return String(memo.updatedAt || memo.updated_at || memo.last_updated || 'N/A');
+                }
+              })()}
+            </p>
+          </div>
+        )}
+
         {/* Catch-all for any extra fields not explicitly listed */}
         {Object.entries(memo).map(([key, value]) => {
           if (
@@ -296,6 +308,9 @@ export default function MemoDetails() {
               "attachments",      // 🚫 exclude attachments
               "created_at",       // 🚫 exclude created_at
               "updated_at",       // 🚫 exclude updated_at
+              "createdAt",        // 🚫 exclude createdAt (shown separately)
+              "updatedAt",        // 🚫 exclude updatedAt (shown separately)
+              "loan_type",        // 🚫 exclude loan_type (shown separately)
               "__v",
             ].includes(key)
           ) {
