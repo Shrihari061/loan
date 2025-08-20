@@ -163,12 +163,6 @@ const LeadManagement: React.FC = () => {
         return { backgroundColor: '#f3f4f6', color: '#6b7280', border: '1px solid #d1d5db' };
       case 'submitted':
         return { backgroundColor: '#dcfce7', color: '#166534', border: '1px solid #bbf7d0' };
-      case 'under review':
-        return { backgroundColor: '#fef3c7', color: '#92400e', border: '1px solid #fde68a' };
-      case 'approved':
-        return { backgroundColor: '#dbeafe', color: '#1e40af', border: '1px solid #bfdbfe' };
-      case 'rejected':
-        return { backgroundColor: '#fee2e2', color: '#991b1b', border: '1px solid #fecaca' };
       default:
         return { backgroundColor: '#f3f4f6', color: '#374151', border: '1px solid #d1d5db' };
     }
@@ -240,9 +234,6 @@ const LeadManagement: React.FC = () => {
             <option value="All">All</option>
             <option value="Draft">Draft</option>
             <option value="Submitted">Submitted</option>
-            <option value="Under Review">Under Review</option>
-            <option value="Approved">Approved</option>
-            <option value="Rejected">Rejected</option>
           </select>
         </div>
         
@@ -263,16 +254,10 @@ const LeadManagement: React.FC = () => {
           >
             <option value="">Loan Type</option>
             <option value="All">All</option>
-            <option value="Capacity Expansion">Capacity Expansion</option>
-            <option value="Term Loan Refinance">Term Loan Refinance</option>
-            <option value="Warehouse Construction">Warehouse Construction</option>
-            <option value="Franchise Expansion">Franchise Expansion</option>
-            <option value="Working Capital">Working Capital</option>
-            <option value="Equipment Purchase">Equipment Purchase</option>
-            <option value="Office Expansion">Office Expansion</option>
-            <option value="Fleet Expansion">Fleet Expansion</option>
-            <option value="Software Development">Software Development</option>
-            <option value="Store Renovation">Store Renovation</option>
+            <option value="BG">BG</option>
+            <option value="OD/CC">OD/CC</option>
+            <option value="Term Loan">Term Loan</option>
+            <option value="LC">LC</option>
           </select>
         </div>
       </div>

@@ -35,16 +35,31 @@ export default function Step2({
   });
 
   const [signatureFile, setSignatureFile] = useState<File | null>(null);
+  const [filesAddedInSession, setFilesAddedInSession] = useState<File[]>([]);
 
   const openModal = (docLabel: string) => {
     setSelectedDocument(docLabel);
     setIsModalOpen(true);
+    setFilesAddedInSession([]);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedDocument(null);
     setSelectedYear("");
+  };
+
+  const handleCancel = () => {
+    if (selectedDocument && filesAddedInSession.length > 0) {
+      // Remove files that were added in this session
+      setUploadedFiles((prev) => {
+        const currentFiles = prev[selectedDocument] || [];
+        const filesToKeep = currentFiles.filter(file => !filesAddedInSession.includes(file));
+        return { ...prev, [selectedDocument]: filesToKeep };
+      });
+    }
+    setFilesAddedInSession([]);
+    closeModal();
   };
 
   const handleFileChange = (files: FileList | null) => {
@@ -55,6 +70,7 @@ export default function Step2({
       ...prev,
       [selectedDocument]: prev[selectedDocument] ? [...prev[selectedDocument], ...newFiles] : newFiles,
     }));
+    setFilesAddedInSession(prev => [...prev, ...newFiles]);
   };
 
   const removeFile = (docLabel: string, index: number) => {
@@ -319,7 +335,7 @@ export default function Step2({
               {/* Modal Actions */}
               <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
                 <button
-                  onClick={closeModal}
+                  onClick={handleCancel}
                   className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                 >
                   Cancel

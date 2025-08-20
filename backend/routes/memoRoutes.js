@@ -99,5 +99,31 @@ router.post('/create', async (req, res) => {
   }
 });
 
+// 🔹 Update memo status (approve/decline)
+router.put('/:id', async (req, res) => {
+  try {
+    const { status } = req.body;
+    
+    if (!status || !['Approved', 'Declined'].includes(status)) {
+      return res.status(400).json({ message: 'Invalid status. Must be "approved" or "declined"' });
+    }
+
+    const memo = await Memo.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true }
+    );
+
+    if (!memo) {
+      return res.status(404).json({ message: 'Memo not found' });
+    }
+
+    res.json(memo);
+  } catch (error) {
+    console.error("Error updating memo status:", error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
 
 module.exports = router;

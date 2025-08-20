@@ -6,6 +6,7 @@ import axios from "axios";
 export default function MemoDetails() {
   const { id } = useParams<{ id: string }>();
   const [memo, setMemo] = useState<Record<string, unknown> | null>(null);
+  const [isActionDisabled, setIsActionDisabled] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,6 +15,44 @@ export default function MemoDetails() {
       .then((res) => setMemo(res.data))
       .catch((err) => console.error("Error fetching memo:", err));
   }, [id]);
+
+  const handleApprove = async () => {
+    if (!id) return;
+    
+    setIsActionDisabled(true);
+    try {
+      await axios.put(`http://localhost:5000/memos/${id}`, {
+        status: 'Approved'
+      });
+      
+      // Update local state
+      setMemo(prev => prev ? { ...prev, status: 'Approved' } : null);
+      alert('Memo approved successfully!');
+    } catch (error) {
+      console.error('Error approving memo:', error);
+      alert('Failed to approve memo. Please try again.');
+      setIsActionDisabled(false);
+    }
+  };
+
+  const handleDecline = async () => {
+    if (!id) return;
+    
+    setIsActionDisabled(true);
+    try {
+      await axios.put(`http://localhost:5000/memos/${id}`, {
+        status: 'Declined'
+      });
+      
+      // Update local state
+      setMemo(prev => prev ? { ...prev, status: 'Declined' } : null);
+      alert('Memo declined successfully!');
+    } catch (error) {
+      console.error('Error declining memo:', error);
+      alert('Failed to decline memo. Please try again.');
+      setIsActionDisabled(false);
+    }
+  };
 
   if (!memo) {
     return <div className="p-6">Loading memo data...</div>;
@@ -70,10 +109,6 @@ export default function MemoDetails() {
       <div className="bg-white p-6 shadow mt-4 mx-6 rounded-xl">
         <div className="grid grid-cols-3 gap-6">
           <div>
-            <p className="text-sm text-gray-500">Memo ID</p>
-            <p className="font-medium">{String(memo.memo_id || memo._id)}</p>
-          </div>
-          <div>
             <p className="text-sm text-gray-500">Customer Name</p>
             <p className="font-medium">{String(memo.customer_name)}</p>
           </div>
@@ -82,12 +117,68 @@ export default function MemoDetails() {
             <p className="font-medium">{String(memo.lead_id)}</p>
           </div>
           <div>
+            <p className="text-sm text-gray-500">Loan Type</p>
+            <p className="font-medium">{String(memo.loan_type || 'N/A')}</p>
+          </div>
+          <div>
             <p className="text-sm text-gray-500">Created By</p>
             <p className="font-medium">{String(memo.created_by)}</p>
           </div>
           <div>
-            <p className="text-sm text-gray-500">Last Updated</p>
-            <p className="font-medium">{String(memo.last_updated)}</p>
+            <p className="text-sm text-gray-500">Created at</p>
+            <p className="font-medium">
+              {(() => {
+                try {
+                  const date = new Date(String(memo.createdAt || memo.created_at));
+                  if (isNaN(date.getTime())) {
+                    return String(memo.createdAt || memo.created_at || 'N/A');
+                  }
+                  
+                  // Convert to IST (UTC+5:30)
+                  const istDate = new Date(date.getTime() + (5.5 * 60 * 60 * 1000));
+                  
+                  // Format as YYYY-MM-DD HH:MM:SS
+                  const year = istDate.getFullYear();
+                  const month = String(istDate.getMonth() + 1).padStart(2, '0');
+                  const day = String(istDate.getDate()).padStart(2, '0');
+                  const hours = String(istDate.getHours()).padStart(2, '0');
+                  const minutes = String(istDate.getMinutes()).padStart(2, '0');
+                  const seconds = String(istDate.getSeconds()).padStart(2, '0');
+                  
+                  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+                } catch (error) {
+                  return String(memo.createdAt || memo.created_at || 'N/A');
+                }
+              })()}
+            </p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Updated at</p>
+            <p className="font-medium">
+              {(() => {
+                try {
+                  const date = new Date(String(memo.updatedAt || memo.updated_at || memo.last_updated));
+                  if (isNaN(date.getTime())) {
+                    return String(memo.updatedAt || memo.updated_at || memo.last_updated || 'N/A');
+                  }
+                  
+                  // Convert to IST (UTC+5:30)
+                  const istDate = new Date(date.getTime() + (5.5 * 60 * 60 * 1000));
+                  
+                  // Format as YYYY-MM-DD HH:MM:SS
+                  const year = istDate.getFullYear();
+                  const month = String(istDate.getMonth() + 1).padStart(2, '0');
+                  const day = String(istDate.getDate()).padStart(2, '0');
+                  const hours = String(istDate.getHours()).padStart(2, '0');
+                  const minutes = String(istDate.getMinutes()).padStart(2, '0');
+                  const seconds = String(istDate.getSeconds()).padStart(2, '0');
+                  
+                  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+                } catch (error) {
+                  return String(memo.updatedAt || memo.updated_at || memo.last_updated || 'N/A');
+                }
+              })()}
+            </p>
           </div>
           <div>
             <p className="text-sm text-gray-500">Status</p>
@@ -151,7 +242,7 @@ export default function MemoDetails() {
           </div>
         )}
 
-        {/* Security Offered */}
+        {/* Security Offered
         {memo.security_offered && typeof memo.security_offered === 'object' && (
           <div className="bg-white p-6 shadow rounded-xl">
             <h3 className="text-lg font-semibold mb-4">Security Offered</h3>
@@ -174,7 +265,7 @@ export default function MemoDetails() {
               </div>
             )}
           </div>
-        )}
+        )} }
 
         {/* Recommendation */}
         {Array.isArray(memo.recommendation) && memo.recommendation.length > 0 && (
@@ -222,6 +313,32 @@ export default function MemoDetails() {
             </div>
           );
         })}
+      </div>
+
+      {/* Action Buttons */}
+      <div className="mt-8 mx-6 flex gap-4 justify-end">
+        <button
+          onClick={handleApprove}
+          disabled={isActionDisabled || String(memo.status) === 'Approved' || String(memo.status) === 'Declined'}
+          className={`px-6 py-3 rounded-lg font-medium transition-colors ${
+            isActionDisabled || String(memo.status) === 'Approved' || String(memo.status) === 'Declined'
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              : 'bg-green-600 text-white hover:bg-green-700'
+          }`}
+        >
+          {String(memo.status) === 'Approved' ? 'Approved' : 'Approve'}
+        </button>
+        <button
+          onClick={handleDecline}
+          disabled={isActionDisabled || String(memo.status) === 'Approved' || String(memo.status) === 'Declined'}
+          className={`px-6 py-3 rounded-lg font-medium transition-colors ${
+            isActionDisabled || String(memo.status) === 'Approved' || String(memo.status) === 'Declined'
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              : 'bg-red-600 text-white hover:bg-red-700'
+          }`}
+        >
+          {String(memo.status) === 'Declined' ? 'Declined' : 'Decline'}
+        </button>
       </div>
     </div>
   );
