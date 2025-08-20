@@ -1,0 +1,12 @@
+pytesseract
+Pillow
+openai
+python-dotenv
+pandas
+numpy
+scikit-learn
+argparse
+yfinance
+openpyxl
+PyPDF2
+pymongo

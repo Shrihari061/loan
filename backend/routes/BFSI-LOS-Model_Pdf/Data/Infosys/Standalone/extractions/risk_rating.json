@@ -1,0 +1,50 @@
+{
+  "weights": {
+    "financial_strength": 50.0,
+    "management_quality": 30.0,
+    "industry_risk": 20.0
+  },
+  "financial_strength": {
+    "per_ratio_max": 12.5,
+    "scores": {
+      "DSCR": {
+        "value": 26.3037,
+        "threshold": "<1.2",
+        "red_flag": false,
+        "score": 12.5,
+        "max": 12.5
+      },
+      "Debt/Equity": {
+        "value": 0.0396,
+        "threshold": ">2.0",
+        "red_flag": false,
+        "score": 12.5,
+        "max": 12.5
+      },
+      "PAT Margin": {
+        "value": 18.7185,
+        "threshold": "<10%",
+        "red_flag": false,
+        "score": 12.5,
+        "max": 12.5
+      },
+      "Current Ratio": {
+        "value": 2.4296,
+        "threshold": "<1.0",
+        "red_flag": false,
+        "score": 12.5,
+        "max": 12.5
+      }
+    },
+    "subtotal": 50.0
+  },
+  "management_quality": {
+    "score": 19.18
+  },
+  "industry_risk": {
+    "score": 0.5
+  },
+  "total_score": 69.68,
+  "risk_bucket": "Medium Risk",
+  "red_flags": []
+}

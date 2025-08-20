@@ -1,0 +1,177 @@
+{
+  "Current Assets": {
+    "matched_value": "Total current assets",
+    "value_latest": 77168,
+    "source": "bs",
+    "confidence": 0.95,
+    "unit": "₹ crore"
+  },
+  "Current Liabilities": {
+    "matched_value": "Current liabilities",
+    "value_latest": 31762,
+    "source": "bs",
+    "confidence": 0.95,
+    "unit": "₹ crore"
+  },
+  "Inventory": {
+    "matched_value": null,
+    "value_latest": null,
+    "source": null,
+    "confidence": 0.0,
+    "unit": null
+  },
+  "Total Debt": {
+    "matched_value": "Current Lease Liabilities + Non Current Lease Liabilities",
+    "value_latest": 3459,
+    "source": "bs",
+    "confidence": 0.7,
+    "unit": "₹ crore"
+  },
+  "Shareholder's Equity": {
+    "matched_value": "Equity share capital + Other equity",
+    "value_latest": 87332,
+    "source": "bs",
+    "confidence": 0.95,
+    "unit": "₹ crore"
+  },
+  "EBIT": {
+    "matched_value": null,
+    "value_latest": null,
+    "source": null,
+    "confidence": 0.0,
+    "unit": null
+  },
+  "Interest Expense": {
+    "matched_value": "Finance cost",
+    "value_latest": 221,
+    "source": "pl",
+    "confidence": 0.95,
+    "unit": "₹ crore"
+  },
+  "Debt Obligations": {
+    "matched_value": "Total Current Liabilities / Total Assets",
+    "value_latest": 0.2542,
+    "source": "bs",
+    "confidence": 0.7,
+    "unit": "ratio"
+  },
+  "Net Operating Income": {
+    "matched_value": null,
+    "value_latest": null,
+    "source": null,
+    "confidence": 0.0,
+    "unit": null
+  },
+  "Net Profit": {
+    "matched_value": "Profit for the year",
+    "value_latest": 25568,
+    "source": "pl",
+    "confidence": 0.95,
+    "unit": "₹ crore"
+  },
+  "Revenue": {
+    "matched_value": "Revenue from operations",
+    "value_latest": 136592,
+    "source": "pl",
+    "confidence": 0.95,
+    "unit": "₹ crore"
+  },
+  "Total Assets": {
+    "matched_value": "Total assets",
+    "value_latest": 124936,
+    "source": "bs",
+    "confidence": 0.95,
+    "unit": "₹ crore"
+  },
+  "Total Current Liabilities": {
+    "matched_value": "Total current liabilities",
+    "value_latest": 31762,
+    "source": "bs",
+    "confidence": 0.95,
+    "unit": "₹ crore"
+  },
+  "EBITDA": {
+    "matched_value": null,
+    "value_latest": null,
+    "source": null,
+    "confidence": 0.0,
+    "unit": null
+  },
+  "COGS": {
+    "matched_value": null,
+    "value_latest": null,
+    "source": null,
+    "confidence": 0.0,
+    "unit": null
+  },
+  "Average Inventory": {
+    "matched_value": null,
+    "value_latest": null,
+    "source": null,
+    "confidence": 0.0,
+    "unit": null
+  },
+  "Receivables": {
+    "matched_value": "Trade receivables",
+    "value_latest": 26413,
+    "source": "bs",
+    "confidence": 0.95,
+    "unit": "₹ crore"
+  },
+  "Payables": {
+    "matched_value": "Trade payables",
+    "value_latest": 2728,
+    "source": "bs",
+    "confidence": 0.95,
+    "unit": "₹ crore"
+  },
+  "Sales": {
+    "matched_value": "Revenue from operations",
+    "value_latest": 136592,
+    "source": "pl",
+    "confidence": 0.95,
+    "unit": "₹ crore"
+  },
+  "Purchases": {
+    "matched_value": null,
+    "value_latest": null,
+    "source": null,
+    "confidence": 0.0,
+    "unit": null
+  },
+  "Current Debt": {
+    "matched_value": "Current Lease Liabilities",
+    "value_latest": 765,
+    "source": "bs",
+    "confidence": 0.95,
+    "unit": "₹ crore"
+  },
+  "Long Term Debt": {
+    "matched_value": "Non-current Lease Liabilities",
+    "value_latest": 2694,
+    "source": "bs",
+    "confidence": 0.95,
+    "unit": "₹ crore"
+  },
+  "Capital Lease Obligations": {
+    "matched_value": "Lease liabilities",
+    "value_latest": 3459,
+    "source": "bs",
+    "confidence": 0.95,
+    "unit": "₹ crore"
+  },
+  "Depreciation": {
+    "matched_value": "Depreciation and amortization expenses",
+    "value_latest": 2619,
+    "source": "pl",
+    "confidence": 0.95,
+    "unit": "₹ crore"
+  },
+  "Principal": {
+    "matched_value": "Payment of Lease liabilities",
+    "value_latest": 859,
+    "source": "cf",
+    "confidence": 0.95,
+    "unit": "₹ crore"
+  }
+}

@@ -1,0 +1,5 @@
+python run_pipeline.py Data `
+  --mongo-uri "mongodb+srv://shriharir:shriharir@cluster0.orh9uhk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0" `
+  --mongo-db "LOMAS" `
+  --mongo-collection "leadd" `
+  --mongo-query '{"business_name":"Vdedanth Textiles Pvt Ltd"}'

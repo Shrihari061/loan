@@ -1,0 +1,22 @@
+{
+  "DSCR": {
+    "value": 26.3037,
+    "threshold": "<1.2",
+    "red_flag": false
+  },
+  "Debt/Equity": {
+    "value": 0.0396,
+    "threshold": ">2.0",
+    "red_flag": false
+  },
+  "PAT Margin": {
+    "value": 18.7185,
+    "threshold": "<10%",
+    "red_flag": false
+  },
+  "Current Ratio": {
+    "value": 2.4296,
+    "threshold": "<1.0",
+    "red_flag": false
+  }
+}

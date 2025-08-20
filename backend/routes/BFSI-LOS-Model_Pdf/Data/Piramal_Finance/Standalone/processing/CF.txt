@@ -1,0 +1,99 @@
+
+
+===== PAGE 1 / 2 =====
+Annual Report 2024-2572
+Standalone Statement of Cash Flow for the year ended March 31, 2025
+(Currency : Rs in lakhs)
+ For the year ended 
+ March 31, 2025  For the year ended 
+ March 31, 2024 
+A. Cash flow from operating activities
+Profit / (loss) before tax after exceptional items  5,245  (354,880)
+Adjustments:
+Realised gain on sale of treasury investments  (5,910)  (4,780)
+Interest income from fixed deposits  (10,147 )  (7,000)
+Realised gain on sale of subsidiaries  (2,052)  - 
+Unrealised loss/(gain) on fair valuation of loans and advances / investments  47,435  100,072 
+Regulatory provision on AIF  -  165,768 
+Gain on pre-termination of lease  (501)  (201)
+Impairment allowances/(reversals) on financial instruments  (117,594)  (66,632)
+Interest cost on lease payment  4,115  3,373 
+Finance costs expenses  437,823  360,369 
+Finance cost paid  (432,574)  (361,467)
+Net loss on derecognition of financial instruments  225,585  301,619 
+Gain on sale of property, plant and equipment  (6,341)  (67)
+Depreciation and amortisation  19,295  15,511 
+Cash generated from operations before working capital changes  164,379  151,685 
+Decrease / (Increase) in loans  (1,239,557)  (962,755)
+Decrease / (Increase) in investments  129,522  188,855 
+Decrease / (Increase) in other receivables  898  (4,186)
+Decrease / (Increase) in other financial assets  (16,172)  (11,983)
+Decrease / (Increase) in other non financial assets  ( 7,638)  (3,744)
+Increase / (Decrease) in trade payables  2,084  6,277 
+Increase / (Decrease) in provisions  1,929  1,439 
+Increase / (Decrease) in other financial liabilities  (25,141)  (44,380)
+Increase / (Decrease) in other non financial liabilities  (5,891)  22,267 
+Cash generated from / (used in) operations  (995,587)  (656,525)
+Income taxes refund (net)  28,061  22,351 
+Net cash generated from / (used in) operating activities (a)  (967,526)  (634,174)
+B Cash flow from investing activities
+Purchase of property, plant and equipment & other intangible assets  (9,796)  (25,808)
+Sale proceeds from property, plant and equipment  23,138  3,127 
+Investments in subsidiaries  (150)  (14,585)
+Purchase of treasury investments  (28,787,169)  ( 7,661,0 45)
+Sale of treasury investments  28,684,029  77,14,582 
+Proceeds from sale of subsidiaries  2,089  - 
+Interest received from fixed deposits  10,262  7,000 
+Investment in fixed deposits  (586,372)  (122,326)
+Redemption from fixed deposits  577,736  92,289 
+Net cash generated from / (used in) investing activities (b)  (86,233)  (6,766)
+
+===== PAGE 2 / 2 =====
+Piramal Finance Limited
+Annual Report 2024-2573
+(Currency : Rs in lakhs)
+ For the year ended 
+ March 31, 2025  For the year ended 
+ March 31, 2024 
+C Cash flow from financing activities
+Payment of lease liabilities  (10,546)  ( 7,739)
+Borrowings taken during the year  3,342,673  2,541,500 
+Borrowings repaid during the year  (2,251,814)  (2,090,998)
+Issue of equity shares  160,000  200,000 
+Net cash generated from / (used in) financing activities (c)  1,240,313  642,763 
+Net increase/(decrease) in cash and cash equivalents (a+b+c)  186,554  1,823 
+Cash and cash equivalents as at beginning of the year  193,356  191,533 
+Cash and cash equivalents as at end of the year  379,910  193,356 
+Cash and Cash Equivalents Comprise of:
+Cash on hand *  -  - 
+Balances with banks in current accounts  239,818  193,356 
+Fixed deposits (with original maturity less than 3 months)  140,092  - 
+ 379,910  193,356 
+*Amount below 0.50 lakhs has been rounded off.
+The standalone statement of cash flow has been prepared under the ‘Indirect Method’ set out in Indian Accounting Standard-7, “Statement of 
+cash flow”
+The notes referred to above forms an integral part of the financial statements.
+As per our report of even date attached.
+For Singhi & Co.
+Chartered Accountants
+Firm Registration No. 302049EFor T R Chadha & Co LLP
+Chartered Accountants
+Firm's Registration No:  
+006711N/N500028For and on behalf of the Board of Directors of 
+Piramal Finance Limited
+(formerly known as Piramal Capital & Housing Finance Limited)  
+(CIN - U64910MH1984PLC032639)
+ 
+Ravi Kapoor
+Partner
+Membership No: 040404Hitesh Garg
+Partner
+Membership No: 502955Jairam Sridharan
+Managing Director
+DIN: 05165390Ajay Piramal
+Chairman
+DIN: 00028116
+New York, USA
+Mumbai, May 6, 2025  Vikash Singhla 
+ Chief Financial Officer Urmila Rao
+Company Secretary

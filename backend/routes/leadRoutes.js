@@ -1,8 +1,8 @@
 const express = require('express');
 const multer = require('multer');
 const Lead = require('../models/Lead');
-
 const router = express.Router();
+const { spawn } = require('child_process');
 
 // Multer setup - store files in memory to save directly in MongoDB
 const storage = multer.memoryStorage();
@@ -50,23 +50,15 @@ router.post(
           return res.status(400).json({ error: 'Invalid JSON in data field' });
         }
       } else {
-        // If JSON is sent normally (application/json without files)
         leadData = req.body;
       }
 
       // -------------------- Ensure proper structured fields --------------------
       if (leadData.address && typeof leadData.address === 'string') {
-        try {
-          leadData.address = JSON.parse(leadData.address);
-        } catch {}
+        try { leadData.address = JSON.parse(leadData.address); } catch {}
       }
-
       if (leadData.directors && typeof leadData.directors === 'string') {
-        try {
-          leadData.directors = JSON.parse(leadData.directors);
-        } catch {
-          leadData.directors = [];
-        }
+        try { leadData.directors = JSON.parse(leadData.directors); } catch { leadData.directors = []; }
       }
 
       leadData.aml_company_status = leadData.aml_company_status || 'idle';
@@ -82,7 +74,6 @@ router.post(
           fileData: file.buffer
         }));
       }
-
       if (req.files?.signature?.[0]) {
         leadData.signature = {
           fileName: req.files.signature[0].originalname,
@@ -92,9 +83,38 @@ router.post(
         };
       }
 
+      // -------------------- Save to MongoDB --------------------
       const newLead = new Lead(leadData);
       await newLead.save();
+
+      // -------------------- Run Python model --------------------
+      console.log("Starting Python model...");
+
+      const pythonProcess = spawn('python', ['./routes/BFSI-LOS-Model_Pdf/run_pipeline.py']);
+
+      pythonProcess.stdout.on('data', (data) => {
+        console.log(`[Python stdout]: ${data.toString()}`);
+      });
+
+      pythonProcess.stderr.on('data', (data) => {
+        console.error(`[Python stderr]: ${data.toString()}`);
+      });
+
+      pythonProcess.on('spawn', () => {
+        console.log("Python process spawned successfully");
+      });
+
+      pythonProcess.on('close', (code) => {
+        console.log(`Python process exited with code ${code}`);
+      });
+
+      pythonProcess.on('error', (err) => {
+        console.error('Failed to start Python process:', err);
+      });
+
+      // -------------------- Send response --------------------
       res.status(201).json(newLead);
+
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: 'Failed to create lead' });

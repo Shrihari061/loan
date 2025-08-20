@@ -13,6 +13,12 @@ interface RiskEntry {
   updatedAt?: string;
 }
 
+interface QCRecord {
+  customer_name: string;
+  lead_id: string;
+  status: string;
+}
+
 const RiskTable: React.FC = () => {
   const [riskData, setRiskData] = useState<RiskEntry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -24,20 +30,35 @@ const RiskTable: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchRiskData = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/risk/");
-        if (Array.isArray(response.data)) setRiskData(response.data);
-        else setRiskData([]);
+        const [riskRes, qcRes] = await Promise.all([
+          axios.get("http://localhost:5000/risk/"),
+          axios.get("http://localhost:5000/cq/")
+        ]);
+
+        const qcData: QCRecord[] = qcRes.data;
+
+        // Filter risk entries by Approved QC status
+        const approvedRiskData = (Array.isArray(riskRes.data) ? riskRes.data : []).filter(entry =>
+          qcData.some(
+            qc =>
+              qc.customer_name === entry.customer_name &&
+              qc.lead_id === entry.lead_id &&
+              qc.status === "Approved"
+          )
+        );
+
+        setRiskData(approvedRiskData);
       } catch (err) {
-        console.error("Error fetching risk data:", err);
+        console.error("Error fetching risk or QC data:", err);
         setRiskData([]);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchRiskData();
+    fetchData();
   }, []);
 
   const getRiskPillColor = (risk?: string) => {

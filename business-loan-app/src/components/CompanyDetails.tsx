@@ -141,7 +141,7 @@ const CompanyDetails: React.FC = () => {
         
         {/* Footnote */}
         <div className="mt-4 text-sm text-gray-600 italic">
-          The values displayed above are those extracted to calculate the ratios.
+          The values displayed above are those extracted to calculate the ratios in scope.
         </div>
       </div>
     );

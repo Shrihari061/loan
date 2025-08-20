@@ -13,6 +13,12 @@ type CompanyData = {
   ratio_health: string;
 };
 
+type QCRecord = {
+  customer_name: string;
+  lead_id: string;
+  status: string;
+};
+
 const CompanyTable: React.FC = () => {
   const [data, setData] = useState<CompanyData[]>([]);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
@@ -20,10 +26,33 @@ const CompanyTable: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get('http://localhost:5000/analysis/')
-      .then((res) => setData(res.data))
-      .catch((err) => console.error('Error fetching data:', err));
+    // Fetch both company data and QC data in parallel
+    const fetchData = async () => {
+      try {
+        const [companyRes, qcRes] = await Promise.all([
+          axios.get('http://localhost:5000/analysis/'),
+          axios.get('http://localhost:5000/cq/')
+        ]);
+
+        const qcData: QCRecord[] = qcRes.data;
+
+        // Filter only approved records based on customer_name & lead_id
+        const approvedData = companyRes.data.filter((company: CompanyData) =>
+          qcData.some(
+            (qc) =>
+              qc.customer_name === company.company_name &&
+              qc.lead_id === company.lead_id &&
+              qc.status === 'Approved'
+          )
+        );
+
+        setData(approvedData);
+      } catch (err) {
+        console.error('Error fetching data:', err);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const toggleMenu = (id: string, e: React.MouseEvent) => {
@@ -62,15 +91,7 @@ const CompanyTable: React.FC = () => {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              {[
-                'Company Name',
-                'Lead ID',
-                'Net Worth',
-                'Debt to Equity',
-                'DSCR',
-                'Year Range',
-                'Ratio Health',
-              ].map((header) => (
+              {['Company Name','Lead ID','Net Worth','Debt to Equity','DSCR','Year Range','Ratio Health'].map((header) => (
                 <th
                   key={header}
                   className="px-4 py-3 text-left text-sm font-medium text-gray-600 uppercase tracking-wider"
@@ -87,27 +108,13 @@ const CompanyTable: React.FC = () => {
           <tbody className="divide-y divide-gray-200">
             {data.map((company, idx) => (
               <tr key={company._id} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">
-                  {company.company_name}
-                </td>
-                <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">
-                  {company.lead_id}
-                </td>
-                <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">
-                  {formatNumber(company.net_worth)}
-                </td>
-                <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">
-                  {company.debt_to_equity}
-                </td>
-                <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">
-                  {company.dscr}
-                </td>
-                <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">
-                  {company.year_range}
-                </td>
-                <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">
-                  {company.ratio_health}
-                </td>
+                <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">{company.company_name}</td>
+                <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">{company.lead_id}</td>
+                <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">{formatNumber(company.net_worth)}</td>
+                <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">{company.debt_to_equity}</td>
+                <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">{company.dscr}</td>
+                <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">{company.year_range}</td>
+                <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">{company.ratio_health}</td>
                 <td className="px-4 py-3 text-right">
                   <span
                     onClick={(e) => toggleMenu(company._id, e)}
@@ -122,7 +129,6 @@ const CompanyTable: React.FC = () => {
         </table>
       </div>
 
-      {/* Floating menu outside table */}
       {openMenuId && menuPosition && (
         <div
           className="fixed z-50 bg-white border rounded-xl shadow-lg w-48 transform -translate-x-full"
