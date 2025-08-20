@@ -83,7 +83,7 @@ router.post('/create', async (req, res) => {
 
       // 🔹 Dynamic normalization
       financial_summary_and_ratios: normalizeFinancialSummary(summaryObj["financial_summary_&_ratios"]),
-      // loan_purpose: normalizeToArray(summaryObj.loan_purpose),
+      loan_purpose: normalizeToArray(summaryObj.loan_purpose),
       swot_analysis: summaryObj.swot_analysis,
       security_offered: summaryObj.security_offered,
       recommendation: normalizeToArray(summaryObj.recommendation),
