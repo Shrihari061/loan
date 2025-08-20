@@ -40,22 +40,22 @@ const Dashboard: React.FC = () => {
   // ---- Top Cards ----
   const topCards = [
     {
-      title: 'Total Disbursement',
+      title: 'Total Amount Disbursed (in Crores)',
       value: data.top_cards.total_disbursement.value,
       change: data.top_cards.total_disbursement.change
     },
     {
-      title: 'Companies in Draft',
+      title: 'Applications in Progress',
       value: data.top_cards.companies_in_draft.value,
       change: data.top_cards.companies_in_draft.change
     },
     {
-      title: 'Financial Capture Stage',
+      title: 'Applications Approved',
       value: data.top_cards.financial_capture_stage.value,
       change: data.top_cards.financial_capture_stage.change
     },
     {
-      title: 'Rejected Companies',
+      title: 'Applications Rejected',
       value: data.top_cards.rejected_companies.value,
       change: data.top_cards.rejected_companies.change
     }
@@ -89,14 +89,18 @@ const Dashboard: React.FC = () => {
         {topCards.map((card, idx) => (
           <div key={idx} className="bg-white shadow rounded-lg p-5">
             <h3 className="text-sm font-medium text-gray-500">{card.title}</h3>
-            <p className="text-2xl font-semibold text-gray-900 mt-2">{card.value.toLocaleString()}</p>
-            <p
-              className={`text-sm mt-1 ${card.change >= 0 ? 'text-green-600' : 'text-red-600'
-                }`}
-            >
-              {card.change >= 0 ? '+' : ''}
-              {card.change}% from last month
+            <p className="text-2xl font-semibold text-gray-900 mt-2">
+              {card.title === 'Total Amount Disbursed (in Crores)' ? `₹${card.value.toLocaleString()}` : card.value.toLocaleString()}
             </p>
+            {card.title === 'Total Amount Disbursed (in Crores)' && (
+              <p
+                className={`text-sm mt-1 ${card.change >= 0 ? 'text-green-600' : 'text-red-600'
+                  }`}
+              >
+                {card.change >= 0 ? '+' : ''}
+                {card.change}% from last month
+              </p>
+            )}
           </div>
         ))}
       </div>
@@ -225,12 +229,12 @@ const Dashboard: React.FC = () => {
         <p className="text-lg font-semibold">{data.applications_summary.in_progress}</p>
       </div>
       <div className="bg-gray-50 p-4 rounded shadow-sm text-center">
-        <h3 className="text-xs text-gray-500">Rejected</h3>
-        <p className="text-lg font-semibold">{data.applications_summary.rejected}</p>
-      </div>
-      <div className="bg-gray-50 p-4 rounded shadow-sm text-center">
         <h3 className="text-xs text-gray-500">Approved</h3>
         <p className="text-lg font-semibold">{data.applications_summary.approved}</p>
+      </div>
+      <div className="bg-gray-50 p-4 rounded shadow-sm text-center">
+        <h3 className="text-xs text-gray-500">Rejected</h3>
+        <p className="text-lg font-semibold">{data.applications_summary.rejected}</p>
       </div>
     </div>
 

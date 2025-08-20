@@ -297,7 +297,7 @@ export default function Step1({
       {/* Manual Entry Fields */}
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="text-sm font-medium">Contact Person</label>
+          <label className="text-sm font-medium">Assigned To</label>
           <select
             value={contactPerson}
             onChange={(e) => handleContactPersonChange(e.target.value)}
@@ -308,6 +308,15 @@ export default function Step1({
               <option key={person} value={person}>{person}</option>
             ))}
           </select>
+        </div>
+        <div>
+          <label className="text-sm font-medium">Designation</label>
+          <input
+            value={designation}
+            onChange={(e) => setDesignation(e.target.value)}
+            className="w-full border px-3 py-2 rounded"
+            placeholder="Designation will auto-populate"
+          />
         </div>
         <div>
           <label className="text-sm font-medium">Phone Number</label>
@@ -341,15 +350,7 @@ export default function Step1({
             className="w-full border px-3 py-2 rounded"
           />
         </div>
-        <div>
-          <label className="text-sm font-medium">Designation</label>
-          <input
-            value={designation}
-            onChange={(e) => setDesignation(e.target.value)}
-            className="w-full border px-3 py-2 rounded"
-            placeholder="Designation will auto-populate"
-          />
-        </div>
+        
       </div>
 
       {/* Save & Continue */}

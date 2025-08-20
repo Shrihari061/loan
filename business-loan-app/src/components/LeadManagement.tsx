@@ -230,7 +230,6 @@ const LeadManagement: React.FC = () => {
               paddingRight: '32px'
             }}
           >
-            <option value="">Status</option>
             <option value="All">All</option>
             <option value="Draft">Draft</option>
             <option value="Submitted">Submitted</option>
