@@ -1,45 +1,21 @@
 {
   "financial_summary_&_ratios": {
-    "Revenue and Profitability": "The company reported a revenue of ₹136,592 crore and a net profit of ₹25,568 crore, reflecting a strong PAT margin of 18.72%, well above the 10% threshold.",
-    "Operational Efficiency": "Receivables stand at ₹26,413 crore, while payables are ₹2,728 crore. Inventory data is unavailable, limiting insights into inventory turnover.",
-    "Leverage and Liquidity": "The Debt/Equity ratio is low at 0.0396, indicating minimal leverage. The Current Ratio is healthy at 2.43, suggesting strong liquidity. DSCR is exceptionally high at 26.30, showcasing robust debt servicing capacity."
+    "Revenue and Profitability": "- Revenue increased by 5.9% to ₹136,592 crore in 2025.\n- PAT decreased slightly to ₹25,568 crore in 2025, with a PAT margin of 18.72% (above the 10% threshold).\n- EBITDA margin stands strong at 27.86%, indicating healthy operational profitability.",
+    "Operational efficiency": "- Accounts receivable days improved to 70.58, well within the threshold of 90 days.\n- Asset turnover ratio is 1.09, reflecting efficient use of assets to generate revenue.\n- Accounts payable days are low at 9.4, indicating timely payments to creditors.",
+    "Leverage and liquidity": "- Debt/Equity ratio is 0.0, showcasing no reliance on debt financing.\n- Current ratio and quick ratio are both at 2.43, indicating strong liquidity.\n- DSCR is robust at 26.30, far exceeding the threshold of 1.2."
   },
-  "executive_summary": "The company demonstrates strong financial health with high profitability, low leverage, and excellent liquidity metrics. Classified as Medium Risk with no red flags, the overall risk tone is stable, supported by a total risk score of 69.68.",
-  "loan_purpose": {
-    "1": "To fund working capital requirements.",
-    "2": "To support expansion projects or capital expenditures.",
-    "3": "To refinance existing debt obligations.",
-    "4": "Total project cost and loan amount requested are not specified."
-  },
+  "executive_summary": "The company demonstrates strong financial health with a low-risk rating and no significant red flags apart from a minor concern regarding net profit margin. Revenue growth and operational efficiency are commendable, supported by robust liquidity and negligible leverage. The overall risk tone is positive, with the company positioned as a financially stable entity.",
+  "loan_purpose": "- Funding for capital expenditure and property, plant, and equipment.\n- Support for working capital requirements.\n- Investment in subsidiaries and acquisitions.\n- General corporate purposes.\n- Total loan requested: ₹XX crore (specific amount not provided).",
   "swot_analysis": {
-    "Strengths": [
-      "Strong profitability with a PAT margin of 18.72%.",
-      "Low leverage with a Debt/Equity ratio of 0.0396.",
-      "Excellent liquidity position with a Current Ratio of 2.43."
-    ],
-    "Weaknesses": [
-      "Lack of inventory data limits operational analysis.",
-      "Industry risk score is low at 0.5, indicating potential sectoral challenges."
-    ],
-    "Opportunities": [
-      "Potential for growth through expansion projects.",
-      "Ability to leverage strong financials for favorable financing terms."
-    ],
-    "Threats": [
-      "Macroeconomic uncertainties could impact revenue streams.",
-      "Dependence on receivables (₹26,413 crore) may pose collection risks."
-    ]
+    "Strengths": "- Strong liquidity position with ₹14,265 crore in cash and cash equivalents.\n- High profitability margins (PAT margin: 18.72%, EBITDA margin: 27.86%).\n- Debt-free capital structure with a Debt/Equity ratio of 0.0.",
+    "Weaknesses": "- Decline in PAT from ₹27,234 crore in 2024 to ₹25,568 crore in 2025.\n- Net profit margin flagged as below threshold, though still strong.\n- High dividend payouts impacting retained earnings.",
+    "Opportunities": "- Potential for further revenue growth in a stable industry.\n- Scope for improving operational efficiency and reducing costs.\n- Expansion through acquisitions and investments in subsidiaries.",
+    "Threats": "- Dependence on timely collections, with accounts receivable days at 70.58.\n- Industry risks and economic downturns could impact profitability.\n- Currency fluctuations affecting foreign income."
   },
   "security_offered": {
-    "Primary Security": "Details on primary security are not provided.",
-    "Collateral Security": "No information available on collateral security.",
-    "Personal Guarantees": "Details on personal guarantees are not specified."
+    "primary_security": "- Hypothecation of current and future receivables.\n- Charge on fixed assets and property, plant, and equipment.",
+    "collateral_security": "- Investments in subsidiaries and financial assets.\n- Cash and cash equivalents as additional security.",
+    "personal_guarantees": "- No personal guarantees indicated."
   },
-  "recommendation": {
-    "1": "Approve the loan request subject to detailed project cost and loan amount disclosure.",
-    "2": "Ensure receivables management to mitigate collection risks.",
-    "3": "Monitor industry-specific risks and their potential impact on operations.",
-    "4": "Obtain clarity on security offered to strengthen loan recovery mechanisms.",
-    "5": "Leverage the company's strong financial position for competitive loan terms."
-  }
+  "recommendation": "- Approve the loan request, considering the low-risk rating and strong financial metrics.\n- Monitor net profit margin trends and address the flagged concern.\n- Ensure timely collections to maintain accounts receivable efficiency.\n- Encourage prudent dividend payouts to retain earnings for growth.\n- Leverage the company’s strong liquidity for strategic investments and acquisitions."
 }

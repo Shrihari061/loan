@@ -5,46 +5,111 @@
     "industry_risk": 20.0
   },
   "financial_strength": {
-    "per_ratio_max": 12.5,
+    "per_ratio_max": 3.8462,
     "scores": {
       "DSCR": {
         "value": 26.3037,
         "threshold": "<1.2",
         "red_flag": false,
-        "score": 12.5,
-        "max": 12.5
+        "score": 3.8462,
+        "max": 3.8462
       },
       "Debt/Equity": {
-        "value": 0.0396,
+        "value": 0.0,
         "threshold": ">2.0",
         "red_flag": false,
-        "score": 12.5,
-        "max": 12.5
+        "score": 3.8462,
+        "max": 3.8462
       },
       "PAT Margin": {
         "value": 18.7185,
         "threshold": "<10%",
         "red_flag": false,
-        "score": 12.5,
-        "max": 12.5
+        "score": 3.8462,
+        "max": 3.8462
       },
       "Current Ratio": {
         "value": 2.4296,
         "threshold": "<1.0",
         "red_flag": false,
-        "score": 12.5,
-        "max": 12.5
+        "score": 3.8462,
+        "max": 3.8462
+      },
+      "Quick Ratio": {
+        "value": 2.4296,
+        "threshold": "<1.0",
+        "red_flag": false,
+        "score": 3.8462,
+        "max": 3.8462
+      },
+      "Interest Coverage": {
+        "value": 160.3665,
+        "threshold": "<1.5",
+        "red_flag": false,
+        "score": 3.8462,
+        "max": 3.8462
+      },
+      "Net profit Margin": {
+        "value": null,
+        "threshold": null,
+        "red_flag": true,
+        "score": 0.0,
+        "max": 3.8462
+      },
+      "Return on Assets": {
+        "value": 20.4649,
+        "threshold": "<5%",
+        "red_flag": false,
+        "score": 3.8462,
+        "max": 3.8462
+      },
+      "Return on equity": {
+        "value": 29.2768,
+        "threshold": "<8%",
+        "red_flag": false,
+        "score": 3.8462,
+        "max": 3.8462
+      },
+      "EBITDA Margin": {
+        "value": 27.864,
+        "threshold": "<10%",
+        "red_flag": false,
+        "score": 3.8462,
+        "max": 3.8462
+      },
+      "Accounts Receivable Days": {
+        "value": 70.5806,
+        "threshold": ">90",
+        "red_flag": false,
+        "score": 3.8462,
+        "max": 3.8462
+      },
+      "Accounts payable days": {
+        "value": 9.3995,
+        "threshold": ">30",
+        "red_flag": false,
+        "score": 3.8462,
+        "max": 3.8462
+      },
+      "Asset Turnover Ratio": {
+        "value": 1.0933,
+        "threshold": "<1.0",
+        "red_flag": false,
+        "score": 3.8462,
+        "max": 3.8462
       }
     },
-    "subtotal": 50.0
+    "subtotal": 46.1538
   },
   "management_quality": {
-    "score": 19.18
+    "score": 25
   },
   "industry_risk": {
-    "score": 0.5
+    "score": 15
   },
-  "total_score": 69.68,
-  "risk_bucket": "Medium Risk",
-  "red_flags": []
+  "total_score": 86.15,
+  "risk_bucket": "Low Risk",
+  "red_flags": [
+    "Net profit Margin below threshold"
+  ]
 }
