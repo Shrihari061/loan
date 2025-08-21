@@ -7,7 +7,7 @@
     "unit": "₹ crore"
   },
   "Current Liabilities": {
-    "matched_value": "Current liabilities",
+    "matched_value": "Total current liabilities",
     "value_latest": 31762,
     "source": "bs",
     "confidence": 0.95,

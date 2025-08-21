@@ -104,7 +104,7 @@ export default function AppraisalTable() {
                 "Lead ID",
                 "Loan Type", // ✅ show loan_type
                 "Created By",
-                "Last Updated",
+                // "Last Updated",
                 "Status",
               ].map((header) => (
                 <th
@@ -126,7 +126,7 @@ export default function AppraisalTable() {
                   {memo.loan_type || "N/A"} {/* ✅ directly display loan_type */}
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-700">{memo.created_by}</td>
-                <td className="px-4 py-3 text-sm text-gray-700">{memo.last_updated}</td>
+                {/* <td className="px-4 py-3 text-sm text-gray-700">{memo.last_updated}</td> */}
                 <td className="px-4 py-3 text-sm text-gray-700">{memo.status}</td>
                 <td className="px-4 py-3 text-right">
                   <span

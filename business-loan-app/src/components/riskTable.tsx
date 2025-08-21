@@ -11,6 +11,12 @@ interface RiskEntry {
   risk_bucket?: string;
   red_flags?: string[];
   updatedAt?: string;
+
+  // 🔹 keep extra fields but don’t render them in the table
+  weights?: any;
+  financial_strength?: any;
+  management_quality?: any;
+  industry_risk?: any;
 }
 
 interface QCRecord {

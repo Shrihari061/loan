@@ -8,44 +8,29 @@ const mongoose = require('mongoose');
 // Utility: safe division
 const safeDivide = (a, b) => (b && b !== 0 ? a / b : null);
 
-// Utility: format ratio health
-const getRatioHealth = (debtToEquity, dscr) => {
-  if (debtToEquity == null || dscr == null) return 'Unknown';
-  if (debtToEquity < 1 && dscr > 2) return 'Excellent';
-  if (debtToEquity < 2 && dscr > 1.5) return 'Good';
-  if (debtToEquity < 3 && dscr > 1) return 'Average';
-  return 'Poor';
-};
-
 // 🔹 Get ALL analysis data
 router.get('/', async (req, res) => {
   try {
     const docs = await ExtractedValues.find();
 
     const result = docs.map(doc => {
-      const shareholderEquity = doc["Shareholder's Equity"]?.value_latest || null;
-      const totalDebt = doc["Total Debt"]?.value_latest || null;
-      const ebit = doc["EBIT"]?.value_latest || null;
-      const depreciation = doc["Depreciation"]?.value_latest || 0;
-      const interest = doc["Interest Expense"]?.value_latest || null;
-      const principal = doc["Principal"]?.value_latest || 0;
+      const data = doc._doc; // access the actual fields
 
-      const debtToEquity = safeDivide(totalDebt, shareholderEquity);
-      const dscr = safeDivide((ebit ?? 0) + depreciation, (interest ?? 0) + principal);
-      const ratioHealth = getRatioHealth(debtToEquity, dscr);
+      const totalAssets = data["Total assets"]?.value_2025 || 0;
+      const totalNonCurrentLiab = data["Total non-current liabilities"]?.value_2025 || 0;
+      const totalCurrentLiab = data["Total current liabilities"]?.value_2025 || 0;
+
+      const netWorth = totalAssets - (totalNonCurrentLiab + totalCurrentLiab);
 
       return {
         _id: doc._id,
-        company_name: doc.customer_name || 'N/A',
-        lead_id: doc.lead_id || 'N/A',
+        company_name: data.customer_name || 'N/A',
+        lead_id: data.lead_id || 'N/A',
         last_updated: doc.updatedAt
           ? new Date(doc.updatedAt).toISOString().split('T')[0]
           : 'N/A',
-        net_worth: shareholderEquity,
-        debt_to_equity: debtToEquity !== null ? debtToEquity.toFixed(2) : 'N/A',
-        dscr: dscr !== null ? dscr.toFixed(2) : 'N/A',
-        year_range: '2024-2025',
-        ratio_health: ratioHealth
+        net_worth: netWorth,
+        year_range: '2024-2025'
       };
     });
 
@@ -56,7 +41,45 @@ router.get('/', async (req, res) => {
   }
 });
 
-// 🔹 Get SINGLE company details by customer_name & lead_id (verified)
+
+
+
+// 🔹 Get all ratios
+router.get('/ratios', async (req, res) => {
+  try {
+    const ratios = await Ratios.find();
+
+    const formatted = ratios.map((doc) => {
+      const ratiosArray = Object.entries(doc._doc)
+        .filter(([key]) => !['_id', 'customer_name', 'lead_id', '__v', 'createdAt', 'updatedAt', 'financial_strength'].includes(key))
+        .map(([key, val]) => ({
+          name: key,
+          value: val?.value ?? null,
+          threshold: val?.threshold ?? null,
+          red_flag: val?.red_flag ?? false,
+        }));
+
+      return {
+        _id: doc._id,
+        customer_name: doc.customer_name,
+        lead_id: doc.lead_id,
+        ratios: ratiosArray,
+        // ✅ include subtotal so frontend can calculate ratio_health
+        financial_strength: {
+          subtotal: doc.financial_strength?.subtotal ?? null
+        }
+      };
+    });
+
+    res.json(formatted);
+  } catch (err) {
+    console.error('Error fetching all ratios:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+
+// 🔹 Get SINGLE company details by ID
 router.get('/:id', async (req, res) => {
   try {
     const baseDoc = await ExtractedValues.findById(req.params.id, {
@@ -71,47 +94,36 @@ router.get('/:id', async (req, res) => {
     });
     if (!doc) return res.status(404).json({ message: 'Matching company not found' });
 
-    // ---------------- Ratios ----------------
-    const shareholderEquity = doc["Shareholder's Equity"]?.value_latest || null;
-    const totalDebt = doc["Total Debt"]?.value_latest || null;
-    const ebit = doc["EBIT"]?.value_latest || null;
-    const depreciation = doc["Depreciation"]?.value_latest || 0;
-    const interest = doc["Interest Expense"]?.value_latest || null;
-    const principal = doc["Principal"]?.value_latest || 0;
+    const data = doc._doc; // Access the actual fields
 
-    const debtToEquity = safeDivide(totalDebt, shareholderEquity);
-    const dscr = safeDivide((ebit ?? 0) + depreciation, (interest ?? 0) + principal);
-    const ratioHealth = getRatioHealth(debtToEquity, dscr);
-
-    // ---------------- Tables (recursive scan) ----------------
+    // ---------------- Tables ----------------
     const balance_sheet = [];
     const profit_loss = [];
     const cash_flow = [];
 
     const traverse = (obj, parentKey = '') => {
       Object.entries(obj).forEach(([key, value]) => {
-        if (value && typeof value === 'object') {
-          if (value.source) {
-            const itemObj = {
-              _id: `${doc._id}-${parentKey}${key}`,
-              item: key,
-              FY2022: value.FY2022 ?? null,
-              FY2023: value.FY2023 ?? null,
-              FY2024: value.FY2024 ?? null,
-              FY2025: value.value_latest ?? null
-            };
-            if (value.source === 'bs') balance_sheet.push(itemObj);
-            else if (value.source === 'pl') profit_loss.push(itemObj);
-            else if (value.source === 'cf') cash_flow.push(itemObj);
-          } else {
-            // Recurse deeper for nested fields
-            traverse(value, parentKey + key + '.');
-          }
+        if (value && typeof value === 'object' && value.source) {
+          const itemObj = {
+            _id: `${doc._id}-${parentKey}${key}`,
+            item: key,
+            FY2024: value.value_2024 ?? null,
+            FY2025: value.value_2025 ?? null
+          };
+          if (value.source === 'bs') balance_sheet.push(itemObj);
+          else if (value.source === 'pl') profit_loss.push(itemObj);
+          else if (value.source === 'cf') cash_flow.push(itemObj);
         }
       });
     };
 
-    traverse(doc._doc);
+    traverse(data);
+
+    // ---------------- Compute Net Worth ----------------
+    const totalAssets = data["Total assets"]?.value_2025 || 0;
+    const totalNonCurrentLiab = data["Total non-current liabilities"]?.value_2025 || 0;
+    const totalCurrentLiab = data["Total current liabilities"]?.value_2025 || 0;
+    const netWorth = totalAssets - (totalNonCurrentLiab + totalCurrentLiab);
 
     // ---------------- Response ----------------
     res.json({
@@ -121,11 +133,8 @@ router.get('/:id', async (req, res) => {
       last_updated: doc.updatedAt
         ? new Date(doc.updatedAt).toISOString().split('T')[0]
         : 'N/A',
-      net_worth: shareholderEquity,
-      debt_to_equity: debtToEquity !== null ? debtToEquity.toFixed(2) : 'N/A',
-      dscr: dscr !== null ? dscr.toFixed(2) : 'N/A',
-      year_range: '2022-2025',
-      ratio_health: ratioHealth,
+      net_worth: netWorth,
+      year_range: '2024-2025',
       balance_sheet,
       profit_loss,
       cash_flow
@@ -157,12 +166,12 @@ router.get('/:id/ratios', async (req, res) => {
 
     // Convert ratioDoc to array format for frontend
     const ratiosArray = Object.entries(ratioDoc._doc)
-      .filter(([key]) => !['_id', 'customer_name', 'lead_id', '__v'].includes(key))
+      .filter(([key]) => !['_id', 'customer_name', 'lead_id', '__v', 'createdAt', 'updatedAt'].includes(key))
       .map(([key, val]) => ({
         name: key,
-        value: val.value,
-        threshold: val.threshold,
-        red_flag: val.red_flag
+        value: val?.value ?? null,
+        threshold: val?.threshold ?? null,
+        red_flag: val?.red_flag ?? false
       }));
 
     res.json(ratiosArray);
@@ -176,7 +185,7 @@ router.get('/:id/ratios', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const { balance_sheet, profit_loss, cash_flow } = req.body;
-    
+
     // Find the document to update
     const doc = await ExtractedValues.findById(req.params.id);
     if (!doc) {
@@ -185,7 +194,7 @@ router.put('/:id', async (req, res) => {
 
     // Create update object
     const updateData = {};
-    
+
     // Helper function to update field values
     const updateField = (item, source) => {
       if (item.item && doc[item.item]) {
@@ -218,7 +227,7 @@ router.put('/:id', async (req, res) => {
 
     // Apply the updates
     await ExtractedValues.findByIdAndUpdate(req.params.id, updateData, { new: true });
-    
+
     res.json({ message: 'Analysis data updated successfully' });
   } catch (err) {
     console.error('Error updating analysis:', err);

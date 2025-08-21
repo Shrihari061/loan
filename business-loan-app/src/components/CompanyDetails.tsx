@@ -109,7 +109,7 @@ const CompanyDetails: React.FC = () => {
 
     return (
       <div className="mb-8">
-        <h2 className="text-lg font-semibold mb-2">{title}</h2>
+        <h2 className="text-lg font-semibold mb-2">{title}<span className="text-lg font-semibold mb-2"> (in crores)</span></h2>
         <div className="overflow-x-auto">
           <table className="min-w-full table-auto border border-gray-300">
             <thead className="bg-gray-100">
@@ -163,7 +163,7 @@ const CompanyDetails: React.FC = () => {
         </div>
         <div>
           <p><strong>Net Worth:</strong> ₹{formatValue(company.net_worth)}</p>
-          <p><strong>Ratio Health:</strong> {company.ratio_health}</p>
+          {/* <p><strong>Ratio Health:</strong> {company.ratio_health}</p> */}
         </div>
       </div>
 
