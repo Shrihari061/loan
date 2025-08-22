@@ -314,10 +314,10 @@ const QCViewer: React.FC = () => {
           <thead className="bg-gray-50">
             <tr>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                Item
+                Item <span className="text-xs font-normal text-gray-400 normal-case">(all amounts in Crores of Rs.)</span>
               </th>
               {yearArray.map(year => (
-                <th key={year} className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                <th key={year} className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
                   {year}
                 </th>
               ))}
@@ -332,12 +332,36 @@ const QCViewer: React.FC = () => {
                     : item.item}
                 </td>
                 {yearArray.map(year => (
-                  <td key={year} className="px-4 py-3 text-sm border-b">
+                  <td key={year} className="px-4 py-3 text-sm border-b text-right">
                     <input
                       type="text"
                       value={item[year] !== null && item[year] !== undefined ? item[year] : ''}
                       onChange={(e) => handleCellEdit(index, year, e.target.value)}
-                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-right"
+                      style={{ 
+                        color: (() => {
+                          const val = item[year];
+                          if (val === null || val === undefined) return '#111827';
+                          
+                          // Handle string values (including parentheses notation)
+                          if (typeof val === 'string') {
+                            // Check if it's in parentheses format like "(7)" or "(4670)"
+                            if (val.startsWith('(') && val.endsWith(')')) {
+                              return '#ef4444'; // Red for negative values in parentheses
+                            }
+                            // Try to convert to number
+                            const numVal = Number(val);
+                            if (!isNaN(numVal)) {
+                              return numVal < 0 ? '#ef4444' : '#111827';
+                            }
+                            return '#111827';
+                          }
+                          
+                          // Handle number values
+                          const numVal = Number(val);
+                          return isNaN(numVal) ? '#111827' : (numVal < 0 ? '#ef4444' : '#111827');
+                        })()
+                      }}
                       placeholder="-"
                     />
                   </td>
@@ -363,7 +387,7 @@ const QCViewer: React.FC = () => {
       <div className="border-b pb-4">
         <h2 className="text-xl font-semibold mb-2">Customer Details</h2>
         <p><strong>Customer Name:</strong> {data.customer_name ?? '-'}</p>
-        <p><strong>lead ID:</strong> {data.lead_id ?? '-'}</p>
+        <p><strong>Lead ID:</strong> {data.lead_id ?? '-'}</p>
         <p><strong>Status:</strong> {data.status ?? 'Pending'}</p>
       </div>
 
@@ -375,7 +399,7 @@ const QCViewer: React.FC = () => {
           value={selectedCollection}
           onChange={(e) => setSelectedCollection(e.target.value)}
         >
-          <option value=""> Choose the document</option>
+          <option value="" disabled>Choose the document</option>
           {collections.map((col) => (
             <option key={col} value={col}>{col}</option>
           ))}
@@ -384,9 +408,6 @@ const QCViewer: React.FC = () => {
 
       {/* Data display */}
       <div>
-        <label className="block mb-2 font-medium">
-          {selectedCollection ? selectedCollection : 'Extracted Data'}:
-        </label>
         {selectedCollection ? (
           <div className="mt-4">
             {financialData && renderFinancialTable(
@@ -409,55 +430,31 @@ const QCViewer: React.FC = () => {
             </div>
           </div>
         ) : (
-          <>
-            <textarea
-              className="w-full h-64 border rounded p-3 font-mono text-sm"
-              value={textValue}
-              readOnly={!isEditing}
-              onChange={(e) => setTextValue(e.target.value)}
-            />
-            <div className="mt-3 flex gap-2">
-              {!isEditing ? (
-                <button
-                  onClick={() => setIsEditing(true)}
-                  className="bg-yellow-500 text-white px-4 py-2 rounded"
-                >
-                  Edit
-                </button>
-              ) : (
-                <button
-                  onClick={handleSave}
-                  className="bg-blue-600 text-white px-4 py-2 rounded"
-                >
-                  Save
-                </button>
-              )}
-            </div>
-          </>
+          <div className="text-gray-500 text-center py-8">
+            Please select a document type to view the extracted data.
+          </div>
         )}
       </div>
 
-      {/* Bottom-right buttons */}
-      <div className="fixed bottom-4 right-6 flex space-x-4 z-50">
-        <button 
-          className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
-          onClick={() => navigate('/qc')} // ⬅️ redirect to QC Table
-        >
-          Cancel
-        </button>
-        <button
-          onClick={handleDecline}
-          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-        >
-          Decline
-        </button>
-        <button
-          onClick={handleApprove}
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-        >
-          Approve
-        </button>
-      </div>
+      {/* Bottom buttons - only show when document is selected */}
+      {selectedCollection && (
+        <div className="mt-8 flex justify-end space-x-4">
+          <button
+            onClick={handleDecline}
+            className="text-white px-4 py-2 rounded hover:opacity-90"
+            style={{ backgroundColor: '#00306E' }}
+          >
+            Decline
+          </button>
+          <button
+            onClick={handleApprove}
+            className="text-white px-4 py-2 rounded hover:opacity-90"
+            style={{ backgroundColor: '#0266F4' }}
+          >
+            Approve
+          </button>
+        </div>
+      )}
     </div>
   );
 };

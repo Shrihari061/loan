@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { FigtreeContainer, FigtreeTableContainer, SortableHeader, FigtreeTableCell, FigtreeTable } from './ReusableComponents';
+import { FigtreeContainer, FigtreeTableContainer, SortableHeader, FigtreeTableCell, FigtreeTable, NonSortableHeader } from './ReusableComponents';
 
 interface RiskEntry {
   _id: string;
@@ -147,7 +147,7 @@ const RiskTable: React.FC = () => {
               <SortableHeader>Lead ID</SortableHeader>
               <SortableHeader>Total Score</SortableHeader>
               <SortableHeader>Overall Risk</SortableHeader>
-              <SortableHeader sortable={false}>Actions</SortableHeader>
+              <NonSortableHeader>Actions</NonSortableHeader>
             </tr>
           </thead>
           <tbody>
@@ -184,7 +184,7 @@ const RiskTable: React.FC = () => {
                     {entry.risk_bucket ?? "—"}
                   </span>
                 </FigtreeTableCell>
-                <FigtreeTableCell style={{ textAlign: 'right' }}>
+                <FigtreeTableCell>
                   <button
                     onClick={(e) => toggleMenu(entry._id, e)}
                     style={{

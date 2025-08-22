@@ -122,10 +122,32 @@ const Dashboard: React.FC = () => {
     <div className="space-y-6" style={{
       width: '1440px',
       minHeight: '100vh',
-      margin: '0 auto',
-      padding: '24px',
+      margin: '-8px auto 0 auto',
+      padding: '0px 24px 24px 24px',
       backgroundColor: '#F8F6F1'
     }}>
+      {/* ---- Dashboard Title ---- */}
+      <div style={{
+        display: 'flex',
+        width: '100%',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        gap: '25px',
+        marginBottom: '16px'
+      }}>
+        <h1 style={{
+          color: '#1F1F1F',
+          fontFamily: 'Figtree',
+          fontSize: '24px',
+          fontStyle: 'normal',
+          fontWeight: '400',
+          lineHeight: '133.4%',
+          margin: 0
+        }}>
+          Dashboard
+        </h1>
+      </div>
+
       {/* ---- Greeting Section ---- */}
       <div style={{
         display: 'flex',

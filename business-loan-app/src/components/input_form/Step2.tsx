@@ -422,7 +422,7 @@ export default function Step2({
         </div>
 
         {/* Signature Upload */}
-        <div className="mb-6">
+        {/* <div className="mb-6">
           <label className="block text-gray-700 font-medium mb-2">
             Upload Signature of Authorised Signatory
           </label>
@@ -437,10 +437,11 @@ export default function Step2({
               Selected: {signatureFile.name}
             </p>
           )}
-        </div>
+        </div> */}
 
         {/* Final Declaration Checkbox */}
         <div className="mb-6">
+          <hr className="border-gray-300 my-4" />
           <label className="flex items-start gap-3">
             <input
               type="checkbox"

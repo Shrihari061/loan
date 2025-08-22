@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Bell, UserCircle2 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import axios from "axios";
 
 export default function MemoDetails() {
@@ -89,7 +89,7 @@ export default function MemoDetails() {
   return (
     <div className="flex flex-col w-full bg-gray-100 min-h-screen py-6">
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 shadow bg-white">
+      <div className="flex items-center px-6 py-4 shadow bg-white mx-6 rounded-xl">
         <div className="flex items-center gap-4">
           <button
             onClick={() => navigate(-1)}
@@ -334,8 +334,13 @@ export default function MemoDetails() {
           className={`px-6 py-3 rounded-lg font-medium transition-colors ${
             isActionDisabled || String(memo.status) === 'Approved' || String(memo.status) === 'Declined'
               ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'bg-green-600 text-white hover:bg-green-700'
+              : 'text-white hover:opacity-90'
           }`}
+          style={{
+            backgroundColor: isActionDisabled || String(memo.status) === 'Approved' || String(memo.status) === 'Declined'
+              ? '#d1d5db'
+              : '#0266F4'
+          }}
         >
           {String(memo.status) === 'Approved' ? 'Approved' : 'Approve'}
         </button>
@@ -345,8 +350,13 @@ export default function MemoDetails() {
           className={`px-6 py-3 rounded-lg font-medium transition-colors ${
             isActionDisabled || String(memo.status) === 'Approved' || String(memo.status) === 'Declined'
               ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'bg-red-600 text-white hover:bg-red-700'
+              : 'text-white hover:opacity-90'
           }`}
+          style={{
+            backgroundColor: isActionDisabled || String(memo.status) === 'Approved' || String(memo.status) === 'Declined'
+              ? '#d1d5db'
+              : '#00306E'
+          }}
         >
           {String(memo.status) === 'Declined' ? 'Declined' : 'Decline'}
         </button>

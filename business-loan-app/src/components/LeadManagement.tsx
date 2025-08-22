@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FigtreeContainer, FigtreeCard, FigtreeHeading, FigtreeTable, SortableHeader, NonSortableHeader } from './ReusableComponents';
-import { globalStyles } from '../styles/globalStyles';
+import { FigtreeContainer, FigtreeTable, SortableHeader, NonSortableHeader } from './ReusableComponents';
+import Input from './input_form/Input';
 
 interface Lead {
   _id: string;
@@ -15,13 +14,14 @@ interface Lead {
 }
 
 const LeadManagement: React.FC = () => {
-  const navigate = useNavigate();
+
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState('');
   const [loanTypeFilter, setLoanTypeFilter] = useState('');
   const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(null);
+  const [showLeadForm, setShowLeadForm] = useState(false);
 
   useEffect(() => {
     const fetchLeads = async () => {
@@ -140,8 +140,10 @@ const LeadManagement: React.FC = () => {
   ];
 
   const handleGenerateLead = () => {
-    navigate('/lead/new');
+    setShowLeadForm(true);
   };
+
+
 
   const handleMenuAction = (action: string, id: string) => {
     console.log(`${action} clicked for Lead ID: ${id}`);
@@ -222,6 +224,10 @@ const LeadManagement: React.FC = () => {
   };
 
   if (loading) return <div style={{ padding: '20px', textAlign: 'center' }}>Loading...</div>;
+
+  if (showLeadForm) {
+    return <Input />;
+  }
 
   return (
     <FigtreeContainer style={{ padding: '20px' }}>
@@ -396,7 +402,7 @@ const LeadManagement: React.FC = () => {
                     {lead.status}
                   </span>
                 </td>
-                <td style={{ ...cellStyle, position: 'relative', width: '40px' }}>
+                <td style={{ ...cellStyle, position: 'relative', width: '40px', textAlign: 'left' }}>
                   <button 
                     onClick={(e) => {
                       e.stopPropagation();
@@ -475,16 +481,7 @@ const LeadManagement: React.FC = () => {
   );
 };
 
-const headerStyle: React.CSSProperties = {
-  padding: '16px 20px',
-  textAlign: 'left',
-  fontSize: '13px',
-  fontWeight: '600',
-  color: '#374151',
-  textTransform: 'none',
-  letterSpacing: '0.02em',
-  borderBottom: '1px solid #e5e7eb'
-};
+
 
 const cellStyle: React.CSSProperties = {
   padding: '16px 20px',

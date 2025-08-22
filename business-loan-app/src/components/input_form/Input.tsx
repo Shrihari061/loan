@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Step1 from "./Step1";
 import Step2 from "./Step2";
+import requestQuoteIcon from "../../assets/request_quote.svg";
+import sourceEnvironmentIcon from "../../assets/source_environment.svg";
 
 interface LeadData {
   lead_id?: string;
@@ -38,7 +40,6 @@ const Input: React.FC = () => {
   });
 
   const handleNext = () => setCurrentStep((prev) => prev + 1);
-  const handleBack = () => setCurrentStep((prev) => prev - 1);
 
   const renderStepComponent = () => {
     switch (currentStep) {
@@ -52,47 +53,97 @@ const Input: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex bg-gray-100 font-sans">
+    <div className="min-h-screen flex bg-gray-50 font-sans">
       {/* Left Fixed Step Pane */}
-      <aside className="w-72 bg-white border-r shadow-sm p-6 sticky top-0 h-screen">
-        <h2 className="text-2xl font-bold text-blue-600 mb-8">CLOS</h2>
-        <ol className="space-y-8 text-gray-700 text-base">
+      <aside className="w-80 bg-white border-r border-gray-200 shadow-sm p-8 sticky top-0 h-screen">
+        <ol className="space-y-10 text-gray-700 text-base">
           <li
             onClick={() => setCurrentStep(1)}
-            className={`cursor-pointer ${currentStep === 1 ? "text-blue-600 font-semibold" : "text-gray-400"}`}
+            className={`cursor-pointer transition-colors ${currentStep === 1 ? "text-blue-600" : "text-gray-400"}`}
           >
-            <div className="flex items-center gap-2">
-              <span className={`w-5 h-5 rounded-full text-white text-sm flex items-center justify-center ${currentStep === 1 ? "bg-blue-600" : "bg-gray-300"}`}>
-                1
-              </span>
-              CIN Verification
+            <div className="flex items-start gap-4 relative">
+              <div 
+                className="flex items-center justify-center"
+                style={{
+                  width: '28px',
+                  height: '28px',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  aspectRatio: '1/1',
+                  borderRadius: '100px',
+                  border: '1px solid #0266F4',
+                  background: '#FFFFFF'
+                }}
+              >
+                <img 
+                  src={sourceEnvironmentIcon} 
+                  alt="Lead Generation" 
+                  className="w-4 h-4"
+                  style={{ filter: currentStep === 1 ? 'brightness(0) invert(0)' : 'brightness(0) invert(0.5)' }}
+                />
+              </div>
+              <div className="ml-4">
+                <div style={{ color: '#7D7D81', fontFamily: 'Figtree', fontSize: '16px', fontStyle: 'normal', fontWeight: '400', lineHeight: '133.4%' }}>
+                  Step 1
+                </div>
+                <div className={`font-semibold ${currentStep === 1 ? "text-blue-600" : "text-gray-400"}`}>
+                  Lead Generation
+                </div>
+                <p className="text-sm text-gray-500 mt-1 leading-relaxed">
+                  Enter basic company and contact details
+                </p>
+              </div>
             </div>
-            <p className="text-sm ml-7 text-gray-500">
-              Enter basic company and contact details
-            </p>
           </li>
 
           <li
             onClick={() => setCurrentStep(2)}
-            className={`cursor-pointer ${currentStep === 2 ? "text-blue-600 font-semibold" : "text-gray-400"}`}
+            className={`cursor-pointer transition-colors ${currentStep === 2 ? "text-blue-600" : "text-gray-400"}`}
           >
-            <div className="flex items-center gap-2">
-              <span className={`w-5 h-5 rounded-full text-white text-sm flex items-center justify-center ${currentStep === 2 ? "bg-blue-600" : "bg-gray-300"}`}>
-                2
-              </span>
-              Financial Entry & Review
+            <div className="flex items-start gap-4 relative">
+              <div 
+                className="flex items-center justify-center"
+                style={{
+                  width: '28px',
+                  height: '28px',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  aspectRatio: '1/1',
+                  borderRadius: '100px',
+                  border: '1px solid #0266F4',
+                  background: '#FFFFFF'
+                }}
+              >
+                <img 
+                  src={requestQuoteIcon} 
+                  alt="Financial Documents" 
+                  className="w-4 h-4"
+                  style={{ filter: currentStep === 2 ? 'brightness(0) invert(0)' : 'brightness(0) invert(0.5)' }}
+                />
+              </div>
+              <div className="ml-4">
+                <div style={{ color: '#7D7D81', fontFamily: 'Figtree', fontSize: '16px', fontStyle: 'normal', fontWeight: '400', lineHeight: '133.4%' }}>
+                  Step 2
+                </div>
+                <div className={`font-semibold ${currentStep === 2 ? "text-blue-600" : "text-gray-400"}`}>
+                  Financial & Statutory Document Uploads
+                </div>
+                <p className="text-sm text-gray-500 mt-1 leading-relaxed">
+                  Upload financials, tax returns, bank statements, and credit reports
+                </p>
+              </div>
             </div>
-            <p className="text-sm ml-7 text-gray-500">
-              Upload financial documents, review declarations, and submit
-              application
-            </p>
           </li>
+
+
         </ol>
       </aside>
 
       {/* Right Pane: Form Content */}
-      <main className="flex-1 p-10 overflow-y-auto bg-gray-100">
-        <div className="max-w-4xl mx-auto bg-white p-8 rounded shadow">
+      <main className="flex-1 p-8 overflow-y-auto bg-gray-50">
+        <div className="max-w-5xl mx-auto bg-white p-10 rounded-xl shadow-sm border border-gray-100">
           {renderStepComponent()}
         </div>
       </main>

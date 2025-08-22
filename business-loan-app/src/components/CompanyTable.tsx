@@ -152,7 +152,7 @@ const CompanyTable: React.FC = () => {
         <FigtreeTable style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ backgroundColor: '#f8f9fa', borderBottom: '1px solid #e5e7eb' }}>
-              {['Company Name','Lead ID','Net Worth','Debt to Equity','DSCR','Year Range','Ratio Health'].map((header) => (
+              {['Company Name','Lead ID','Net Worth','Debt to Equity','DSCR','Year Range'].map((header) => (
                 <NonSortableHeader key={header}>
 
                   {header}
@@ -180,8 +180,8 @@ const CompanyTable: React.FC = () => {
                 <FigtreeTableCell>{company.debt_to_equity}</FigtreeTableCell>
                 <FigtreeTableCell>{company.dscr}</FigtreeTableCell>
                 <FigtreeTableCell>{company.year_range}</FigtreeTableCell>
-                <FigtreeTableCell>{company.ratio_health}</FigtreeTableCell>
-                <FigtreeTableCell style={{ textAlign: 'right' }}>
+                {/* <FigtreeTableCell>{company.ratio_health}</FigtreeTableCell> */}
+                <FigtreeTableCell>
                   <button
 
                     onClick={(e) => toggleMenu(company._id, e)}

@@ -42,7 +42,7 @@ export default function Step1({
   const [contactPerson, setContactPerson] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [loanType, setLoanType] = useState<string>('');
-  const [loanAmount, setLoanAmount] = useState<number | undefined>();
+  const [loanAmount, setLoanAmount] = useState<string>('');
 
   const [contactPersonData] = useState<Array<{ name: string, phone: string, designation: string }>>([
   { name: 'Ashwini Shekhawat', phone: '+91-98765-43210', designation: 'RM' },
@@ -163,7 +163,7 @@ export default function Step1({
       contact_phone: phoneNumber,
       designation: designation,
       loan_type: loanType,
-      loan_amount: loanAmount,
+      loan_amount: loanAmount ? Number(loanAmount) : undefined,
       aml_company_status: amlCompanyStatus,
       aml_director_status: amlDirectorStatus,
     });
@@ -173,24 +173,27 @@ export default function Step1({
 
   return (
     <div className="w-full">
-      <h1 className="text-2xl font-bold mb-6 text-blue-700">Company Info & AML Check</h1>
+      <h1 className="text-3xl font-bold mb-8 text-gray-900">Lead Generation</h1>
 
       {/* CIN Entry */}
-      <div className="mb-6 flex items-end gap-4">
+      <div className="mb-8 flex items-end gap-4">
         <div className="flex-1">
-          <label className="block text-sm font-medium text-gray-700">CIN Number</label>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">Corporate Identification Number (CIN)</label>
           <input
             value={cin}
             onChange={(e) => handleCINChange(e.target.value)}
-            className="w-full border px-3 py-2 rounded shadow-sm"
+            className="w-full border border-gray-300 px-4 py-3 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Enter CIN"
           />
         </div>
         <button
           onClick={validateCIN}
-          className="bg-blue-600 text-white px-5 py-2 rounded shadow hover:bg-blue-700"
+          className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-sm hover:bg-blue-700 flex items-center gap-2 font-medium"
         >
-          Verify CIN
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+          Verify
         </button>
         {cinValid !== null && (
           <span className="text-sm font-semibold">
@@ -205,29 +208,29 @@ export default function Step1({
 
       {/* Company Details */}
       {companyDetails && (
-        <div className="grid grid-cols-2 gap-4 mb-6">
+        <div className="grid grid-cols-2 gap-6 mb-8">
           <div>
-            <label className="text-sm font-medium">Company Name</label>
-            <input value={companyDetails.name} readOnly className="w-full border px-3 py-2 rounded bg-gray-100" />
+            <label className="text-sm font-semibold text-gray-700 mb-2">Company Name</label>
+            <input value={companyDetails.name} readOnly className="w-full border border-gray-300 px-4 py-3 rounded-lg bg-gray-50" />
           </div>
           <div>
-            <label className="text-sm font-medium">Lead ID</label>
-            <input value={companyDetails.lead_id} readOnly className="w-full border px-3 py-2 rounded bg-gray-100" />
+            <label className="text-sm font-semibold text-gray-700 mb-2">Lead ID</label>
+            <input value={companyDetails.lead_id} readOnly className="w-full border border-gray-300 px-4 py-3 rounded-lg bg-gray-50" />
           </div>
           <div>
-            <label className="text-sm font-medium">Incorporation Date</label>
-            <input value={companyDetails.incorporatedDate} readOnly className="w-full border px-3 py-2 rounded bg-gray-100" />
+            <label className="text-sm font-semibold text-gray-700 mb-2">Incorporation Date</label>
+            <input value={companyDetails.incorporatedDate} readOnly className="w-full border border-gray-300 px-4 py-3 rounded-lg bg-gray-50" />
           </div>
           <div>
-            <label className="text-sm font-medium">Email</label>
-            <input value={companyDetails.email} readOnly className="w-full border px-3 py-2 rounded bg-gray-100" />
+            <label className="text-sm font-semibold text-gray-700 mb-2">Email</label>
+            <input value={companyDetails.email} readOnly className="w-full border border-gray-300 px-4 py-3 rounded-lg bg-gray-50" />
           </div>
           <div className="col-span-2">
-            <label className="text-sm font-medium">Address</label>
+            <label className="text-sm font-semibold text-gray-700 mb-2">Address</label>
             <input
               value={`${companyDetails.address.line1}, ${companyDetails.address.city}, ${companyDetails.address.state}`}
               readOnly
-              className="w-full border px-3 py-2 rounded bg-gray-100"
+              className="w-full border border-gray-300 px-4 py-3 rounded-lg bg-gray-50"
             />
           </div>
         </div>
@@ -235,22 +238,22 @@ export default function Step1({
 
       {/* Director Details */}
       {directorDetails.length > 0 && (
-        <div className="mb-6">
-          <h3 className="font-semibold text-md mb-3">Director Details</h3>
-          <div className="space-y-2">
+        <div className="mb-8">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Director Details</h3>
+          <div className="space-y-4">
             {directorDetails.map((d, idx) => (
-              <div key={idx} className="grid grid-cols-3 gap-4">
+              <div key={idx} className="grid grid-cols-3 gap-6">
                 <div>
-                  <label className="text-sm font-medium">DIN</label>
-                  <input value={d.din} readOnly className="w-full border px-2 py-1 rounded bg-gray-100" />
+                  <label className="text-sm font-semibold text-gray-700 mb-2">DIN</label>
+                  <input value={d.din} readOnly className="w-full border border-gray-300 px-4 py-3 rounded-lg bg-gray-50" />
                 </div>
                 <div>
-                  <label className="text-sm font-medium">First Name</label>
-                  <input value={d.firstName} readOnly className="w-full border px-2 py-1 rounded bg-gray-100" />
+                  <label className="text-sm font-semibold text-gray-700 mb-2">First Name</label>
+                  <input value={d.firstName} readOnly className="w-full border border-gray-300 px-4 py-3 rounded-lg bg-gray-50" />
                 </div>
                 <div>
-                  <label className="text-sm font-medium">Last Name</label>
-                  <input value={d.lastName} readOnly className="w-full border px-2 py-1 rounded bg-gray-100" />
+                  <label className="text-sm font-semibold text-gray-700 mb-2">Last Name</label>
+                  <input value={d.lastName} readOnly className="w-full border border-gray-300 px-4 py-3 rounded-lg bg-gray-50" />
                 </div>
               </div>
             ))}
@@ -295,13 +298,13 @@ export default function Step1({
       )}
 
       {/* Manual Entry Fields */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-6">
         <div>
-          <label className="text-sm font-medium">Assigned To</label>
+          <label className="text-sm font-semibold text-gray-700 mb-2">Assigned To</label>
           <select
             value={contactPerson}
             onChange={(e) => handleContactPersonChange(e.target.value)}
-            className="w-full border px-3 py-2 rounded"
+            className="w-full border border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">Select Contact Person</option>
             {availableContactPersons.map((person) => (
@@ -310,29 +313,29 @@ export default function Step1({
           </select>
         </div>
         <div>
-          <label className="text-sm font-medium">Designation</label>
+          <label className="text-sm font-semibold text-gray-700 mb-2">Designation</label>
           <input
             value={designation}
             onChange={(e) => setDesignation(e.target.value)}
-            className="w-full border px-3 py-2 rounded"
+            className="w-full border border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Designation will auto-populate"
           />
         </div>
         <div>
-          <label className="text-sm font-medium">Phone Number</label>
+          <label className="text-sm font-semibold text-gray-700 mb-2">Phone Number</label>
           <input
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
-            className="w-full border px-3 py-2 rounded"
+            className="w-full border border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Phone number will auto-populate"
           />
         </div>
         <div>
-          <label className="text-sm font-medium">Loan Type</label>
+          <label className="text-sm font-semibold text-gray-700 mb-2">Loan Type</label>
           <select
-            value={loanType} // <- Added binding
-            onChange={(e) => setLoanType(e.target.value)} // <- Added handler
-            className="w-full border px-3 py-2 rounded"
+            value={loanType}
+            onChange={(e) => setLoanType(e.target.value)}
+            className="w-full border border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">Select Loan Type</option>
             <option value="Term Loan">Term Loan</option>
@@ -342,28 +345,32 @@ export default function Step1({
           </select>
         </div>
         <div>
-          <label className="text-sm font-medium">Loan Amount</label>
+          <label className="text-sm font-semibold text-gray-700 mb-2">Loan Amount</label>
           <input
             type="number"
-            value={loanAmount ?? ''} // <- Added binding
-            onChange={(e) => setLoanAmount(Number(e.target.value))} // <- Added handler
-            className="w-full border px-3 py-2 rounded"
+            value={loanAmount}
+            onChange={(e) => setLoanAmount(e.target.value)}
+            className="w-full border border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
-        
       </div>
 
-      {/* Save & Continue */}
-      <div className="mt-8">
+      {/* Save & Submit Buttons */}
+      <div className="mt-10 flex gap-4">
+        <button
+          className="bg-white text-gray-700 px-8 py-3 rounded-lg shadow-sm border border-gray-300 hover:bg-gray-50 font-medium"
+        >
+          Save
+        </button>
         <button
           disabled={
             amlCompanyStatus !== 'done' ||
             (amlDirectorStatus !== 'idle' && amlDirectorStatus !== 'done')
           }
           onClick={handleSaveAndContinue}
-          className="bg-green-600 text-white px-6 py-2 rounded shadow disabled:bg-gray-400"
+          className="bg-gray-600 text-white px-8 py-3 rounded-lg shadow-sm disabled:bg-gray-400 hover:bg-gray-700 font-medium"
         >
-          Save & Continue
+          Submit
         </button>
       </div>
     </div>

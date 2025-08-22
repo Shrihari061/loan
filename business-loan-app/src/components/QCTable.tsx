@@ -87,7 +87,7 @@ const QCTable: React.FC = () => {
                 <FigtreeTableCell>{entry.customer_name}</FigtreeTableCell>
                 <FigtreeTableCell>{entry.lead_id}</FigtreeTableCell>
                 <FigtreeTableCell>{entry.status}</FigtreeTableCell>
-                <FigtreeTableCell style={{ textAlign: 'right' }}>
+                <FigtreeTableCell>
                   {entry.status !== "Approved" && entry.status !== "Declined" && (
                     <button
                       onClick={(e) => toggleMenu(entry._id, e)}

@@ -81,7 +81,32 @@ const CompanyDetails: React.FC = () => {
   const formatValue = (value: number | string | null) => {
     if (value === null || value === undefined) return 'N/A';
     if (typeof value === 'string') return value;
-    return value.toLocaleString('en-IN');
+    const numValue = Number(value);
+    if (isNaN(numValue)) return value;
+    return numValue.toLocaleString('en-IN');
+  };
+
+  const getValueColor = (value: number | string | null) => {
+    if (value === null || value === undefined) return '#111827';
+    
+    // Handle string values (including parentheses notation)
+    if (typeof value === 'string') {
+      // Check if it's in parentheses format like "(7)" or "(4670)"
+      if (value.startsWith('(') && value.endsWith(')')) {
+        return '#ef4444'; // Red for negative values in parentheses
+      }
+      // Try to convert to number
+      const numValue = Number(value);
+      if (!isNaN(numValue)) {
+        return numValue < 0 ? '#ef4444' : '#111827';
+      }
+      return '#111827';
+    }
+    
+    // Handle number values
+    const numValue = Number(value);
+    if (isNaN(numValue)) return '#111827';
+    return numValue < 0 ? '#ef4444' : '#111827'; // Red for negative, default for positive
   };
 
   const generateDummyValue = (itemName: string, documentType: string, year: number): number => {
@@ -109,7 +134,8 @@ const CompanyDetails: React.FC = () => {
     return Math.round(baseValue * itemMultiplier * yearMultiplier);
   };
 
-  const getRiskColor = (health: string) => {
+  const getRiskColor = (health: string | undefined) => {
+    if (!health) return '#6b7280';
     switch (health.toLowerCase()) {
       case 'excellent': return '#10b981';
       case 'good': return '#3b82f6';
@@ -140,7 +166,9 @@ const CompanyDetails: React.FC = () => {
           backgroundColor: '#f8f9fa',
           borderBottom: '1px solid #e5e7eb'
         }}>
-          <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>{title}</h3>
+          <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+            {title} <span style={{ fontSize: '14px', fontWeight: '400', color: '#6b7280' }}>(all amounts in Crores of Rs.)</span>
+          </h3>
         </div>
 
         {/* Table Content */}
@@ -158,15 +186,15 @@ const CompanyDetails: React.FC = () => {
             <tbody>
               {data.map((row, index) => (
                                   <tr key={row._id} style={{ backgroundColor: index % 2 === 0 ? '#fff' : '#f9fafb' }}>
-                    <td style={{ padding: '12px 16px', fontSize: '14px', color: '#111827', borderBottom: '1px solid #f3f4f6', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                    <td style={{ padding: '12px 16px', fontSize: '14px', color: '#111827', textAlign: 'left', borderBottom: '1px solid #f3f4f6', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
                       {title === 'Cash Flow Summary' && row.item === 'Principal' 
                         ? 'Payment of lease liabilities' 
                         : row.item}
                     </td>
-                    <td style={{ padding: '12px 16px', fontSize: '14px', color: '#111827', textAlign: 'right', borderBottom: '1px solid #f3f4f6', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>{formatValue(row.FY2022)}</td>
-                    <td style={{ padding: '12px 16px', fontSize: '14px', color: '#111827', textAlign: 'right', borderBottom: '1px solid #f3f4f6', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>{formatValue(row.FY2023)}</td>
-                    <td style={{ padding: '12px 16px', fontSize: '14px', color: '#111827', textAlign: 'right', borderBottom: '1px solid #f3f4f6', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>{formatValue(row.FY2024)}</td>
-                    <td style={{ padding: '12px 16px', fontSize: '14px', color: '#111827', textAlign: 'right', borderBottom: '1px solid #f3f4f6', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>{formatValue(row.FY2025)}</td>
+                    <td style={{ padding: '12px 16px', fontSize: '14px', color: getValueColor(row.FY2022), textAlign: 'right', borderBottom: '1px solid #f3f4f6', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>{formatValue(row.FY2022)}</td>
+                    <td style={{ padding: '12px 16px', fontSize: '14px', color: getValueColor(row.FY2023), textAlign: 'right', borderBottom: '1px solid #f3f4f6', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>{formatValue(row.FY2023)}</td>
+                    <td style={{ padding: '12px 16px', fontSize: '14px', color: getValueColor(row.FY2024), textAlign: 'right', borderBottom: '1px solid #f3f4f6', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>{formatValue(row.FY2024)}</td>
+                    <td style={{ padding: '12px 16px', fontSize: '14px', color: getValueColor(row.FY2025), textAlign: 'right', borderBottom: '1px solid #f3f4f6', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>{formatValue(row.FY2025)}</td>
                   </tr>
               ))}
             </tbody>
@@ -240,9 +268,9 @@ const CompanyDetails: React.FC = () => {
                 {company.ratio_health}
               </div>
               <div style={{ fontSize: '14px', color: '#6b7280', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
-                <div>Debt-to-Equity: {company.debt_to_equity}</div>
+                <div>Debt-to-Equity: {company.debt_to_equity || 'N/A'}</div>
                 <div>Net Worth: ₹{formatValue(company.net_worth)}</div>
-                <div>DSCR: {company.dscr}</div>
+                <div>DSCR: {company.dscr || 'N/A'}</div>
                 <div>Year Range: {company.year_range}</div>
               </div>
             </div>

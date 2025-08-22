@@ -144,7 +144,7 @@ export default function AppraisalTable() {
                 <FigtreeTableCell>{memo.created_by}</FigtreeTableCell>
                 <FigtreeTableCell>{memo.last_updated}</FigtreeTableCell>
                 <FigtreeTableCell>{memo.status}</FigtreeTableCell>
-                <FigtreeTableCell style={{ textAlign: 'right' }}>
+                <FigtreeTableCell>
                   <button
 
                     onClick={(e) => toggleMenu(memo._id, e)}

@@ -125,6 +125,27 @@ router.get('/:id', async (req, res) => {
     const totalCurrentLiab = data["Total current liabilities"]?.value_2025 || 0;
     const netWorth = totalAssets - (totalNonCurrentLiab + totalCurrentLiab);
 
+    // ---------------- Get Ratio Data ----------------
+    const ratioDoc = await Ratios.findOne({
+      customer_name: doc.customer_name,
+      lead_id: doc.lead_id
+    });
+
+    let dscr = 'N/A';
+    let debt_to_equity = 'N/A';
+    let ratio_health = 'N/A';
+
+    if (ratioDoc) {
+      const dscrRatio = ratioDoc.DSCR;
+      const debtToEquityRatio = ratioDoc['Debt/Equity'];
+      
+      dscr = dscrRatio?.value ?? 'N/A';
+      debt_to_equity = debtToEquityRatio?.value ?? 'N/A';
+      ratio_health = ratioDoc.financial_strength?.subtotal ? 
+        (ratioDoc.financial_strength.subtotal >= 3 ? 'Good' : 
+         ratioDoc.financial_strength.subtotal >= 2 ? 'Moderate' : 'Poor') : 'N/A';
+    }
+
     // ---------------- Response ----------------
     res.json({
       _id: doc._id,
@@ -134,6 +155,9 @@ router.get('/:id', async (req, res) => {
         ? new Date(doc.updatedAt).toISOString().split('T')[0]
         : 'N/A',
       net_worth: netWorth,
+      dscr: dscr,
+      debt_to_equity: debt_to_equity,
+      ratio_health: ratio_health,
       year_range: '2024-2025',
       balance_sheet,
       profit_loss,
