@@ -81,7 +81,7 @@ const Layout: React.FC = () => {
           fontSize: '18px',
           fontWeight: '600',
           color: '#374151',
-          fontFamily: 'Arial, Helvetica, sans-serif'
+          fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
         }}>
           Loan Origination System
         </div>
@@ -93,7 +93,14 @@ const Layout: React.FC = () => {
       </div>
 
       {/* Sidebar */}
-      <div className="w-[220px] h-screen fixed top-0 left-0 text-gray-700 pt-5 overflow-y-auto bg-white rounded-lg shadow" style={{ marginTop: '60px', marginLeft: '16px', marginBottom: '16px', height: 'calc(100vh - 76px)' }}>
+      <div className="w-[220px] h-screen fixed top-0 left-0 text-gray-700 pt-5 overflow-y-auto bg-white rounded-lg shadow" style={{ 
+        marginTop: '60px', 
+        marginLeft: '16px', 
+        marginBottom: '16px', 
+        height: 'calc(100vh - 76px)',
+        zIndex: 999,
+        position: 'fixed'
+      }}>
 
         {navItems.map((item, index) => (
           <div
@@ -116,7 +123,13 @@ const Layout: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <div className="ml-[220px] p-8 w-full" style={{ backgroundColor: '#f8f6f1', marginTop: '60px', minHeight: '100vh' }}>
+      <div className="ml-[220px] p-8 w-full" style={{ 
+        backgroundColor: '#f8f6f1', 
+        marginTop: '60px', 
+        minHeight: '100vh',
+        position: 'relative',
+        zIndex: 1
+      }}>
         <Routes>
           <Route path="/" element={<Navigate to="/dashboard" />} />
           <Route path="/dashboard" element={<Dashboard />} />

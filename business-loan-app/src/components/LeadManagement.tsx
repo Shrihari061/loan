@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { FigtreeContainer, FigtreeCard, FigtreeHeading, FigtreeTable, SortableHeader, NonSortableHeader } from './ReusableComponents';
+import { globalStyles } from '../styles/globalStyles';
 
 interface Lead {
   _id: string;
@@ -19,6 +21,7 @@ const LeadManagement: React.FC = () => {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState('');
   const [loanTypeFilter, setLoanTypeFilter] = useState('');
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(null);
 
   useEffect(() => {
     const fetchLeads = async () => {
@@ -174,10 +177,54 @@ const LeadManagement: React.FC = () => {
     return matchesStatus && matchesLoanType;
   });
 
+  // Sorting function
+  const sortedLeads = React.useMemo(() => {
+    if (!sortConfig) return filteredLeads;
+
+    return [...filteredLeads].sort((a, b) => {
+      let aValue: any = a[sortConfig.key as keyof Lead];
+      let bValue: any = b[sortConfig.key as keyof Lead];
+
+      // Handle special cases
+      if (sortConfig.key === 'loan_amount') {
+        aValue = Number(aValue);
+        bValue = Number(bValue);
+      } else if (sortConfig.key === 'last_updated') {
+        aValue = new Date(aValue).getTime();
+        bValue = new Date(bValue).getTime();
+      } else {
+        aValue = String(aValue).toLowerCase();
+        bValue = String(bValue).toLowerCase();
+      }
+
+      if (aValue < bValue) {
+        return sortConfig.direction === 'asc' ? -1 : 1;
+      }
+      if (aValue > bValue) {
+        return sortConfig.direction === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+  }, [filteredLeads, sortConfig]);
+
+  const handleSort = (key: string) => {
+    setSortConfig(current => {
+      if (current?.key === key) {
+        if (current.direction === 'asc') {
+          return { key, direction: 'desc' };
+        } else {
+          return null; // Remove sorting
+        }
+      } else {
+        return { key, direction: 'asc' };
+      }
+    });
+  };
+
   if (loading) return <div style={{ padding: '20px', textAlign: 'center' }}>Loading...</div>;
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'Inter, system-ui, sans-serif' }}>
+    <FigtreeContainer style={{ padding: '20px' }}>
       {/* Header */}
       <div style={{ 
         display: 'flex', 
@@ -216,71 +263,117 @@ const LeadManagement: React.FC = () => {
         alignItems: 'center'
       }}>
         <div style={{ position: 'relative' }}>
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            style={{
+          <div style={{
+            position: 'relative',
+            border: '1px solid #d1d5db',
+            borderRadius: '8px',
+            backgroundColor: 'white',
+            minWidth: '140px',
+            cursor: 'pointer'
+          }}>
+            <div style={{
               padding: '12px 16px 12px 12px',
-              border: '1px solid #d1d5db',
-              borderRadius: '8px',
-              fontSize: '14px',
-              outline: 'none',
-              backgroundColor: 'white',
-              minWidth: '140px',
-              paddingRight: '32px'
-            }}
-          >
-            <option value="All">All</option>
-            <option value="Draft">Draft</option>
-            <option value="Submitted">Submitted</option>
-          </select>
+              paddingRight: '32px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}>
+              <div>
+                <span style={{ color: '#7D7D81', fontSize: '14px', marginRight: '8px' }}>Status</span>
+                <span style={{ color: '#111827', fontSize: '14px' }}>{statusFilter || 'All'}</span>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" style={{ color: '#6b7280' }}>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                opacity: 0,
+                cursor: 'pointer'
+              }}
+            >
+              <option value="All">All</option>
+              <option value="Draft">Draft</option>
+              <option value="Submitted">Submitted</option>
+            </select>
+          </div>
         </div>
         
         <div style={{ position: 'relative' }}>
-          <select
-            value={loanTypeFilter}
-            onChange={(e) => setLoanTypeFilter(e.target.value)}
-            style={{
+          <div style={{
+            position: 'relative',
+            border: '1px solid #d1d5db',
+            borderRadius: '8px',
+            backgroundColor: 'white',
+            minWidth: '140px',
+            cursor: 'pointer'
+          }}>
+            <div style={{
               padding: '12px 16px 12px 12px',
-              border: '1px solid #d1d5db',
-              borderRadius: '8px',
-              fontSize: '14px',
-              outline: 'none',
-              backgroundColor: 'white',
-              minWidth: '140px',
-              paddingRight: '32px'
-            }}
-          >
-            <option value="">Loan Type</option>
-            <option value="All">All</option>
-            <option value="BG">BG</option>
-            <option value="OD/CC">OD/CC</option>
-            <option value="Term Loan">Term Loan</option>
-            <option value="LC">LC</option>
-          </select>
+              paddingRight: '32px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}>
+              <div>
+                <span style={{ color: '#7D7D81', fontSize: '14px', marginRight: '8px' }}>Loan Type</span>
+                <span style={{ color: '#111827', fontSize: '14px' }}>{loanTypeFilter || 'All'}</span>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" style={{ color: '#6b7280' }}>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+            <select
+              value={loanTypeFilter}
+              onChange={(e) => setLoanTypeFilter(e.target.value)}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                opacity: 0,
+                cursor: 'pointer'
+              }}
+            >
+              <option value="All">All</option>
+              <option value="BG">BG</option>
+              <option value="OD/CC">OD/CC</option>
+              <option value="Term Loan">Term Loan</option>
+              <option value="LC">LC</option>
+            </select>
+          </div>
         </div>
       </div>
 
       {/* Table */}
       <div style={{ 
         backgroundColor: 'white', 
-        borderRadius: '8px', 
+        borderRadius: '12px', 
         border: '1px solid #e5e7eb',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        boxShadow: '0 4px 13px 2px rgba(0, 0, 0, 0.07)'
       }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <FigtreeTable style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
-            <tr style={{ backgroundColor: '#f9fafb', borderBottom: '1px solid #e5e7eb' }}>
-              <th style={headerStyle}>Business Name</th>
-              <th style={headerStyle}>Loan Type</th>
-              <th style={headerStyle}>Loan Amount</th>
-              <th style={headerStyle}>Last Updated</th>
-              <th style={headerStyle}>Status</th>
-              <th style={headerStyle}></th>
+            <tr style={{ backgroundColor: '#f8f9fa', borderBottom: '1px solid #e5e7eb' }}>
+              <SortableHeader sortKey="business_name" currentSort={sortConfig} onSort={handleSort}>Business Name</SortableHeader>
+              <NonSortableHeader>Loan Type</NonSortableHeader>
+              <SortableHeader sortKey="loan_amount" currentSort={sortConfig} onSort={handleSort}>Loan Amount</SortableHeader>
+              <SortableHeader sortKey="last_updated" currentSort={sortConfig} onSort={handleSort}>Last Updated</SortableHeader>
+              <NonSortableHeader>Status</NonSortableHeader>
+              <NonSortableHeader>Actions</NonSortableHeader>
             </tr>
           </thead>
           <tbody>
-            {filteredLeads.map((lead) => (
+            {sortedLeads.map((lead) => (
               <tr key={lead._id} style={{ borderBottom: '1px solid #f3f4f6', position: 'relative' }}>
                 <td style={cellStyle}>{lead.business_name}</td>
                 <td style={cellStyle}>{lead.loan_type}</td>
@@ -363,52 +456,42 @@ const LeadManagement: React.FC = () => {
               </tr>
             ))}
           </tbody>
-        </table>
+        </FigtreeTable>
       </div>
 
       {/* Pagination */}
       <div style={{ 
         display: 'flex', 
-        justifyContent: 'space-between', 
+        justifyContent: 'flex-end', 
         alignItems: 'center', 
-        marginTop: '16px',
-        padding: '0 4px'
+        marginTop: '20px',
+        padding: '16px 20px'
       }}>
-        <div style={{ color: '#6b7280', fontSize: '14px' }}>
-          Showing {filteredLeads.length} of {leads.length} entries
-        </div>
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-          <button style={paginationButtonStyle}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <button style={paginationButtonStyle}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
+        <div style={{ color: '#6b7280', fontSize: '14px', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+          1-{sortedLeads.length} of {leads.length}
         </div>
       </div>
-    </div>
+    </FigtreeContainer>
   );
 };
 
 const headerStyle: React.CSSProperties = {
-  padding: '12px 16px',
+  padding: '16px 20px',
   textAlign: 'left',
-  fontSize: '12px',
+  fontSize: '13px',
   fontWeight: '600',
   color: '#374151',
-  textTransform: 'uppercase',
-  letterSpacing: '0.05em'
+  textTransform: 'none',
+  letterSpacing: '0.02em',
+  borderBottom: '1px solid #e5e7eb'
 };
 
 const cellStyle: React.CSSProperties = {
-  padding: '12px 16px',
+  padding: '16px 20px',
   textAlign: 'left',
   fontSize: '14px',
-  color: '#111827'
+  color: '#111827',
+  borderBottom: '1px solid #f3f4f6'
 };
 
 const menuItemStyle: React.CSSProperties = {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { FigtreeContainer, FigtreeTableContainer, NonSortableHeader, FigtreeTableCell, FigtreeTable } from './ReusableComponents';
 
 type CompanyData = {
   _id: string;
@@ -143,70 +144,69 @@ const CompanyTable: React.FC = () => {
   const isBracketed = (val: any) => typeof val === 'string' && /^\(.*\)$/.test(val);
 
   return (
-    <div className="p-6 relative">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Company Overview</h2>
+    <FigtreeContainer style={{ padding: '20px' }}>
+      <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#111827', marginBottom: '24px' }}>Financial Analysis</h2>
 
-      <div className="overflow-x-auto bg-white shadow-lg rounded-lg">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              {['Company Name','Lead ID','Net Worth','Debt to Equity','DSCR','Year Range'].map((header) => (
-                <th
-                  key={header}
-                  className="px-4 py-3 text-left text-sm font-medium text-gray-600 uppercase tracking-wider"
-                >
+
+      <FigtreeTableContainer>
+        <FigtreeTable style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr style={{ backgroundColor: '#f8f9fa', borderBottom: '1px solid #e5e7eb' }}>
+              {['Company Name','Lead ID','Net Worth','Debt to Equity','DSCR','Year Range','Ratio Health'].map((header) => (
+                <NonSortableHeader key={header}>
+
                   {header}
-                </th>
+                </NonSortableHeader>
               ))}
-              <th className="px-4 py-3 text-center text-sm font-medium text-gray-600 uppercase tracking-wider"></th>
+
+              <NonSortableHeader>Actions</NonSortableHeader>
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-gray-200">
-            {data.map((company, idx) => (
-              <tr key={company._id} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">{company.company_name}</td>
-                <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">{company.lead_id}</td>
+          <tbody>
+            {data.map((company) => (
+              <tr 
+                key={company._id} 
+                style={{ 
+                  borderBottom: '1px solid #f3f4f6',
+                  transition: 'background-color 0.2s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f9fafb'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+              >
+                <FigtreeTableCell>{company.company_name}</FigtreeTableCell>
+                <FigtreeTableCell>{company.lead_id}</FigtreeTableCell>
+                <FigtreeTableCell>{formatNumber(company.net_worth)}</FigtreeTableCell>
+                <FigtreeTableCell>{company.debt_to_equity}</FigtreeTableCell>
+                <FigtreeTableCell>{company.dscr}</FigtreeTableCell>
+                <FigtreeTableCell>{company.year_range}</FigtreeTableCell>
+                <FigtreeTableCell>{company.ratio_health}</FigtreeTableCell>
+                <FigtreeTableCell style={{ textAlign: 'right' }}>
+                  <button
 
-                <td
-                  className={`px-4 py-3 text-sm whitespace-nowrap ${
-                    isBracketed(company.net_worth) ? '!bg-red-200 text-red-800 font-semibold' : 'text-gray-700'
-                  }`}
-                >
-                  {formatNumber(company.net_worth)}
-                </td>
-
-                <td
-                  className={`px-4 py-3 text-sm whitespace-nowrap ${
-                    isBracketed(company.debt_to_equity) ? '!bg-red-200 text-red-800 font-semibold' : 'text-gray-700'
-                  }`}
-                >
-                  {formatNumber(company.debt_to_equity)}
-                </td>
-
-                <td
-                  className={`px-4 py-3 text-sm whitespace-nowrap ${
-                    isBracketed(company.dscr) ? '!bg-red-200 text-red-800 font-semibold' : 'text-gray-700'
-                  }`}
-                >
-                  {formatNumber(company.dscr)}
-                </td>
-
-                <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">{company.year_range}</td>
-                {/* <td className="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">{company.ratio_health}</td> */}
-                <td className="px-4 py-3 text-right">
-                  <span
                     onClick={(e) => toggleMenu(company._id, e)}
-                    className="cursor-pointer px-2 py-1 rounded hover:bg-gray-200"
+                    style={{
+                      padding: '8px',
+                      borderRadius: '4px',
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      color: '#6b7280',
+                      transition: 'background-color 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f3f4f6'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                   >
-                    &#8942;
-                  </span>
-                </td>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                    </svg>
+                  </button>
+                </FigtreeTableCell>
               </tr>
             ))}
           </tbody>
-        </table>
-      </div>
+        </FigtreeTable>
+      </FigtreeTableContainer>
 
       {openMenuId && menuPosition && (
         <div
@@ -223,8 +223,8 @@ const CompanyTable: React.FC = () => {
             </div>
           ))}
         </div>
-      )}
-    </div>
+              )}
+    </FigtreeContainer>
   );
 };
 

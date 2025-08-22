@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactDOM from "react-dom";
+import { FigtreeContainer, FigtreeTableContainer, FigtreeTableCell, FigtreeTable, NonSortableHeader } from './ReusableComponents';
 
 interface DocumentStatus {
   status: "Pending" | "Approved" | "Declined";
@@ -48,31 +49,27 @@ const QCTable: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 relative">
+    <FigtreeContainer style={{ padding: '20px' }}>
       {/* Title */}
-      <h2 className="text-xl font-bold text-gray-900">Quality Check (QC) Table</h2>
+      <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#111827', marginBottom: '24px' }}>
+        Quality Check (QC) Table
+      </h2>
 
       {/* Table Container */}
-      <div className="bg-white rounded-lg shadow border border-gray-200 overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-50 border-b border-gray-200">
-            <tr>
-              <th className="text-left py-3 px-4 font-semibold text-gray-600 uppercase text-xs">
-                Customer Name
-              </th>
-              <th className="text-left py-3 px-4 font-semibold text-gray-600 uppercase text-xs">
-                Lead ID
-              </th>
-              <th className="text-left py-3 px-4 font-semibold text-gray-600 uppercase text-xs">
-                Status
-              </th>
-              <th className="text-left py-3 px-4"></th>
+      <FigtreeTableContainer>
+        <FigtreeTable style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr style={{ backgroundColor: '#f8f9fa', borderBottom: '1px solid #e5e7eb' }}>
+              <NonSortableHeader>Customer Name</NonSortableHeader>
+              <NonSortableHeader>Lead ID</NonSortableHeader>
+              <NonSortableHeader>Status</NonSortableHeader>
+              <NonSortableHeader>Actions</NonSortableHeader>
             </tr>
           </thead>
           <tbody>
             {data.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-4 py-6 text-center text-gray-500">
+                <td colSpan={4} style={{ textAlign: 'center', color: '#6b7280', padding: '16px 20px' }}>
                   No QC records found.
                 </td>
               </tr>
@@ -80,21 +77,36 @@ const QCTable: React.FC = () => {
             {data.map((entry, index) => (
               <tr
                 key={entry._id}
-                className={`${index !== data.length - 1 ? "border-b border-gray-100" : ""
-                  } hover:bg-gray-50`}
+                style={{ 
+                  borderBottom: index !== data.length - 1 ? '1px solid #f3f4f6' : 'none',
+                  transition: 'background-color 0.2s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f9fafb'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
               >
-                <td className="py-3 px-4 text-gray-800">{entry.customer_name}</td>
-                <td className="py-3 px-4 text-gray-800">{entry.lead_id}</td>
-                <td className="py-3 px-4 text-gray-800">{entry.status}</td>
-                <td className="py-3 px-4 text-right">
-                  {entry.status !== "Approved" && entry.status !== "Rejected" && (
+                <FigtreeTableCell>{entry.customer_name}</FigtreeTableCell>
+                <FigtreeTableCell>{entry.lead_id}</FigtreeTableCell>
+                <FigtreeTableCell>{entry.status}</FigtreeTableCell>
+                <FigtreeTableCell style={{ textAlign: 'right' }}>
+                  {entry.status !== "Approved" && entry.status !== "Declined" && (
                     <button
                       onClick={(e) => toggleMenu(entry._id, e)}
-                      className="p-2 rounded hover:bg-gray-100"
+                      style={{
+                        padding: '8px',
+                        borderRadius: '4px',
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        color: '#6b7280',
+                        transition: 'background-color 0.2s'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f3f4f6'}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 text-gray-600"
+                        width="20"
+                        height="20"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                       >
@@ -102,12 +114,12 @@ const QCTable: React.FC = () => {
                       </svg>
                     </button>
                   )}
-                </td>
+                </FigtreeTableCell>
               </tr>
             ))}
           </tbody>
-        </table>
-      </div>
+        </FigtreeTable>
+      </FigtreeTableContainer>
 
       {/* Floating dropdown menu (same style as RiskTable) */}
       {openMenuId &&
@@ -131,7 +143,7 @@ const QCTable: React.FC = () => {
           </div>,
           document.body
         )}
-    </div>
+    </FigtreeContainer>
   );
 };
 
