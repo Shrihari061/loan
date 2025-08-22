@@ -9,16 +9,16 @@ interface RatioItem {
 }
 
 const getCellColor = (ratio: RatioItem) => {
-  if (ratio.red_flag) return "bg-red-100 text-red-800";
+  if (ratio.red_flag) return "bg-blue-900 text-white"; // 🔴 replaced red → dark blue
   if (ratio.threshold && typeof ratio.threshold === "string") {
     const numThreshold = parseFloat(ratio.threshold);
     if (!isNaN(numThreshold) && ratio.value !== null) {
       return ratio.value >= numThreshold
-        ? "bg-green-100 text-green-800"
-        : "bg-orange-100 text-orange-800";
+        ? "bg-cyan-100 text-cyan-800" // 🟢 replaced green → cyan/light blue
+        : "bg-blue-100 text-blue-800"; // 🟠 replaced orange/yellow → blue
     }
   }
-  return "bg-green-100 text-green-800";
+  return "bg-cyan-100 text-cyan-800"; // default to cyan/light blue
 };
 
 const CompanyRatioAnalysis: React.FC = () => {
@@ -56,9 +56,9 @@ const CompanyRatioAnalysis: React.FC = () => {
     <div className="px-6">
       {/* Legend */}
       <div className="mb-4">
-        <span className="inline-block w-4 h-4 bg-green-400 mr-2 rounded-sm" /> Good
-        <span className="inline-block w-4 h-4 bg-orange-400 ml-4 mr-2 rounded-sm" /> Moderate
-        <span className="inline-block w-4 h-4 bg-red-400 ml-4 mr-2 rounded-sm" /> Poor
+        <span className="inline-block w-4 h-4 bg-cyan-400 mr-2 rounded-sm" /> Good
+        <span className="inline-block w-4 h-4 bg-blue-400 ml-4 mr-2 rounded-sm" /> Moderate
+        <span className="inline-block w-4 h-4 bg-blue-900 ml-4 mr-2 rounded-sm" /> Poor
       </div>
 
       {/* Ratios Table */}

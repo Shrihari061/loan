@@ -19,5 +19,11 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "BFSI-LOS-Model_Pdf/*",
+      "*.py"
+    ]
   }
 }

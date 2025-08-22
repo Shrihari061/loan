@@ -99,10 +99,6 @@ export default function MemoDetails() {
           </button>
           <h1 className="text-xl font-semibold">Appraisal Memo Detail</h1>
         </div>
-        <div className="flex items-center gap-4">
-          <Bell className="h-5 w-5 text-gray-600" />
-          <UserCircle2 className="h-6 w-6 text-gray-600" />
-        </div>
       </div>
 
       {/* Top Section (basic info) */}

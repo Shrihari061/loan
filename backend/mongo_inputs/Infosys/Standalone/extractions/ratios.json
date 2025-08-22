@@ -4,11 +4,6 @@
     "threshold": "<1.2",
     "red_flag": false
   },
-  "Debt/Equity": {
-    "value": 0.0396,
-    "threshold": ">2.0",
-    "red_flag": false
-  },
   "PAT Margin": {
     "value": 18.7185,
     "threshold": "<10%",
@@ -16,6 +11,56 @@
   },
   "Current Ratio": {
     "value": 2.4296,
+    "threshold": "<1.0",
+    "red_flag": false
+  },
+  "Quick Ratio": {
+    "value": 2.4296,
+    "threshold": "<1.0",
+    "red_flag": false
+  },
+  "Debt/Equity": {
+    "value": 0.0396,
+    "threshold": ">2.0",
+    "red_flag": false
+  },
+  "Interest Coverage": {
+    "value": 160.3665,
+    "threshold": "<1.5",
+    "red_flag": false
+  },
+  "Net Profit Margin": {
+    "value": 18.7185,
+    "threshold": "<5%",
+    "red_flag": false
+  },
+  "Return on Assets": {
+    "value": 20.4649,
+    "threshold": "<5%",
+    "red_flag": false
+  },
+  "Return on equity": {
+    "value": 29.2768,
+    "threshold": "<8%",
+    "red_flag": false
+  },
+  "EBITDA Margin": {
+    "value": 27.864,
+    "threshold": "<10%",
+    "red_flag": false
+  },
+  "Accounts Receivable Days": {
+    "value": 70.5806,
+    "threshold": ">90",
+    "red_flag": false
+  },
+  "Accounts payable days": {
+    "value": 0.0,
+    "threshold": ">30",
+    "red_flag": false
+  },
+  "Asset Turnover Ratio": {
+    "value": 1.0933,
     "threshold": "<1.0",
     "red_flag": false
   }

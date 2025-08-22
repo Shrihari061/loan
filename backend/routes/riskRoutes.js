@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Risk = require('../models/Risk');
+const Risk = require('../models/Risk'); // ✅ updated model bound to "risk" collection
 const ExtractedValues = require('../models/ExtractedValues'); // ✅ uncommented & imported
 
 // -------------------- GET all risks --------------------
@@ -25,7 +25,7 @@ router.get('/:id', async (req, res) => {
 
     // 2️⃣ Find matching extracted_values record by customer_name + lead_id
     const extractedDoc = await ExtractedValues.findOne({
-      customer_name: riskRecord.customer_name, // ✅ corrected
+      customer_name: riskRecord.customer_name,
       lead_id: riskRecord.lead_id
     });
 
@@ -47,7 +47,9 @@ router.get('/:id', async (req, res) => {
       financial_strength: riskRecord.financial_strength,
       management_quality: riskRecord.management_quality,
       industry_risk: riskRecord.industry_risk,
-      revenue: extractedDoc["Revenue"]?.value_latest ?? null, // ✅ contextual field from extracted values
+
+      // ✅ pulled from extracted_values
+      revenue: extractedDoc["Revenue"]?.value_latest ?? null,
       net_profit: extractedDoc["Net Profit"]?.value_latest ?? null,
       total_assets: extractedDoc["Total Assets"]?.value_latest ?? null
     };

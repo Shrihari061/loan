@@ -42,6 +42,10 @@ interface RiskDetailData {
   financial_strength: FinancialStrength;
   management_quality: ManagementQuality;
   industry_risk: IndustryRisk;
+
+  revenue?: number | null;
+  net_profit?: number | null;
+  total_assets?: number | null;
 }
 
 const RiskDetail: React.FC = () => {
@@ -95,8 +99,8 @@ const RiskDetail: React.FC = () => {
       {/* Risk Breakdown */}
       <div className="bg-white p-4 rounded-lg shadow-sm">
         <h3 className="text-xl font-semibold mb-2">Risk Breakdown</h3>
-        <table className="min-w-full text-sm border border-gray-200 rounded-lg">
-          <thead className="bg-gray-50 border-b border-gray-200">
+        <table className="min-w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+          <thead className="bg-gray-100">
             <tr>
               <th className="px-4 py-2 text-left font-medium text-gray-600">Component</th>
               <th className="px-4 py-2 text-left font-medium text-gray-600">Weight</th>
@@ -105,13 +109,13 @@ const RiskDetail: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            <tr className="border-b">
+            <tr>
               <td className="px-4 py-2">Financial Strength</td>
               <td className="px-4 py-2">{data.weights.financial_strength}%</td>
               <td className="px-4 py-2">{data.financial_strength.subtotal}</td>
               <td className="px-4 py-2">{data.weights.financial_strength}</td>
             </tr>
-            <tr className="border-b">
+            <tr>
               <td className="px-4 py-2">Management Quality</td>
               <td className="px-4 py-2">{data.weights.management_quality}%</td>
               <td className="px-4 py-2">{data.management_quality.score}</td>
@@ -130,8 +134,8 @@ const RiskDetail: React.FC = () => {
       {/* Financial Strength Ratios */}
       <div className="bg-white p-4 rounded-lg shadow-sm">
         <h3 className="text-xl font-semibold mb-2">Financial Strength Ratios</h3>
-        <table className="min-w-full text-sm border border-gray-200 rounded-lg">
-          <thead className="bg-gray-50 border-b border-gray-200">
+        <table className="min-w-full text-sm border border-gray-200 rounded-lg overflow-hidden">
+          <thead className="bg-gray-100">
             <tr>
               <th className="px-4 py-2 text-left font-medium text-gray-600">Ratio</th>
               <th className="px-4 py-2 text-left font-medium text-gray-600">Value</th>
@@ -143,7 +147,7 @@ const RiskDetail: React.FC = () => {
           </thead>
           <tbody>
             {Object.entries(data.financial_strength.scores).map(([ratio, details]) => (
-              <tr key={ratio} className="border-b hover:bg-gray-50">
+              <tr key={ratio}>
                 <td className="px-4 py-2 font-medium">{ratio}</td>
                 <td className="px-4 py-2">{details.value}</td>
                 <td className="px-4 py-2">{details.threshold}</td>
@@ -151,7 +155,7 @@ const RiskDetail: React.FC = () => {
                 <td className="px-4 py-2">{details.max}</td>
                 <td className="px-4 py-2">
                   {details.red_flag ? (
-                    <span className="bg-red-100 text-red-700 px-2 py-1 rounded">⚠️</span>
+                    <span className="text-red-600">⚠️</span>
                   ) : (
                     <span className="text-green-600">✔</span>
                   )}

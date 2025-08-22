@@ -1,4 +1,9 @@
 {
+  "_id": {
+    "$oid": "68a600baea418d0ef61a26f0"
+  },
+  "customer_name": "Vardhan Corp Ltd.",
+  "lead_id": "LOAN/2025/YPL/942",
   "Property, plant and equipment": {
     "value_2025": 10070,
     "value_2024": 10813,
@@ -23,13 +28,7 @@
     "source": "bs",
     "unit": "₹ crore"
   },
-  "Financial assets (Investments, Non-current)": {
-    "value_2025": "null",
-    "value_2024": "null",
-    "source": "bs",
-    "unit": ""
-  },
-  "Investments": {
+  "Investments (Non-current)": {
     "value_2025": 27371,
     "value_2024": 23352,
     "source": "bs",
@@ -53,7 +52,7 @@
     "source": "bs",
     "unit": "₹ crore"
   },
-  "Income tax assets (net, Non-current)": {
+  "Income tax assets (net) (Non-current)": {
     "value_2025": 1164,
     "value_2024": 2583,
     "source": "bs",
@@ -71,7 +70,7 @@
     "source": "bs",
     "unit": "₹ crore"
   },
-  "Financial assets (Current Investments)": {
+  "Investments (Current)": {
     "value_2025": 11147,
     "value_2024": 11307,
     "source": "bs",
@@ -101,7 +100,7 @@
     "source": "bs",
     "unit": "₹ crore"
   },
-  "Income tax assets (net, Current)": {
+  "Income tax assets (net) (Current)": {
     "value_2025": 2949,
     "value_2024": 6329,
     "source": "bs",
@@ -179,13 +178,13 @@
     "source": "bs",
     "unit": "₹ crore"
   },
-  "Trade payables (Micro enterprises and small enterprises)": {
+  "Total outstanding dues of micro enterprises and small enterprises": {
     "value_2025": 8,
     "value_2024": 92,
     "source": "bs",
     "unit": "₹ crore"
   },
-  "Trade payables (Others)": {
+  "Total outstanding dues of creditors other than micro enterprises and small enterprises": {
     "value_2025": 2720,
     "value_2024": 2401,
     "source": "bs",
@@ -203,7 +202,7 @@
     "source": "bs",
     "unit": "₹ crore"
   },
-  "Provisions": {
+  "Provisions (Current)": {
     "value_2025": 993,
     "value_2024": 1464,
     "source": "bs",
@@ -365,27 +364,35 @@
     "source": "pl",
     "unit": "₹ crore"
   },
-  "Basic (in ₹ per share)": {
+  "Earnings per equity share - Basic (in ₹ per share)": {
     "value_2025": 61.58,
     "value_2024": 65.62,
     "source": "pl",
     "unit": "₹ per share"
   },
-  "Diluted (in ₹ per share)": {
+  "Earnings per equity share - Diluted (in ₹ per share)": {
     "value_2025": 61.46,
     "value_2024": 65.56,
     "source": "pl",
     "unit": "₹ per share"
   },
-  "Weighted average equity shares used in computing earnings per equity share (Basic)": {
-    "value_2025": 4151936905,
-    "value_2024": 4150099796,
+  "Weighted average equity shares used in computing earnings per equity share - Basic (in shares)": {
+    "value_2025": {
+      "$numberLong": "4151936905"
+    },
+    "value_2024": {
+      "$numberLong": "4150099796"
+    },
     "source": "pl",
     "unit": "in shares"
   },
-  "Weighted average equity shares used in computing earnings per equity share (Diluted)": {
-    "value_2025": 4159905476,
-    "value_2024": 4153994624,
+  "Weighted average equity shares used in computing earnings per equity share - Diluted (in shares)": {
+    "value_2025": {
+      "$numberLong": "4159905476"
+    },
+    "value_2024": {
+      "$numberLong": "4153994624"
+    },
     "source": "pl",
     "unit": "in shares"
   },

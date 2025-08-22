@@ -109,6 +109,7 @@ export default function AppraisalTable() {
       </div>
 
       {/* Table Container */}
+
       <FigtreeTableContainer>
         <FigtreeTable style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
@@ -120,10 +121,12 @@ export default function AppraisalTable() {
               <SortableHeader sortKey="last_updated" currentSort={null} onSort={() => {}}>Last Updated</SortableHeader>
               <NonSortableHeader>Status</NonSortableHeader>
               <NonSortableHeader>Actions</NonSortableHeader>
+
             </tr>
           </thead>
           <tbody>
             {memos.map((memo: any, idx) => (
+
               <tr 
                 key={memo._id} 
                 style={{ 
@@ -143,6 +146,7 @@ export default function AppraisalTable() {
                 <FigtreeTableCell>{memo.status}</FigtreeTableCell>
                 <FigtreeTableCell style={{ textAlign: 'right' }}>
                   <button
+
                     onClick={(e) => toggleMenu(memo._id, e)}
                     style={{
                       padding: '8px',

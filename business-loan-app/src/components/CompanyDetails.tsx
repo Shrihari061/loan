@@ -282,6 +282,7 @@ const CompanyDetails: React.FC = () => {
               </button>
             ))}
           </div>
+
         </div>
 
         {/* Main Content */}

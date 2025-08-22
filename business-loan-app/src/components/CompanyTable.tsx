@@ -11,13 +11,35 @@ type CompanyData = {
   debt_to_equity: number | string;
   dscr: number | string;
   year_range: string;
-  ratio_health: string;
+  // ratio_health: string;
 };
 
 type QCRecord = {
   customer_name: string;
   lead_id: string;
   status: string;
+};
+
+type ScoreEntry = {
+  value: number | null;
+  threshold?: string;
+  red_flag?: boolean;
+  score?: number;
+  max?: number;
+};
+
+type FinancialStrength = {
+  per_ratio_max?: number;
+  scores?: { [key: string]: ScoreEntry };
+  subtotal?: number;
+};
+
+type RatioDoc = {
+  _id: string;
+  customer_name?: string;
+  lead_id?: string;
+  ratios: { name: string; value: number | null }[];
+  financial_strength?: FinancialStrength;
 };
 
 const CompanyTable: React.FC = () => {
@@ -27,25 +49,60 @@ const CompanyTable: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch both company data and QC data in parallel
     const fetchData = async () => {
       try {
-        const [companyRes, qcRes] = await Promise.all([
+        const [companyRes, qcRes, ratiosRes] = await Promise.all([
           axios.get('http://localhost:5000/analysis/'),
-          axios.get('http://localhost:5000/cq/')
+          axios.get('http://localhost:5000/cq/'),
+          axios.get('http://localhost:5000/analysis/ratios')
         ]);
 
         const qcData: QCRecord[] = qcRes.data;
+        const ratiosData: RatioDoc[] = ratiosRes.data;
 
-        // Filter only approved records based on customer_name & lead_id
-        const approvedData = companyRes.data.filter((company: CompanyData) =>
-          qcData.some(
-            (qc) =>
-              qc.customer_name === company.company_name &&
-              qc.lead_id === company.lead_id &&
-              qc.status === 'Approved'
+        const approvedData = companyRes.data
+          .filter((company: CompanyData) =>
+            qcData.some(
+              (qc) =>
+                qc.customer_name === company.company_name &&
+                qc.lead_id === company.lead_id &&
+                qc.status === 'Approved'
+            )
           )
-        );
+          .map((company: CompanyData) => {
+            const ratioDoc = ratiosData.find(
+              (r) =>
+                r.customer_name === company.company_name &&
+                r.lead_id === company.lead_id
+            );
+
+            let debtToEquity = 'N/A';
+            let dscr = 'N/A';
+            let ratioHealth = 'N/A';
+
+            if (ratioDoc) {
+              const debtEquityRatio = ratioDoc.ratios.find((r) => r.name === 'Debt/Equity');
+              const dscrRatio = ratioDoc.ratios.find((r) => r.name === 'DSCR');
+
+              debtToEquity = debtEquityRatio?.value ?? 'N/A';
+              dscr = dscrRatio?.value ?? 'N/A';
+
+              // ✅ calculate ratio health from subtotal
+              const subtotal = ratioDoc.financial_strength?.subtotal ?? null;
+              if (subtotal !== null) {
+                if (subtotal > 40) ratioHealth = 'Health';
+                else if (subtotal > 30) ratioHealth = 'Moderate';
+                else ratioHealth = 'Low';
+              }
+            }
+
+            return {
+              ...company,
+              debt_to_equity: debtToEquity,
+              dscr: dscr,
+              ratio_health: ratioHealth
+            };
+          });
 
         setData(approvedData);
       } catch (err) {
@@ -84,9 +141,12 @@ const CompanyTable: React.FC = () => {
     return num.toLocaleString('en-IN');
   };
 
+  const isBracketed = (val: any) => typeof val === 'string' && /^\(.*\)$/.test(val);
+
   return (
     <FigtreeContainer style={{ padding: '20px' }}>
       <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#111827', marginBottom: '24px' }}>Financial Analysis</h2>
+
 
       <FigtreeTableContainer>
         <FigtreeTable style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -94,9 +154,11 @@ const CompanyTable: React.FC = () => {
             <tr style={{ backgroundColor: '#f8f9fa', borderBottom: '1px solid #e5e7eb' }}>
               {['Company Name','Lead ID','Net Worth','Debt to Equity','DSCR','Year Range','Ratio Health'].map((header) => (
                 <NonSortableHeader key={header}>
+
                   {header}
                 </NonSortableHeader>
               ))}
+
               <NonSortableHeader>Actions</NonSortableHeader>
             </tr>
           </thead>
@@ -121,6 +183,7 @@ const CompanyTable: React.FC = () => {
                 <FigtreeTableCell>{company.ratio_health}</FigtreeTableCell>
                 <FigtreeTableCell style={{ textAlign: 'right' }}>
                   <button
+
                     onClick={(e) => toggleMenu(company._id, e)}
                     style={{
                       padding: '8px',

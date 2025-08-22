@@ -1,32 +1,44 @@
 {
   "financial_summary_&_ratios": {
-    "Revenue and Profitability": "The company reported a revenue of ₹136,592 crore and a net profit of ₹25,568 crore, reflecting a strong PAT margin of 18.72%, well above the 10% threshold.",
-    "Operational Efficiency": "The DSCR stands at an impressive 26.30, indicating excellent debt servicing capability. However, inventory and COGS data are unavailable for further operational insights.",
-    "Leverage and Liquidity": "The Debt/Equity ratio is low at 0.0396, showcasing minimal leverage. The Current Ratio is strong at 2.43, indicating robust short-term liquidity. Total debt is ₹3,459 crore against shareholder equity of ₹87,332 crore."
+    "Revenue and Profitability": "Revenue grew by 5.93% to ₹136,592 crore in 2025. PAT decreased slightly to ₹25,568 crore, with a strong PAT margin of 18.72%. EBITDA margin stood at 27.86%, indicating robust operational profitability.",
+    "Operational efficiency": "Accounts receivable days are at 70.58, well within the acceptable threshold. Asset turnover ratio is 1.09, reflecting efficient utilization of assets.",
+    "Leverage and liquidity": "Debt/Equity ratio is low at 0.0396, indicating minimal leverage. Current ratio and quick ratio are both strong at 2.43, showcasing excellent liquidity. DSCR is exceptionally high at 26.30, ensuring strong debt servicing capability."
   },
-  "executive_summary": "The company demonstrates strong financial health with robust profitability, low leverage, and excellent liquidity metrics. With a total risk score of 69.68, the entity falls into the 'Medium Risk' bucket, with no red flags identified. The overall risk tone is stable and favorable for lending consideration.",
+  "executive_summary": "The company demonstrates strong financial health with a low-risk rating and no significant red flags apart from a minor concern regarding net profit margin thresholds. Revenue and profitability remain robust, supported by efficient operations and excellent liquidity. The overall risk tone is favorable, with the company positioned well for growth and stability.",
   "loan_purpose": {
-    "1": "To finance working capital requirements.",
-    "2": "To support expansion projects or capital expenditure.",
-    "3": "To refinance existing debt obligations.",
-    "4": "Total project cost and loan amount requested are not specified in the provided data."
+    "1": "To finance capital expenditure for property, plant, and equipment (₹1,587 crore in 2025).",
+    "2": "To support working capital requirements and operational cash flow needs.",
+    "3": "To fund strategic investments and acquisitions (₹4,361 crore in 2025).",
+    "4": "To refinance existing short-term liabilities and improve liquidity."
   },
   "swot_analysis": {
-    "Strengths": "Strong profitability with a PAT margin of 18.72%. Excellent liquidity position with a Current Ratio of 2.43.",
-    "Weaknesses": "Lack of detailed operational data such as inventory and COGS limits deeper analysis. Industry risk score is low at 0.5, indicating potential sectoral challenges.",
-    "Opportunities": "Potential for growth through expansion projects. Favorable financial ratios provide room for additional leverage if required.",
-    "Threats": "Macroeconomic uncertainties could impact revenue and profitability. Dependence on industry-specific factors may pose risks."
+    "Strengths": [
+      "Strong profitability with a PAT margin of 18.72% and EBITDA margin of 27.86%.",
+      "Excellent liquidity position with a current ratio of 2.43 and cash reserves of ₹14,265 crore."
+    ],
+    "Weaknesses": [
+      "Decline in net profit from ₹27,234 crore in 2024 to ₹25,568 crore in 2025.",
+      "Net profit margin flagged below the threshold, though still at a healthy level."
+    ],
+    "Opportunities": [
+      "Potential for further growth in revenue through strategic investments and acquisitions.",
+      "Scope to optimize operational costs and improve net profit margins."
+    ],
+    "Threats": [
+      "Economic uncertainties and market volatility could impact revenue growth.",
+      "Rising competition in the industry may pressure margins."
+    ]
   },
   "security_offered": {
-    "Primary Security": "Details on primary security are not provided.",
-    "Collateral Security": "Collateral security information is not available.",
-    "Personal Guarantees": "No personal guarantees are mentioned in the provided data."
+    "Primary security": "Charge on fixed assets, including property, plant, and equipment worth ₹10,070 crore.",
+    "Collateral security": "Investments and other financial assets valued at ₹27,371 crore.",
+    "Personal guarantees": "Not applicable or not provided in the data."
   },
   "recommendation": {
-    "1": "Approve the loan request subject to standard due diligence and compliance checks.",
-    "2": "Ensure clarity on the loan purpose, including project cost and specific utilization of funds.",
-    "3": "Obtain details on primary and collateral security to mitigate potential risks.",
-    "4": "Monitor industry-specific risks and macroeconomic factors that could impact financial performance.",
-    "5": "Leverage the company's strong financial position to negotiate favorable loan terms."
+    "1": "Approve the loan request considering the company's strong financial position and low-risk rating.",
+    "2": "Monitor net profit margins closely to address the flagged concern.",
+    "3": "Encourage the company to optimize operational costs to enhance profitability further.",
+    "4": "Ensure adequate security coverage through fixed assets and investments.",
+    "5": "Support the company's strategic investments and acquisitions to drive growth."
   }
 }
