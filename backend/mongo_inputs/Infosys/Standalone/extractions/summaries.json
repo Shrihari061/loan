@@ -1,21 +1,44 @@
 {
   "financial_summary_&_ratios": {
-    "Revenue and Profitability": "- Revenue increased by 5.9% to ₹136,592 crore in 2025.\n- PAT decreased slightly to ₹25,568 crore in 2025, with a PAT margin of 18.72% (above the 10% threshold).\n- EBITDA margin stands strong at 27.86%, indicating healthy operational profitability.",
-    "Operational efficiency": "- Accounts receivable days improved to 70.58, well within the threshold of 90 days.\n- Asset turnover ratio is 1.09, reflecting efficient use of assets to generate revenue.\n- Accounts payable days are low at 9.4, indicating timely payments to creditors.",
-    "Leverage and liquidity": "- Debt/Equity ratio is 0.0, showcasing no reliance on debt financing.\n- Current ratio and quick ratio are both at 2.43, indicating strong liquidity.\n- DSCR is robust at 26.30, far exceeding the threshold of 1.2."
+    "Revenue and Profitability": "Revenue grew by 5.93% to ₹136,592 crore in 2025. PAT decreased slightly to ₹25,568 crore, with a strong PAT margin of 18.72%. EBITDA margin stood at 27.86%, indicating robust operational profitability.",
+    "Operational efficiency": "Accounts receivable days are at 70.58, well within the acceptable threshold. Asset turnover ratio is 1.09, reflecting efficient utilization of assets.",
+    "Leverage and liquidity": "Debt/Equity ratio is low at 0.0396, indicating minimal leverage. Current ratio and quick ratio are both strong at 2.43, showcasing excellent liquidity. DSCR is exceptionally high at 26.30, ensuring strong debt servicing capability."
   },
-  "executive_summary": "The company demonstrates strong financial health with a low-risk rating and no significant red flags apart from a minor concern regarding net profit margin. Revenue growth and operational efficiency are commendable, supported by robust liquidity and negligible leverage. The overall risk tone is positive, with the company positioned as a financially stable entity.",
-  "loan_purpose": "- Funding for capital expenditure and property, plant, and equipment.\n- Support for working capital requirements.\n- Investment in subsidiaries and acquisitions.\n- General corporate purposes.\n- Total loan requested: ₹XX crore (specific amount not provided).",
+  "executive_summary": "The company demonstrates strong financial health with a low-risk rating and no significant red flags apart from a minor concern regarding net profit margin thresholds. Revenue and profitability remain robust, supported by efficient operations and excellent liquidity. The overall risk tone is favorable, with the company positioned well for growth and stability.",
+  "loan_purpose": {
+    "1": "To finance capital expenditure for property, plant, and equipment (₹1,587 crore in 2025).",
+    "2": "To support working capital requirements and operational cash flow needs.",
+    "3": "To fund strategic investments and acquisitions (₹4,361 crore in 2025).",
+    "4": "To refinance existing short-term liabilities and improve liquidity."
+  },
   "swot_analysis": {
-    "Strengths": "- Strong liquidity position with ₹14,265 crore in cash and cash equivalents.\n- High profitability margins (PAT margin: 18.72%, EBITDA margin: 27.86%).\n- Debt-free capital structure with a Debt/Equity ratio of 0.0.",
-    "Weaknesses": "- Decline in PAT from ₹27,234 crore in 2024 to ₹25,568 crore in 2025.\n- Net profit margin flagged as below threshold, though still strong.\n- High dividend payouts impacting retained earnings.",
-    "Opportunities": "- Potential for further revenue growth in a stable industry.\n- Scope for improving operational efficiency and reducing costs.\n- Expansion through acquisitions and investments in subsidiaries.",
-    "Threats": "- Dependence on timely collections, with accounts receivable days at 70.58.\n- Industry risks and economic downturns could impact profitability.\n- Currency fluctuations affecting foreign income."
+    "Strengths": [
+      "Strong profitability with a PAT margin of 18.72% and EBITDA margin of 27.86%.",
+      "Excellent liquidity position with a current ratio of 2.43 and cash reserves of ₹14,265 crore."
+    ],
+    "Weaknesses": [
+      "Decline in net profit from ₹27,234 crore in 2024 to ₹25,568 crore in 2025.",
+      "Net profit margin flagged below the threshold, though still at a healthy level."
+    ],
+    "Opportunities": [
+      "Potential for further growth in revenue through strategic investments and acquisitions.",
+      "Scope to optimize operational costs and improve net profit margins."
+    ],
+    "Threats": [
+      "Economic uncertainties and market volatility could impact revenue growth.",
+      "Rising competition in the industry may pressure margins."
+    ]
   },
   "security_offered": {
-    "primary_security": "- Hypothecation of current and future receivables.\n- Charge on fixed assets and property, plant, and equipment.",
-    "collateral_security": "- Investments in subsidiaries and financial assets.\n- Cash and cash equivalents as additional security.",
-    "personal_guarantees": "- No personal guarantees indicated."
+    "Primary security": "Charge on fixed assets, including property, plant, and equipment worth ₹10,070 crore.",
+    "Collateral security": "Investments and other financial assets valued at ₹27,371 crore.",
+    "Personal guarantees": "Not applicable or not provided in the data."
   },
-  "recommendation": "- Approve the loan request, considering the low-risk rating and strong financial metrics.\n- Monitor net profit margin trends and address the flagged concern.\n- Ensure timely collections to maintain accounts receivable efficiency.\n- Encourage prudent dividend payouts to retain earnings for growth.\n- Leverage the company’s strong liquidity for strategic investments and acquisitions."
+  "recommendation": {
+    "1": "Approve the loan request considering the company's strong financial position and low-risk rating.",
+    "2": "Monitor net profit margins closely to address the flagged concern.",
+    "3": "Encourage the company to optimize operational costs to enhance profitability further.",
+    "4": "Ensure adequate security coverage through fixed assets and investments.",
+    "5": "Support the company's strategic investments and acquisitions to drive growth."
+  }
 }

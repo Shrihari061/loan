@@ -20,7 +20,7 @@
     "red_flag": false
   },
   "Debt/Equity": {
-    "value": 0.0,
+    "value": 0.0396,
     "threshold": ">2.0",
     "red_flag": false
   },
@@ -55,7 +55,7 @@
     "red_flag": false
   },
   "Accounts payable days": {
-    "value": 9.3995,
+    "value": 0.0,
     "threshold": ">30",
     "red_flag": false
   },

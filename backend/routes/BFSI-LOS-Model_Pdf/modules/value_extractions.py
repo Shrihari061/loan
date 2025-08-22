@@ -82,8 +82,33 @@ def _normalize_units(u: Any) -> str:
         return ""
     return u.strip()
 
+# -------------------------
+# Helper: format negative numbers as parentheses
+# -------------------------
+def _format_negative_brackets(value: Any) -> Any:
+    """
+    Convert negative integers or floats to string with parentheses.
+    Leave positive numbers as-is.
+    'null' strings remain unchanged.
+    """
+    if value in (None, "null"):
+        return value
+    try:
+        if isinstance(value, str):
+            # Skip if already parentheses
+            if value.startswith("(") and value.endswith(")"):
+                return value
+            num = float(value)
+        else:
+            num = float(value)
+        if num < 0:
+            return f"({str(int(abs(num)))})" if num == int(num) else f"({abs(num)})"
+        return value
+    except:
+        return value
+
 def _postprocess_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
-    """Ensure required keys exist and types match your constraints."""
+    """Ensure required keys exist and types match constraints, convert negatives to brackets."""
     out = {}
     for k, v in payload.items():
         if not isinstance(v, dict):
@@ -95,11 +120,10 @@ def _postprocess_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
         if "weighted average equity shares" in k.lower():
             unit = "in shares"
 
-        value_2025 = _to_number_or_null(v.get("value_2025"), unit=unit, label=k)
-        value_2024 = _to_number_or_null(v.get("value_2024"), unit=unit, label=k)
+        value_2025 = _format_negative_brackets(_to_number_or_null(v.get("value_2025"), unit=unit, label=k))
+        value_2024 = _format_negative_brackets(_to_number_or_null(v.get("value_2024"), unit=unit, label=k))
 
         source = v.get("source", "")
-        # enforce source whitelist
         if source not in ("bs", "pl", "pf", "cf"):
             if source == "pf":
                 source = "pl"

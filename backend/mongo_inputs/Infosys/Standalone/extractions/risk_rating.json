@@ -15,7 +15,7 @@
         "max": 3.8462
       },
       "Debt/Equity": {
-        "value": 0.0,
+        "value": 0.0396,
         "threshold": ">2.0",
         "red_flag": false,
         "score": 3.8462,
@@ -85,7 +85,7 @@
         "max": 3.8462
       },
       "Accounts payable days": {
-        "value": 9.3995,
+        "value": 0.0,
         "threshold": ">30",
         "red_flag": false,
         "score": 3.8462,

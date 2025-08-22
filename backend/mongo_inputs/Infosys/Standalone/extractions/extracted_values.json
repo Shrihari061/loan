@@ -23,19 +23,25 @@
     "source": "bs",
     "unit": "₹ crore"
   },
-  "Financial assets - Investments (non-current)": {
+  "Financial assets (Investments, Non-current)": {
+    "value_2025": "null",
+    "value_2024": "null",
+    "source": "bs",
+    "unit": ""
+  },
+  "Investments": {
     "value_2025": 27371,
     "value_2024": 23352,
     "source": "bs",
     "unit": "₹ crore"
   },
-  "Financial assets - Loans (non-current)": {
+  "Loans (Non-current)": {
     "value_2025": 26,
     "value_2024": 34,
     "source": "bs",
     "unit": "₹ crore"
   },
-  "Other financial assets (non-current)": {
+  "Other financial assets (Non-current)": {
     "value_2025": 2350,
     "value_2024": 1756,
     "source": "bs",
@@ -47,7 +53,7 @@
     "source": "bs",
     "unit": "₹ crore"
   },
-  "Income tax assets (net) (non-current)": {
+  "Income tax assets (net, Non-current)": {
     "value_2025": 1164,
     "value_2024": 2583,
     "source": "bs",
@@ -65,7 +71,7 @@
     "source": "bs",
     "unit": "₹ crore"
   },
-  "Financial assets - Investments (current)": {
+  "Financial assets (Current Investments)": {
     "value_2025": 11147,
     "value_2024": 11307,
     "source": "bs",
@@ -83,19 +89,19 @@
     "source": "bs",
     "unit": "₹ crore"
   },
-  "Financial assets - Loans (current)": {
+  "Loans (Current)": {
     "value_2025": 207,
     "value_2024": 208,
     "source": "bs",
     "unit": "₹ crore"
   },
-  "Other financial assets (current)": {
+  "Other financial assets (Current)": {
     "value_2025": 12569,
     "value_2024": 10129,
     "source": "bs",
     "unit": "₹ crore"
   },
-  "Income tax assets (net) (current)": {
+  "Income tax assets (net, Current)": {
     "value_2025": 2949,
     "value_2024": 6329,
     "source": "bs",
@@ -137,13 +143,13 @@
     "source": "bs",
     "unit": "₹ crore"
   },
-  "Lease liabilities (non-current)": {
+  "Lease liabilities (Non-current)": {
     "value_2025": 2694,
     "value_2024": 3088,
     "source": "bs",
     "unit": "₹ crore"
   },
-  "Other financial liabilities (non-current)": {
+  "Other financial liabilities (Non-current)": {
     "value_2025": 1991,
     "value_2024": 1941,
     "source": "bs",
@@ -167,25 +173,25 @@
     "source": "bs",
     "unit": "₹ crore"
   },
-  "Lease liabilities (current)": {
+  "Lease liabilities (Current)": {
     "value_2025": 765,
     "value_2024": 678,
     "source": "bs",
     "unit": "₹ crore"
   },
-  "Trade payables - Total outstanding dues of micro enterprises and small enterprises": {
+  "Trade payables (Micro enterprises and small enterprises)": {
     "value_2025": 8,
     "value_2024": 92,
     "source": "bs",
     "unit": "₹ crore"
   },
-  "Trade payables - Total outstanding dues of creditors other than micro enterprises and small enterprises": {
+  "Trade payables (Others)": {
     "value_2025": 2720,
     "value_2024": 2401,
     "source": "bs",
     "unit": "₹ crore"
   },
-  "Other financial liabilities (current)": {
+  "Other financial liabilities (Current)": {
     "value_2025": 14101,
     "value_2024": 11808,
     "source": "bs",
@@ -359,25 +365,25 @@
     "source": "pl",
     "unit": "₹ crore"
   },
-  "Earnings per equity share - Basic (in ₹ per share)": {
+  "Basic (in ₹ per share)": {
     "value_2025": 61.58,
     "value_2024": 65.62,
     "source": "pl",
     "unit": "₹ per share"
   },
-  "Earnings per equity share - Diluted (in ₹ per share)": {
+  "Diluted (in ₹ per share)": {
     "value_2025": 61.46,
     "value_2024": 65.56,
     "source": "pl",
     "unit": "₹ per share"
   },
-  "Weighted average equity shares used in computing earnings per equity share - Basic (in shares)": {
+  "Weighted average equity shares used in computing earnings per equity share (Basic)": {
     "value_2025": 4151936905,
     "value_2024": 4150099796,
     "source": "pl",
     "unit": "in shares"
   },
-  "Weighted average equity shares used in computing earnings per equity share - Diluted (in shares)": {
+  "Weighted average equity shares used in computing earnings per equity share (Diluted)": {
     "value_2025": 4159905476,
     "value_2024": 4153994624,
     "source": "pl",
@@ -396,14 +402,14 @@
     "unit": "₹ crore"
   },
   "Impairment loss recognized / (reversed) under expected credit loss model": {
-    "value_2025": -7,
+    "value_2025": "(7)",
     "value_2024": 130,
     "source": "cf",
     "unit": "₹ crore"
   },
   "Interest and dividend income": {
-    "value_2025": -3699,
-    "value_2024": -4670,
+    "value_2025": "(3699)",
+    "value_2024": "(4670)",
     "source": "cf",
     "unit": "₹ crore"
   },
@@ -414,7 +420,7 @@
     "unit": "₹ crore"
   },
   "Provision for post-sale client support": {
-    "value_2025": -114,
+    "value_2025": "(114)",
     "value_2024": 77,
     "source": "cf",
     "unit": "₹ crore"
@@ -426,8 +432,8 @@
     "unit": "₹ crore"
   },
   "Interest receivable on income tax refund": {
-    "value_2025": -327,
-    "value_2024": -1934,
+    "value_2025": "(327)",
+    "value_2024": "(1934)",
     "source": "cf",
     "unit": "₹ crore"
   },
@@ -438,14 +444,14 @@
     "unit": "₹ crore"
   },
   "Trade receivables and unbilled revenue": {
-    "value_2025": -2994,
-    "value_2024": -2933,
+    "value_2025": "(2994)",
+    "value_2024": "(2933)",
     "source": "cf",
     "unit": "₹ crore"
   },
   "Loans, other financial assets and other assets": {
-    "value_2025": -1942,
-    "value_2024": -1645,
+    "value_2025": "(1942)",
+    "value_2024": "(1645)",
     "source": "cf",
     "unit": "₹ crore"
   },
@@ -457,7 +463,7 @@
   },
   "Other financial liabilities, other liabilities and provisions": {
     "value_2025": 3529,
-    "value_2024": -117,
+    "value_2024": "(117)",
     "source": "cf",
     "unit": "₹ crore"
   },
@@ -468,8 +474,8 @@
     "unit": "₹ crore"
   },
   "Income taxes paid": {
-    "value_2025": -4601,
-    "value_2024": -8235,
+    "value_2025": "(4601)",
+    "value_2024": "(8235)",
     "source": "cf",
     "unit": "₹ crore"
   },
@@ -480,14 +486,14 @@
     "unit": "₹ crore"
   },
   "Expenditure on property, plant and equipment": {
-    "value_2025": -1587,
-    "value_2024": -1832,
+    "value_2025": "(1587)",
+    "value_2024": "(1832)",
     "source": "cf",
     "unit": "₹ crore"
   },
   "Deposits placed with corporation": {
-    "value_2025": -1026,
-    "value_2024": -688,
+    "value_2025": "(1026)",
+    "value_2024": "(688)",
     "source": "cf",
     "unit": "₹ crore"
   },
@@ -510,7 +516,7 @@
     "unit": "₹ crore"
   },
   "Loan given to subsidiaries": {
-    "value_2025": -10,
+    "value_2025": "(10)",
     "value_2024": "null",
     "source": "cf",
     "unit": "₹ crore"
@@ -522,13 +528,13 @@
     "unit": "₹ crore"
   },
   "Investment in subsidiaries": {
-    "value_2025": -4361,
-    "value_2024": -63,
+    "value_2025": "(4361)",
+    "value_2024": "(63)",
     "source": "cf",
     "unit": "₹ crore"
   },
   "Payment towards acquisition of entities": {
-    "value_2025": -184,
+    "value_2025": "(184)",
     "value_2024": "null",
     "source": "cf",
     "unit": "₹ crore"
@@ -552,32 +558,32 @@
     "unit": "₹ crore"
   },
   "Payments to acquire investments - Liquid mutual fund units": {
-    "value_2025": -66637,
-    "value_2024": -57606,
+    "value_2025": "(66637)",
+    "value_2024": "(57606)",
     "source": "cf",
     "unit": "₹ crore"
   },
   "Payments to acquire investments - Commercial papers": {
-    "value_2025": -6058,
-    "value_2024": -9405,
+    "value_2025": "(6058)",
+    "value_2024": "(9405)",
     "source": "cf",
     "unit": "₹ crore"
   },
   "Payments to acquire investments - Certificates of deposit": {
-    "value_2025": -6138,
-    "value_2024": -7011,
+    "value_2025": "(6138)",
+    "value_2024": "(7011)",
     "source": "cf",
     "unit": "₹ crore"
   },
   "Payments to acquire investments - Non-convertible debentures": {
-    "value_2025": -3240,
-    "value_2024": -1526,
+    "value_2025": "(3240)",
+    "value_2024": "(1526)",
     "source": "cf",
     "unit": "₹ crore"
   },
   "Payments to acquire investments - Other investments": {
-    "value_2025": -25,
-    "value_2024": -2,
+    "value_2025": "(25)",
+    "value_2024": "(2)",
     "source": "cf",
     "unit": "₹ crore"
   },
@@ -624,14 +630,14 @@
     "unit": "₹ crore"
   },
   "Net cash used in investing activities": {
-    "value_2025": -1943,
-    "value_2024": -3261,
+    "value_2025": "(1943)",
+    "value_2024": "(3261)",
     "source": "cf",
     "unit": "₹ crore"
   },
   "Payment of lease liabilities": {
-    "value_2025": -859,
-    "value_2024": -850,
+    "value_2025": "(859)",
+    "value_2024": "(850)",
     "source": "cf",
     "unit": "₹ crore"
   },
@@ -642,20 +648,20 @@
     "unit": "₹ crore"
   },
   "Other payments": {
-    "value_2025": -186,
-    "value_2024": -243,
+    "value_2025": "(186)",
+    "value_2024": "(243)",
     "source": "cf",
     "unit": "₹ crore"
   },
   "Payment of dividends": {
-    "value_2025": -20337,
-    "value_2024": -14733,
+    "value_2025": "(20337)",
+    "value_2024": "(14733)",
     "source": "cf",
     "unit": "₹ crore"
   },
   "Net cash used in financing activities": {
-    "value_2025": -21379,
-    "value_2024": -15825,
+    "value_2025": "(21379)",
+    "value_2024": "(15825)",
     "source": "cf",
     "unit": "₹ crore"
   },
@@ -666,8 +672,8 @@
     "unit": "₹ crore"
   },
   "Effect of exchange differences on translation of foreign currency cash and cash equivalents": {
-    "value_2025": -13,
-    "value_2024": -44,
+    "value_2025": "(13)",
+    "value_2024": "(44)",
     "source": "cf",
     "unit": "₹ crore"
   },
