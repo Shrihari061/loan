@@ -25,12 +25,22 @@ interface CompanyData {
   cash_flow: FinancialItem[];
 }
 
+
+
 const CompanyDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [company, setCompany] = useState<CompanyData | null>(null);
   const [activeTab, setActiveTab] = useState<'source' | 'ratio'>('source');
+  const [selectedDocument, setSelectedDocument] = useState<'balance_sheet' | 'profit_loss' | 'cash_flow'>('balance_sheet');
 
-  // Fetch company details (verified by backend using name + lead_id)
+  // Financial document types
+  const financialDocuments = [
+    { key: 'balance_sheet', name: 'Balance Sheet Data', icon: '📊' },
+    { key: 'profit_loss', name: 'P&L Data', icon: '📈' },
+    { key: 'cash_flow', name: 'Cash Flow Data', icon: '💰' }
+  ];
+
+  // Fetch company details
   useEffect(() => {
     const fetchCompany = async () => {
       try {
@@ -75,10 +85,9 @@ const CompanyDetails: React.FC = () => {
   };
 
   const generateDummyValue = (itemName: string, documentType: string, year: number): number => {
-    const baseValue = 50000; // Base value for calculations
-    const yearMultiplier = 1 + (year - 2022) * 0.15; // 15% growth per year
+    const baseValue = 50000;
+    const yearMultiplier = 1 + (year - 2022) * 0.15;
     
-    // Different multipliers based on item type
     let itemMultiplier = 1;
     
     if (documentType === 'balance_sheet') {
@@ -100,99 +109,248 @@ const CompanyDetails: React.FC = () => {
     return Math.round(baseValue * itemMultiplier * yearMultiplier);
   };
 
-  const renderTable = (title: string, data: FinancialItem[]) => {
+  const getRiskColor = (health: string) => {
+    switch (health.toLowerCase()) {
+      case 'excellent': return '#10b981';
+      case 'good': return '#3b82f6';
+      case 'moderate': return '#f59e0b';
+      case 'poor': return '#ef4444';
+      default: return '#6b7280';
+    }
+  };
+
+
+
+  const renderFinancialTable = (title: string, data: FinancialItem[]) => {
     if (!data || data.length === 0) return null;
 
-    const showFY2022 = data.some((row) => row.FY2022 !== null);
-    const showFY2023 = data.some((row) => row.FY2023 !== null);
-    const showFY2024 = data.some((row) => row.FY2024 !== null);
-
     return (
-      <div className="mb-8">
-        <h2 className="text-lg font-semibold mb-2">{title}</h2>
-        <div className="overflow-x-auto">
-          <table className="min-w-full table-auto border border-gray-300">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="border px-4 py-2 text-left">Item</th>
-                {showFY2022 && <th className="border px-4 py-2 text-left">FY2022</th>}
-                {showFY2023 && <th className="border px-4 py-2 text-left">FY2023</th>}
-                {showFY2024 && <th className="border px-4 py-2 text-left">FY2024</th>}
-                <th className="border px-4 py-2 text-left">FY2025</th>
+      <div style={{
+        backgroundColor: '#fff',
+        borderRadius: '8px',
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+        overflow: 'hidden'
+      }}>
+        {/* Table Header */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '16px 20px',
+          backgroundColor: '#f8f9fa',
+          borderBottom: '1px solid #e5e7eb'
+        }}>
+          <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>{title}</h3>
+        </div>
+
+        {/* Table Content */}
+        <div style={{ overflow: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ backgroundColor: '#f8f9fa' }}>
+                                  <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '14px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>Item</th>
+                  <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '14px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>FY2022</th>
+                  <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '14px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>FY2023</th>
+                  <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '14px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>FY2024</th>
+                  <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '14px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>FY2025</th>
               </tr>
             </thead>
             <tbody>
-              {data.map((row) => (
-                <tr key={row._id}>
-                  <td className="border px-4 py-2">
-                    {title === 'Cash Flow Summary' && row.item === 'Principal' 
-                      ? 'Payment of lease liabilities' 
-                      : row.item}
-                  </td>
-                  {showFY2022 && <td className="border px-4 py-2">{formatValue(row.FY2022)}</td>}
-                  {showFY2023 && <td className="border px-4 py-2">{formatValue(row.FY2023)}</td>}
-                  {showFY2024 && <td className="border px-4 py-2">{formatValue(row.FY2024)}</td>}
-                  <td className="border px-4 py-2">{formatValue(row.FY2025)}</td>
-                </tr>
+              {data.map((row, index) => (
+                                  <tr key={row._id} style={{ backgroundColor: index % 2 === 0 ? '#fff' : '#f9fafb' }}>
+                    <td style={{ padding: '12px 16px', fontSize: '14px', color: '#111827', borderBottom: '1px solid #f3f4f6', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                      {title === 'Cash Flow Summary' && row.item === 'Principal' 
+                        ? 'Payment of lease liabilities' 
+                        : row.item}
+                    </td>
+                    <td style={{ padding: '12px 16px', fontSize: '14px', color: '#111827', textAlign: 'right', borderBottom: '1px solid #f3f4f6', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>{formatValue(row.FY2022)}</td>
+                    <td style={{ padding: '12px 16px', fontSize: '14px', color: '#111827', textAlign: 'right', borderBottom: '1px solid #f3f4f6', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>{formatValue(row.FY2023)}</td>
+                    <td style={{ padding: '12px 16px', fontSize: '14px', color: '#111827', textAlign: 'right', borderBottom: '1px solid #f3f4f6', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>{formatValue(row.FY2024)}</td>
+                    <td style={{ padding: '12px 16px', fontSize: '14px', color: '#111827', textAlign: 'right', borderBottom: '1px solid #f3f4f6', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>{formatValue(row.FY2025)}</td>
+                  </tr>
               ))}
             </tbody>
           </table>
-        </div>
-        
-        {/* Footnote */}
-        <div className="mt-4 text-sm text-gray-600 italic">
-          The values displayed above are those extracted to calculate the ratios in scope.
         </div>
       </div>
     );
   };
 
   if (!company) {
-    return <div className="p-4">Loading company data...</div>;
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+      }}>
+        Loading company data...
+      </div>
+    );
   }
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">{company.company_name}</h1>
-
-      {/* Company Info */}
-      <div className="grid grid-cols-2 gap-4 mb-6">
-        <div>
-          <p><strong>lead ID:</strong> {company.lead_id}</p>
-          <p><strong>Year Range:</strong> {company.year_range}</p>
+    <div style={{
+      backgroundColor: '#f8f6f1',
+      minHeight: '100vh',
+      fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+    }}>
+      <style>
+        {`
+          * {
+            font-family: 'Figtree', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+          }
+        `}
+      </style>
+      <div style={{ padding: '24px', maxWidth: '1400px', margin: '0 auto' }}>
+        
+        {/* Header Section */}
+        <div style={{
+          backgroundColor: '#fff',
+          borderRadius: '12px',
+          padding: '24px',
+          marginBottom: '24px',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+            <div>
+              <h1 style={{ fontSize: '24px', fontWeight: '600', color: '#111827', marginBottom: '8px', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                {company.company_name}
+              </h1>
+              <p style={{ fontSize: '14px', color: '#6b7280', marginBottom: '4px', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                {company.lead_id}
+              </p>
+              <p style={{ fontSize: '14px', color: '#6b7280', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                Last Updated: {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+              </p>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{
+                display: 'inline-block',
+                padding: '4px 12px',
+                backgroundColor: getRiskColor(company.ratio_health),
+                color: '#fff',
+                borderRadius: '16px',
+                fontSize: '12px',
+                fontWeight: '500',
+                marginBottom: '8px',
+                fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+              }}>
+                {company.ratio_health}
+              </div>
+              <div style={{ fontSize: '14px', color: '#6b7280', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                <div>Debt-to-Equity: {company.debt_to_equity}</div>
+                <div>Net Worth: ₹{formatValue(company.net_worth)}</div>
+                <div>DSCR: {company.dscr}</div>
+                <div>Year Range: {company.year_range}</div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div>
-          <p><strong>Net Worth:</strong> ₹{formatValue(company.net_worth)}</p>
-          <p><strong>Ratio Health:</strong> {company.ratio_health}</p>
+
+        {/* Navigation Tabs */}
+        <div style={{
+          backgroundColor: '#fff',
+          borderRadius: '12px',
+          padding: '0 24px',
+          marginBottom: '24px',
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
+        }}>
+          <div style={{ display: 'flex', borderBottom: '1px solid #e5e7eb' }}>
+            {[
+              { key: 'source', label: 'Source Financials' },
+              { key: 'ratio', label: 'Ratio Analysis & Health Check' }
+            ].map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key as any)}
+                style={{
+                  padding: '16px 24px',
+                  borderBottom: `2px solid ${activeTab === tab.key ? '#2563eb' : 'transparent'}`,
+                  backgroundColor: activeTab === tab.key ? '#f8fafc' : 'transparent',
+                  color: activeTab === tab.key ? '#2563eb' : '#6b7280',
+                  fontSize: '14px',
+                  fontWeight: activeTab === tab.key ? '600' : '500',
+                  cursor: 'pointer',
+                  border: 'none',
+                  outline: 'none',
+                  fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+                }}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div style={{ display: 'flex', gap: '24px' }}>
+          
+          {/* Left Panel - Documents */}
+          <div style={{
+            width: '300px',
+            backgroundColor: '#fff',
+            borderRadius: '12px',
+            padding: '20px',
+            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+            height: 'fit-content'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" style={{ color: '#6b7280', marginRight: '8px' }}>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              </svg>
+              <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>Documents</h3>
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {financialDocuments.map((doc) => (
+                <div 
+                  key={doc.key}
+                  onClick={() => setSelectedDocument(doc.key as 'balance_sheet' | 'profit_loss' | 'cash_flow')}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    padding: '12px',
+                    backgroundColor: selectedDocument === doc.key ? '#e0f2fe' : '#f9fafb',
+                    borderRadius: '8px',
+                    border: `1px solid ${selectedDocument === doc.key ? '#0288d1' : '#e5e7eb'}`,
+                    cursor: 'pointer',
+                    transition: 'all 0.2s'
+                  }}
+                >
+                  <div style={{ marginRight: '12px', fontSize: '20px' }}>
+                    {doc.icon}
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ 
+                      fontSize: '14px', 
+                      color: selectedDocument === doc.key ? '#0288d1' : '#111827', 
+                      fontWeight: selectedDocument === doc.key ? '600' : '500',
+                      fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+                    }}>
+                      {doc.name}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right Panel - Content */}
+          <div style={{ flex: 1 }}>
+            {activeTab === 'ratio' ? (
+              <CompanyRatioAnalysis />
+            ) : (
+              <>
+                {selectedDocument === 'balance_sheet' && renderFinancialTable('Balance Sheet Summary', company.balance_sheet)}
+                {selectedDocument === 'profit_loss' && renderFinancialTable('Profit & Loss Summary', company.profit_loss)}
+                {selectedDocument === 'cash_flow' && renderFinancialTable('Cash Flow Summary', company.cash_flow)}
+              </>
+            )}
+          </div>
         </div>
       </div>
-
-      {/* Tab Navigation */}
-      <div className="mb-6 border-b border-gray-300 flex">
-        <button
-          className={`px-4 py-2 mr-2 border-b-2 ${activeTab === 'source' ? 'border-blue-500 font-semibold' : 'border-transparent'}`}
-          onClick={() => setActiveTab('source')}
-        >
-          Source Financials
-        </button>
-        <button
-          className={`px-4 py-2 border-b-2 ${activeTab === 'ratio' ? 'border-blue-500 font-semibold' : 'border-transparent'}`}
-          onClick={() => setActiveTab('ratio')}
-        >
-          Ratio Analysis & Health Check
-        </button>
-      </div>
-
-      {/* Tab Content */}
-      {activeTab === 'ratio' ? (
-        <CompanyRatioAnalysis />
-      ) : (
-        <>
-          {renderTable('Balance Sheet Summary', company.balance_sheet)}
-          {renderTable('Profit & Loss Summary', company.profit_loss)}
-          {renderTable('Cash Flow Summary', company.cash_flow)}
-        </>
-      )}
     </div>
   );
 };

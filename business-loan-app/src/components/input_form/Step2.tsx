@@ -239,7 +239,7 @@ export default function Step2({
       </div>
 
       {/* Financial Year Selection */}
-      <div className="mt-8 pt-6">
+      {/* <div className="mt-8 pt-6">
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Financial Year
@@ -255,7 +255,7 @@ export default function Step2({
             ))}
           </select>
         </div>
-      </div>
+      </div> */}
 
 
 

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { createPortal } from "react-dom";
+import { FigtreeContainer, FigtreeTableContainer, SortableHeader, FigtreeTableCell, FigtreeTable, NonSortableHeader } from './ReusableComponents';
 
 export default function AppraisalTable() {
   const [memos, setMemos] = useState<any[]>([]);
@@ -82,65 +83,89 @@ export default function AppraisalTable() {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <FigtreeContainer style={{ padding: '20px' }}>
       {/* Header */}
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-semibold text-gray-800">Appraisal Memos</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+        <h1 style={{ fontSize: '24px', fontWeight: '600', color: '#111827' }}>Appraisal Memos</h1>
         <button
           onClick={handleGenerateClick}
-          className="bg-blue-600 text-white px-5 py-2 rounded-lg shadow hover:bg-blue-700 transition"
+          style={{
+            backgroundColor: '#2563eb',
+            color: 'white',
+            padding: '12px 20px',
+            borderRadius: '8px',
+            border: 'none',
+            fontSize: '14px',
+            fontWeight: '500',
+            cursor: 'pointer',
+            transition: 'background-color 0.2s',
+            fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1d4ed8'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#2563eb'}
         >
           Generate New Memo
         </button>
       </div>
 
       {/* Table Container */}
-      <div className="overflow-x-auto bg-white shadow rounded-lg">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              {[
-                "Customer Name",
-                "Lead ID",
-                "Loan Type", // ✅ show loan_type
-                "Created By",
-                "Last Updated",
-                "Status",
-              ].map((header) => (
-                <th
-                  key={header}
-                  className="px-4 py-3 text-left text-sm font-medium text-gray-600 uppercase tracking-wider"
-                >
-                  {header}
-                </th>
-              ))}
-              <th />
+      <FigtreeTableContainer>
+        <FigtreeTable style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr style={{ backgroundColor: '#f8f9fa', borderBottom: '1px solid #e5e7eb' }}>
+              <NonSortableHeader>Customer Name</NonSortableHeader>
+              <NonSortableHeader>Lead ID</NonSortableHeader>
+              <NonSortableHeader>Loan Type</NonSortableHeader>
+              <NonSortableHeader>Created By</NonSortableHeader>
+              <SortableHeader sortKey="last_updated" currentSort={null} onSort={() => {}}>Last Updated</SortableHeader>
+              <NonSortableHeader>Status</NonSortableHeader>
+              <NonSortableHeader>Actions</NonSortableHeader>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody>
             {memos.map((memo: any, idx) => (
-              <tr key={memo._id} className={idx % 2 === 0 ? "bg-white" : "bg-gray-50"}>
-                <td className="px-4 py-3 text-sm text-gray-700">{memo.customer_name}</td>
-                <td className="px-4 py-3 text-sm text-gray-700">{memo.lead_id}</td>
-                <td className="px-4 py-3 text-sm text-gray-700">
-                  {memo.loan_type || "N/A"} {/* ✅ directly display loan_type */}
-                </td>
-                <td className="px-4 py-3 text-sm text-gray-700">{memo.created_by}</td>
-                <td className="px-4 py-3 text-sm text-gray-700">{memo.last_updated}</td>
-                <td className="px-4 py-3 text-sm text-gray-700">{memo.status}</td>
-                <td className="px-4 py-3 text-right">
-                  <span
+              <tr 
+                key={memo._id} 
+                style={{ 
+                  borderBottom: '1px solid #f3f4f6',
+                  transition: 'background-color 0.2s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f9fafb'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+              >
+                <FigtreeTableCell>{memo.customer_name}</FigtreeTableCell>
+                <FigtreeTableCell>{memo.lead_id}</FigtreeTableCell>
+                <FigtreeTableCell>
+                  {memo.loan_type || "N/A"}
+                </FigtreeTableCell>
+                <FigtreeTableCell>{memo.created_by}</FigtreeTableCell>
+                <FigtreeTableCell>{memo.last_updated}</FigtreeTableCell>
+                <FigtreeTableCell>{memo.status}</FigtreeTableCell>
+                <FigtreeTableCell style={{ textAlign: 'right' }}>
+                  <button
                     onClick={(e) => toggleMenu(memo._id, e)}
-                    className="cursor-pointer px-2 py-1 rounded hover:bg-gray-200"
+                    style={{
+                      padding: '8px',
+                      borderRadius: '4px',
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      color: '#6b7280',
+                      transition: 'background-color 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f3f4f6'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                   >
-                    &#8942;
-                  </span>
-                </td>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                    </svg>
+                  </button>
+                </FigtreeTableCell>
               </tr>
             ))}
           </tbody>
-        </table>
-      </div>
+        </FigtreeTable>
+      </FigtreeTableContainer>
 
       {/* Floating Menu */}
       {openMenuId && menuPosition &&
@@ -212,7 +237,7 @@ export default function AppraisalTable() {
             )}
           </div>
         </div>
-      )}
-    </div>
+              )}
+    </FigtreeContainer>
   );
 }

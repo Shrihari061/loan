@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { FigtreeContainer, FigtreeTableContainer, SortableHeader, FigtreeTableCell, FigtreeTable } from './ReusableComponents';
 
 interface RiskEntry {
   _id: string;
@@ -22,10 +23,10 @@ interface QCRecord {
 const RiskTable: React.FC = () => {
   const [riskData, setRiskData] = useState<RiskEntry[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [riskFilter, setRiskFilter] = useState("All");
+
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [menuPosition, setMenuPosition] = useState<{ top: number; left: number } | null>(null);
+  const [sortConfig, setSortConfig] = useState<{ key: string; direction: 'asc' | 'desc' } | null>(null);
 
   const navigate = useNavigate();
 
@@ -64,13 +65,13 @@ const RiskTable: React.FC = () => {
   const getRiskPillColor = (risk?: string) => {
     switch (risk?.toLowerCase()) {
       case "low risk":
-        return "bg-green-100 text-green-700 border border-green-300";
+        return { backgroundColor: '#dcfce7', color: '#166534', border: '1px solid #bbf7d0' };
       case "medium risk":
-        return "bg-yellow-100 text-yellow-700 border border-yellow-300";
+        return { backgroundColor: '#fef3c7', color: '#92400e', border: '1px solid #fde68a' };
       case "high risk":
-        return "bg-red-100 text-red-700 border border-red-300";
+        return { backgroundColor: '#fee2e2', color: '#991b1b', border: '1px solid #fca5a5' };
       default:
-        return "bg-gray-100 text-gray-700 border border-gray-300";
+        return { backgroundColor: '#f3f4f6', color: '#374151', border: '1px solid #d1d5db' };
     }
   };
 
@@ -90,101 +91,124 @@ const RiskTable: React.FC = () => {
     navigate(`/risk/${id}`);
   };
 
-  const filteredData = riskData.filter((entry) => {
-    const matchesSearch =
-      entry.customer_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      entry.lead_id?.toLowerCase().includes(searchTerm.toLowerCase());
+  const sortedData = React.useMemo(() => {
+    if (!sortConfig) return riskData;
 
-    const matchesRisk =
-      riskFilter === "All" ||
-      entry.risk_bucket?.trim().toLowerCase() === riskFilter.toLowerCase();
+    return [...riskData].sort((a, b) => {
+      if (sortConfig.key === 'customer_name') {
+        const nameA = (a.customer_name || '').toLowerCase();
+        const nameB = (b.customer_name || '').toLowerCase();
+        
+        if (sortConfig.direction === 'asc') {
+          return nameA.localeCompare(nameB);
+        } else {
+          return nameB.localeCompare(nameA);
+        }
+      }
+      return 0;
+    });
+  }, [riskData, sortConfig]);
 
-    return matchesSearch && matchesRisk;
-  });
+  const handleSort = (key: string) => {
+    setSortConfig(current => {
+      if (current?.key === key) {
+        if (current.direction === 'asc') {
+          return { key, direction: 'desc' };
+        } else {
+          return null; // Remove sorting
+        }
+      }
+      return { key, direction: 'asc' };
+    });
+  };
 
   if (loading) {
     return <div className="p-6 text-center text-gray-600">Loading risk data...</div>;
   }
 
   return (
-    <div className="p-6 relative">
-      <h1 className="text-2xl font-semibold mb-6 text-gray-900">Risk Assessment</h1>
+    <FigtreeContainer style={{ padding: '20px' }}>
+      <h1 style={{ fontSize: '24px', fontWeight: '600', color: '#111827', marginBottom: '24px' }}>Risk Assessment</h1>
 
-      {/* Search + Filter */}
-      <div className="flex items-center gap-4 mb-4">
-        <input
-          type="text"
-          placeholder="Search by Borrower / lead ID"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring focus:ring-blue-200"
-        />
-        <select
-          value={riskFilter}
-          onChange={(e) => setRiskFilter(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-lg text-sm"
-        >
-          <option value="All">All</option>
-          <option value="Low Risk">Low Risk</option>
-          <option value="Medium Risk">Medium Risk</option>
-          <option value="High Risk">High Risk</option>
-        </select>
-      </div>
+
 
       {/* Table */}
-      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="bg-gray-50 border-b border-gray-200">
-            <tr>
-              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Borrower</th>
-              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Lead ID</th>
-              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Total Score</th>
-              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Red Flags</th>
-              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">Risk Bucket</th>
-              <th className="px-4 py-2"></th>
+      <FigtreeTableContainer>
+        <FigtreeTable style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr style={{ backgroundColor: '#f8f9fa', borderBottom: '1px solid #e5e7eb' }}>
+              <SortableHeader sortKey="customer_name" currentSort={sortConfig} onSort={handleSort}>Borrower</SortableHeader>
+              <SortableHeader>Lead ID</SortableHeader>
+              <SortableHeader>Total Score</SortableHeader>
+              <SortableHeader>Overall Risk</SortableHeader>
+              <SortableHeader sortable={false}>Actions</SortableHeader>
             </tr>
           </thead>
           <tbody>
-            {filteredData.length === 0 && (
+            {sortedData.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-6 text-center text-gray-500">
+                <td colSpan={5} style={{ textAlign: 'center', color: '#6b7280', padding: '16px 20px' }}>
                   No matching records found.
                 </td>
               </tr>
             )}
-            {filteredData.map((entry) => (
-              <tr key={entry._id} className="border-b border-gray-100 hover:bg-gray-50">
-                <td className="px-4 py-2 text-gray-800">{entry.customer_name}</td>
-                <td className="px-4 py-2 text-gray-800">{entry.lead_id}</td>
-                <td className="px-4 py-2">{entry.total_score ?? "N/A"}</td>
-                <td className="px-4 py-2">{entry.red_flags?.length || 0}</td>
-                <td className="px-4 py-2">
+            {sortedData.map((entry: RiskEntry) => (
+              <tr 
+                key={entry._id} 
+                style={{ 
+                  borderBottom: '1px solid #f3f4f6',
+                  transition: 'background-color 0.2s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f9fafb'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+              >
+                <FigtreeTableCell>{entry.customer_name}</FigtreeTableCell>
+                <FigtreeTableCell>{entry.lead_id}</FigtreeTableCell>
+                <FigtreeTableCell>{entry.total_score ?? "N/A"}</FigtreeTableCell>
+                <FigtreeTableCell>
                   <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium ${getRiskPillColor(entry.risk_bucket)}`}
+                    style={{
+                      padding: '4px 12px',
+                      borderRadius: '16px',
+                      fontSize: '12px',
+                      fontWeight: '500',
+                      ...getRiskPillColor(entry.risk_bucket)
+                    }}
                   >
                     {entry.risk_bucket ?? "—"}
                   </span>
-                </td>
-                <td className="px-4 py-2 text-right">
+                </FigtreeTableCell>
+                <FigtreeTableCell style={{ textAlign: 'right' }}>
                   <button
                     onClick={(e) => toggleMenu(entry._id, e)}
-                    className="p-2 rounded hover:bg-gray-100"
+                    style={{
+                      padding: '8px',
+                      borderRadius: '4px',
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      color: '#6b7280',
+                      transition: 'background-color 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f3f4f6'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 text-gray-600"
+                      width="20"
+                      height="20"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
                       <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm0 5.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm0 5.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z" />
                     </svg>
                   </button>
-                </td>
+                </FigtreeTableCell>
               </tr>
             ))}
           </tbody>
-        </table>
-      </div>
+        </FigtreeTable>
+      </FigtreeTableContainer>
 
       {/* Floating dropdown menu */}
       {openMenuId && menuPosition &&
@@ -207,7 +231,7 @@ const RiskTable: React.FC = () => {
           </div>,
           document.body
         )}
-    </div>
+    </FigtreeContainer>
   );
 };
 

@@ -14,8 +14,11 @@ import {
   BarChart,
   Bar
 } from 'recharts';
+import { TrendingUp, FileText, CheckCircle, XCircle, Coins } from 'lucide-react';
+import { FigtreeContainer, FigtreeCard, FigtreeHeading } from './ReusableComponents';
+import { globalStyles } from '../styles/globalStyles';
 
-const COLORS = ['#4CAF50', '#FFC107', '#F44336'];
+const COLORS = ['#00306E', '#0266F4', '#A8CBFF'];
 
 const Dashboard: React.FC = () => {
   const [data, setData] = useState<any>(null);
@@ -40,30 +43,38 @@ const Dashboard: React.FC = () => {
   // ---- Top Cards ----
   const topCards = [
     {
-      title: 'Total Amount Disbursed (in Crores)',
+      title: 'Total Disbursement (in Crores)',
       value: data.top_cards.total_disbursement.value,
-      change: data.top_cards.total_disbursement.change
+      change: data.top_cards.total_disbursement.change,
+      icon: Coins,
+      period: 'From last week'
     },
     {
       title: 'Applications in Progress',
       value: data.top_cards.companies_in_draft.value,
-      change: data.top_cards.companies_in_draft.change
+      change: data.top_cards.companies_in_draft.change,
+      icon: FileText,
+      period: 'From last week'
     },
     {
       title: 'Applications Approved',
       value: data.top_cards.financial_capture_stage.value,
-      change: data.top_cards.financial_capture_stage.change
+      change: data.top_cards.financial_capture_stage.change,
+      icon: CheckCircle,
+      period: 'From last week'
     },
     {
       title: 'Applications Rejected',
       value: data.top_cards.rejected_companies.value,
-      change: data.top_cards.rejected_companies.change
+      change: data.top_cards.rejected_companies.change,
+      icon: XCircle,
+      period: 'From last week'
     }
   ];
 
   // ---- Chart Data Prep ----
   const monthlyDisbursementData = Object.entries(data.monthly_disbursement).map(([month, value]) => ({
-    month,
+    month: month.substring(0, 3),
     value
   }));
 
@@ -77,151 +88,403 @@ const Dashboard: React.FC = () => {
     value
   }));
 
+  // Custom tick component for Application Pipeline chart
+  const CustomTick = (props: any) => {
+    const { x, y, payload } = props;
+    const value = payload.value;
+    
+    if (value === 'Under Financial Review') {
+      return (
+        <g transform={`translate(${x},${y})`}>
+          <text x={0} y={0} dy={16} textAnchor="middle" fill="#666" fontSize={13}>
+            Under Financial
+          </text>
+          <text x={0} y={0} dy={32} textAnchor="middle" fill="#666" fontSize={13}>
+            Review
+          </text>
+        </g>
+      );
+    }
+    
+    return (
+      <text x={x} y={y} dy={16} textAnchor="middle" fill="#666" fontSize={13}>
+        {value}
+      </text>
+    );
+  };
+
   const pendingProgressData = Object.entries(data.pending_progress).map(([label, value]) => ({
     label,
     value
   }));
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-6" style={{
+      width: '1440px',
+      minHeight: '100vh',
+      margin: '0 auto',
+      padding: '24px',
+      backgroundColor: '#F8F6F1'
+    }}>
+      {/* ---- Greeting Section ---- */}
+      <div style={{
+        display: 'flex',
+        width: '1148px',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        gap: '7px'
+      }}>
+        <div style={{
+          color: '#1F1F1F',
+          fontFamily: 'Figtree',
+          fontSize: '24px',
+          fontStyle: 'normal',
+          fontWeight: '500',
+          lineHeight: '133.4%',
+          alignSelf: 'stretch'
+        }}>
+          Hi, Aryan
+        </div>
+        <div style={{
+          color: '#7D7D81',
+          fontFeatureSettings: "'liga' off, 'clig' off",
+          fontFamily: 'Figtree',
+          fontSize: '14px',
+          fontStyle: 'normal',
+          fontWeight: '400',
+          lineHeight: '143%',
+          letterSpacing: '0.17px',
+          width: '718px'
+        }}>
+          Welcome back to CLOS
+        </div>
+      </div>
+
       {/* ---- Top Cards ---- */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {topCards.map((card, idx) => (
-          <div key={idx} className="bg-white shadow rounded-lg p-5">
-            <h3 className="text-sm font-medium text-gray-500">{card.title}</h3>
-            <p className="text-2xl font-semibold text-gray-900 mt-2">
-              {card.title === 'Total Amount Disbursed (in Crores)' ? `₹${card.value.toLocaleString()}` : card.value.toLocaleString()}
-            </p>
-            {card.title === 'Total Amount Disbursed (in Crores)' && (
-              <p
-                className={`text-sm mt-1 ${card.change >= 0 ? 'text-green-600' : 'text-red-600'
-                  }`}
-              >
-                {card.change >= 0 ? '+' : ''}
-                {card.change}% from last month
-              </p>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* ---- First Row of Charts ---- */}
-      <div className="flex flex-col md:flex-row gap-6 h-96">
-        {/* Line Chart */}
-        <div className="md:w-7/10 w-full bg-white rounded-lg shadow p-4">
-          <h2 className="text-lg font-semibold mb-4">Monthly Disbursement</h2>
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={monthlyDisbursementData}>
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip />
-              <Line type="monotone" dataKey="value" stroke="#1D4ED8" strokeWidth={2} />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* Pie Chart */}
-        <div className="md:w-3/10 w-full bg-white rounded-lg shadow p-4 flex flex-col items-center justify-center">
-          <h2 className="text-lg font-semibold mb-4 text-center">Risk Category Breakdown</h2>
-          <ResponsiveContainer width="100%" height="80%">
-            <PieChart>
-              <Pie
-                data={riskCategoryData}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                innerRadius={40}
-                outerRadius={70}
-                paddingAngle={5}
-                label
-              >
-                {riskCategoryData.map((_, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip />
-              <Legend verticalAlign="bottom" height={36} />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      {/* ---- Second Row of Charts ---- */}
-      <div className="flex flex-col md:flex-row gap-6 h-96">
-        {/* Bar Chart - Application Pipeline */}
-        <div className="md:w-7/10 w-full bg-white rounded-lg shadow p-4">
-          <h2 className="text-lg font-semibold mb-4">Application Pipeline by Stage</h2>
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={applicationPipelineData}>
-              <XAxis
-                dataKey="stage"
-                interval={0} // <-- show all labels
-                tick={{ fontSize: 11, angle: 0, dy: 10 }} // <-- smaller text, spacing
-              />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="value" fill="#1D4ED8" barSize={20} radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* Pending Progress */}
-        <div className="md:w-3/10 w-full bg-white rounded-lg shadow p-4">
-          <h2 className="text-lg font-semibold mb-4">Pending</h2>
-          <div className="space-y-4">
-            {pendingProgressData.map((item, idx) => (
-              <div key={idx}>
-                <div className="flex justify-between text-sm font-medium">
-                  <span>{item.label}</span>
-                  <span>{item.value}%</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div
-                    className="bg-blue-600 h-2 rounded-full"
-                    style={{ width: `${item.value}%` }}
-                  ></div>
+      <div className="grid grid-cols-4 gap-6" style={{ width: '1374px' }}>
+        {topCards.map((card, idx) => {
+          const IconComponent = card.icon;
+          return (
+            <div key={idx} className="bg-white shadow-lg rounded-xl p-6 hover:shadow-xl transition-shadow duration-300">
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  {/* Icon */}
+                  <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mb-4">
+                    <IconComponent className="w-6 h-6 text-gray-600" />
+                  </div>
+                  
+                  {/* Title */}
+                  <h3 className="text-sm font-medium mb-2" style={{ color: '#1F1F1F' }}>{card.title}</h3>
+                  
+                  {/* Value */}
+                  <p className="text-3xl font-bold text-gray-900 mb-3">
+                    {card.title === 'Total Disbursement' ? `₹${card.value.toLocaleString()}` : card.value.toLocaleString()}
+                  </p>
+                  
+                  {/* Change indicator - only show for Total Disbursement */}
+                  {card.title === 'Total Disbursement' && (
+                    <div className="flex items-center gap-2">
+                      <div className={`px-2 py-1 rounded-lg text-xs font-medium ${
+                        card.change >= 0 
+                          ? 'bg-green-100 text-green-700' 
+                          : 'bg-red-100 text-red-700'
+                      }`}>
+                        <div className="flex items-center gap-1">
+                          {card.change >= 0 ? (
+                            <TrendingUp className="w-3 h-3" />
+                          ) : (
+                            <TrendingUp className="w-3 h-3 rotate-180" />
+                          )}
+                          {card.change >= 0 ? '+' : ''}{card.change}%
+                        </div>
+                      </div>
+                      <span className="text-xs text-gray-500">{card.period}</span>
+                    </div>
+                  )}
                 </div>
               </div>
-            ))}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* ---- Charts Section ---- */}
+      <div className="flex gap-6">
+        {/* Left Column - Monthly Disbursement and Application Pipeline stacked vertically */}
+        <div className="flex flex-col gap-6">
+          {/* Monthly Disbursement Chart */}
+          <div style={{
+            width: '900px',
+            height: '501px',
+            borderRadius: '12px',
+            background: '#FFF',
+            boxShadow: '0 4px 13px 2px rgba(0, 0, 0, 0.07)',
+            padding: '24px'
+          }}>
+            <h2 className="text-lg font-semibold mb-4" style={{ color: '#1F1F1F' }}>Monthly Disbursement</h2>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={monthlyDisbursementData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+                <XAxis 
+                  dataKey="month" 
+                  tick={{ fontSize: 13 }}
+                  tickMargin={25}
+                  textAnchor="middle"
+                  height={60}
+                />
+                <YAxis 
+                  tick={{ fontSize: 13 }}
+                  tickMargin={10}
+                  width={40}
+                />
+                <Tooltip />
+                <Line type="monotone" dataKey="value" stroke="#1D4ED8" strokeWidth={2} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Application Pipeline by Stage Chart */}
+          <div style={{
+            width: '900px',
+            height: '501px',
+            flexShrink: 0,
+            borderRadius: '12px',
+            background: '#FFF',
+            boxShadow: '0 4px 13px 2px rgba(0, 0, 0, 0.07)',
+            padding: '24px'
+          }}>
+            <h2 className="text-lg font-semibold mb-4" style={{ color: '#1F1F1F' }}>Application Pipeline by Stage</h2>
+            <ResponsiveContainer width="100%" height="80%">
+              <BarChart data={applicationPipelineData} margin={{ top: 20, right: 50, left: 30, bottom: 50 }}>
+                                  <XAxis 
+                    dataKey="stage"
+                    interval={0}
+                    tickMargin={20}
+                    tick={<CustomTick />}
+                  />
+                <YAxis 
+                  tick={{ fontSize: 13 }}
+                  tickMargin={15}
+                />
+                <Tooltip />
+                <Bar dataKey="value" fill="#1D4ED8" barSize={12} radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* Right Column - Risk Ratio and Pending stacked vertically */}
+        <div className="flex flex-col gap-6">
+          {/* Risk Ratio Card */}
+          <div className="flex flex-col items-center justify-center" style={{
+            width: '450px',
+            height: '501px',
+            flexShrink: 0,
+            borderRadius: '12px',
+            background: '#FFFFFF',
+            boxShadow: '0 4px 13px 2px rgba(0, 0, 0, 0.07)',
+            padding: '24px'
+          }}>
+            <h2 className="text-lg font-semibold mb-4 text-center" style={{ color: '#1F1F1F' }}>Risk Ratio</h2>
+            <ResponsiveContainer width="100%" height="80%">
+              <PieChart>
+                <Pie
+                  data={riskCategoryData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={100}
+                  paddingAngle={2}
+                  label={false}
+                >
+                  {riskCategoryData.map((_, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend 
+                  verticalAlign="bottom" 
+                  height={36}
+                  formatter={(value) => <span style={{ color: '#363636' }}>{value}</span>}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Pending Card */}
+          <div style={{
+            display: 'flex',
+            padding: '23px 72px 29px 23px',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            gap: '36px',
+            borderRadius: '12px',
+            background: '#FFF',
+            boxShadow: '0 4px 13px 2px rgba(0, 0, 0, 0.07)',
+            width: '450px',
+            height: '501px'
+          }}>
+            <h2 className="text-lg font-semibold" style={{ color: '#1F1F1F' }}>Pending</h2>
+            <div className="space-y-6 w-full">
+              {pendingProgressData.map((item, idx) => (
+                <div key={idx} className="w-full">
+                  <div className="flex justify-between text-sm font-medium mb-2">
+                    <span style={{ color: '#363636' }}>{item.label}</span>
+                    <span style={{ color: '#1F1F1F', fontWeight: 600 }}>{item.value}%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-3 mb-1">
+                    <div
+                      className="bg-blue-600 h-3 rounded-full"
+                      style={{ width: `${item.value}%` }}
+                    ></div>
+                  </div>
+                  <div className="flex justify-between text-xs text-gray-500">
+                    <span>0%</span>
+                    <span>100%</span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
       {/* ---- Third Row ---- */}
-<div className="flex flex-col md:flex-row gap-6 h-80">
-  {/* Total Applicants Line Chart - 35% Width, No Y-axis */}
-  <div className="md:w-[35%] w-full bg-white rounded-lg shadow p-4">
-    <h2 className="text-lg font-semibold mb-4">Total Applicants</h2>
-    <ResponsiveContainer width="100%" height="100%">
-      <LineChart
-        data={Object.entries(data.monthly_breakdown).map(([month, value]) => ({
-          month,
-          value
-        }))}
-      >
-        <XAxis
-  dataKey="month"
-  interval={0} // force show all months
-  tick={{ fontSize: 11 }}
-  tickMargin={10}
-  angle={-25} // rotate labels
-  textAnchor="end"
-/>
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* Total Applicants Widget */}
+        <div style={{
+          width: '446px',
+          height: '501px',
+          borderRadius: '12px',
+          background: '#FFF',
+          boxShadow: '0 4px 13px 2px rgba(0, 0, 0, 0.07)',
+          padding: '24px',
+          display: 'flex',
+          flexDirection: 'column'
+        }}>
+          {/* Total Applicants Section */}
+          <div style={{ marginBottom: '20px' }}>
+            <h2 className="text-lg font-semibold" style={{ color: '#1F1F1F', marginBottom: '8px' }}>Total Applicants</h2>
+            <p style={{ 
+              fontSize: '32px', 
+              fontWeight: 'bold', 
+              color: '#1F1F1F',
+              margin: 0
+            }}>
+              55
+            </p>
+          </div>
 
-        <Tooltip />
-        <Line
-          type="monotone"
-          dataKey="value"
-          stroke="#1D4ED8"
-          strokeWidth={2}
-        />
-      </LineChart>
-    </ResponsiveContainer>
-  </div>
+          {/* Divider */}
+          <div style={{ 
+            height: '1px', 
+            background: '#E5E7EB', 
+            marginBottom: '20px' 
+          }}></div>
 
-  {/* Applications Summary + Recent Applications Table - 70% Width */}
-  <div className="md:w-[70%] w-full bg-white rounded-lg shadow p-4 overflow-auto">
+          {/* Monthly Breakdown Section */}
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'space-between',
+            marginBottom: '20px'
+          }}>
+            <button style={{
+              width: '32px',
+              height: '32px',
+              borderRadius: '50%',
+              border: '1px solid #E5E7EB',
+              background: 'white',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer'
+            }}>
+              ←
+            </button>
+            <h3 style={{ 
+              fontSize: '16px', 
+              fontWeight: '600', 
+              color: '#1F1F1F',
+              margin: 0
+            }}>
+              Monthly Breakdown
+            </h3>
+            <button style={{
+              width: '32px',
+              height: '32px',
+              borderRadius: '50%',
+              border: '1px solid #E5E7EB',
+              background: 'white',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer'
+            }}>
+              →
+            </button>
+          </div>
+
+          {/* Chart */}
+          <div style={{ flex: 1 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart
+                data={Object.entries(data.monthly_breakdown).map(([month, value]) => ({
+                  month: month.substring(0, 3),
+                  value
+                }))}
+                margin={{ top: 20, right: 20, left: 20, bottom: 30 }}
+              >
+                <XAxis
+                  dataKey="month"
+                  interval={0}
+                  tick={{ 
+                    fontSize: 14, 
+                    fill: '#000',
+                    fontFamily: 'Figtree',
+                    fontStyle: 'normal',
+                    fontWeight: 400
+                  }}
+                  tickMargin={10}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis 
+                  hide={true}
+                />
+                <Tooltip 
+                  contentStyle={{
+                    background: 'white',
+                    border: '1px solid #E5E7EB',
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+                  }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="value"
+                  stroke="#1D4ED8"
+                  strokeWidth={3}
+                  dot={{ fill: '#1D4ED8', strokeWidth: 2, r: 4 }}
+                  activeDot={{ r: 6, stroke: '#1D4ED8', strokeWidth: 2 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+  {/* Applications Summary + Recent Applications Table */}
+  <div style={{
+    width: '905px',
+    height: '501px',
+    borderRadius: '12px',
+    background: '#FFF',
+    boxShadow: '0 4px 13px 2px rgba(0, 0, 0, 0.07)',
+    padding: '24px',
+    display: 'flex',
+    flexDirection: 'column'
+  }}>
     {/* Top Stats Row */}
     <div className="grid grid-cols-3 gap-4 mb-6">
       <div className="bg-gray-50 p-4 rounded shadow-sm text-center">
@@ -256,7 +519,7 @@ const Dashboard: React.FC = () => {
         </tr>
       </thead>
       <tbody>
-        {data.recent_applications.map((app: any) => (
+        {data.recent_applications.map((app) => (
           <tr key={app._id} className="border-b hover:bg-gray-50">
             <td className="py-2">{app.borrower}</td>
             <td className="py-2">{app.loan_type}</td>
@@ -277,6 +540,19 @@ const Dashboard: React.FC = () => {
         ))}
       </tbody>
     </table>
+    
+    {/* Pagination Footer */}
+    <div style={{ 
+      display: 'flex', 
+      justifyContent: 'flex-end', 
+      alignItems: 'center', 
+      marginTop: '20px',
+      padding: '0 20px'
+    }}>
+      <div style={{ color: '#6b7280', fontSize: '14px', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+        1-{data.recent_applications.length} of {data.recent_applications.length}
+      </div>
+    </div>
   </div>
 </div>
 
