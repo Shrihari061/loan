@@ -1,0 +1,32 @@
+{
+  "financial_summary_&_ratios": {
+    "Revenue and Profitability": "Revenue from operations grew by 5.93% to ₹136,592 crore in 2025. PAT margin remains strong at 18.72%, with a net profit of ₹25,568 crore. EBITDA margin is robust at 27.86%.",
+    "Operational efficiency": "Accounts receivable days are at 70.58, well below the threshold of 90 days, indicating efficient collections. Asset turnover ratio stands at 1.09, reflecting effective utilization of assets.",
+    "Leverage and liquidity": "Debt/Equity ratio is low at 0.0396, indicating minimal leverage. Current ratio of 2.43 and DSCR of 26.30 highlight strong liquidity and debt servicing capacity."
+  },
+  "executive_summary": "The company demonstrates strong financial health with consistent revenue growth and profitability. Operational efficiency and liquidity metrics are robust, with no red flags identified. Overall, the risk profile is categorized as 'Low Risk,' supported by a total score of 90.0.",
+  "loan_purpose": {
+    "1": "To fund capital expenditure projects, including property, plant, and equipment.",
+    "2": "Support working capital requirements to manage operational cash flows.",
+    "3": "Potential investments in subsidiaries and acquisitions, as evidenced by past cash flows.",
+    "4": "General corporate purposes and dividend payouts."
+  },
+  "swot_analysis": {
+    "Strengths": "Strong profitability with a PAT margin of 18.72%. Low leverage with a Debt/Equity ratio of 0.0396.",
+    "Weaknesses": "Decline in other income from ₹7,417 crore in 2024 to ₹4,782 crore in 2025. Slight decrease in net profit from ₹27,234 crore in 2024 to ₹25,568 crore in 2025.",
+    "Opportunities": "Scope for further expansion in revenue streams and market share. Potential to enhance operational efficiency through technology investments.",
+    "Threats": "Economic downturns or industry-specific risks could impact revenue. Currency fluctuations may affect profitability given global operations."
+  },
+  "security_offered": {
+    "Primary security": "Hypothecation of current assets, including receivables and inventory.",
+    "Collateral security": "Fixed assets such as property, plant, and equipment valued at ₹10,070 crore.",
+    "Personal guarantees": "No specific mention of personal guarantees; assumed not applicable."
+  },
+  "recommendation": {
+    "1": "Approve the loan request given the company's strong financial metrics and low-risk profile.",
+    "2": "Ensure the loan proceeds are utilized for the stated purposes, with periodic monitoring.",
+    "3": "Leverage the company's robust liquidity position to negotiate favorable loan terms.",
+    "4": "Encourage the company to diversify revenue streams to mitigate potential risks.",
+    "5": "Monitor any significant changes in industry dynamics or macroeconomic conditions that could impact performance."
+  }
+}
