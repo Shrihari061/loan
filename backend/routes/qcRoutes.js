@@ -59,4 +59,21 @@ router.put('/:id/reject', async (req, res) => {
   }
 });
 
+// 🔹 Revert a CQ record (set status = "In Progress")
+router.put('/:id/revert', async (req, res) => {
+  try {
+    const updated = await CQ.findByIdAndUpdate(
+      req.params.id,
+      { status: 'In Progress' },
+      { new: true }
+    );
+
+    if (!updated) return res.status(404).json({ error: 'Customer not found' });
+
+    res.json({ message: 'Customer status reverted to In Progress', record: updated });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to revert status' });
+  }
+});
+
 module.exports = router;

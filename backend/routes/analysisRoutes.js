@@ -30,7 +30,7 @@ router.get('/', async (req, res) => {
           ? new Date(doc.updatedAt).toISOString().split('T')[0]
           : 'N/A',
         net_worth: netWorth,
-        year_range: '2024-2025'
+        year_range: '2023-2025'
       };
     });
 
@@ -158,7 +158,7 @@ router.get('/:id', async (req, res) => {
       dscr: dscr,
       debt_to_equity: debt_to_equity,
       ratio_health: ratio_health,
-      year_range: '2024-2025',
+      year_range: '2023-2025',
       balance_sheet,
       profit_loss,
       cash_flow
@@ -224,11 +224,11 @@ router.put('/:id', async (req, res) => {
       if (item.item && doc[item.item]) {
         updateData[item.item] = {
           ...doc[item.item],
-          FY2022: item.FY2022,
+          // FY2022: item.FY2022,
           FY2023: item.FY2023,
           FY2024: item.FY2024,
           FY2025: item.FY2025,
-          value_latest: item.FY2025 || item.FY2024 || item.FY2023 || item.FY2022,
+          value_latest: item.FY2025 || item.FY2024 || item.FY2023,
           source: source
         };
       }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 interface ScoreEntry {
   value: number;
@@ -50,6 +50,7 @@ interface RiskDetailData {
 
 const RiskDetail: React.FC = () => {
   const { id } = useParams();
+  const navigate = useNavigate(); // 🔹 Added navigate
   const [data, setData] = useState<RiskDetailData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -73,6 +74,16 @@ const RiskDetail: React.FC = () => {
 
   return (
     <div className="p-6 space-y-6">
+      {/* ✅ Back Button */}
+      <div>
+        <button
+          onClick={() => navigate("/risk")}
+          className="inline-flex items-center gap-2 px-3 py-1 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
+        >
+          ← Back to Risk Assessment Table
+        </button>
+      </div>
+
       {/* Company Info */}
       <div className="bg-white p-4 rounded-lg shadow-sm space-y-2">
         <p><span className="font-medium">Customer:</span> {data.customer_name}</p>

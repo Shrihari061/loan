@@ -126,7 +126,7 @@ const CompanyTable: React.FC = () => {
 
   const handleAction = (action: string, company: CompanyData) => {
     if (action === 'View Data') {
-      navigate(`/report/${company._id}`);
+      navigate(`/reports/${company._id}`);
     } else {
       console.log(`${action} for ${company.company_name}`);
     }

@@ -15,7 +15,7 @@ type DocumentEntry = {
 type FinancialItem = {
   _id: string;
   item: string;
-  [key: string]: string | number | null; // For FY2022, FY2023, etc.
+  [key: string]: string | number | null; // For FY2023, FY2024, FY2025, etc.
 };
 
 type AnalysisEntry = {
@@ -56,9 +56,11 @@ const QCViewer: React.FC = () => {
 
   // Collection selector
   const [selectedCollection, setSelectedCollection] = useState<string>('');
+  const [selectedYear, setSelectedYear] = useState<string>(''); // ⬅️ new year dropdown state
   const [financialData, setFinancialData] = useState<FinancialData | null>(null);
   const [isFinancialDataEdited, setIsFinancialDataEdited] = useState(false);
   const collections = ['Balance Sheet Summary', 'Profit & Loss Summary', 'Cash Flow Summary'];
+  const years = ['2023', '2024', '2025']; // ⬅️ year options
 
   const extractedDataToText = (obj?: ExtractedData) => {
     if (!obj) return '';
@@ -153,21 +155,21 @@ const QCViewer: React.FC = () => {
           ...data,
           balance_sheet: (data.balance_sheet || []).map((item: FinancialItem) => ({
             ...item,
-            FY2022: item.FY2022 || generateDummyValue(item.item, 'balance_sheet', 2022),
-            FY2023: item.FY2023 || generateDummyValue(item.item, 'balance_sheet', 2023),
-            FY2024: item.FY2024 || generateDummyValue(item.item, 'balance_sheet', 2024)
+            FY2023: item.FY2023 ?? generateDummyValue(item.item, 'balance_sheet', 2023),
+            FY2024: item.FY2024 ?? item['value_2024'] ?? null,
+            FY2025: item.FY2025 ?? item['value_2025'] ?? null
           })),
           profit_loss: (data.profit_loss || []).map((item: FinancialItem) => ({
             ...item,
-            FY2022: item.FY2022 || generateDummyValue(item.item, 'profit_loss', 2022),
-            FY2023: item.FY2023 || generateDummyValue(item.item, 'profit_loss', 2023),
-            FY2024: item.FY2024 || generateDummyValue(item.item, 'profit_loss', 2024)
+            FY2023: item.FY2023 ?? generateDummyValue(item.item, 'profit_loss', 2023),
+            FY2024: item.FY2024 ?? item['value_2024'] ?? null,
+            FY2025: item.FY2025 ?? item['value_2025'] ?? null
           })),
           cash_flow: (data.cash_flow || []).map((item: FinancialItem) => ({
             ...item,
-            FY2022: item.FY2022 || generateDummyValue(item.item, 'cash_flow', 2022),
-            FY2023: item.FY2023 || generateDummyValue(item.item, 'cash_flow', 2023),
-            FY2024: item.FY2024 || generateDummyValue(item.item, 'cash_flow', 2024)
+            FY2023: item.FY2023 ?? generateDummyValue(item.item, 'cash_flow', 2023),
+            FY2024: item.FY2024 ?? item['value_2024'] ?? null,
+            FY2025: item.FY2025 ?? item['value_2025'] ?? null
           }))
         };
         setFinancialData(dataWithDummyValues);
@@ -277,13 +279,7 @@ const QCViewer: React.FC = () => {
       return <div className="text-gray-500">No data available</div>;
     }
 
-    const years = new Set<string>();
-    data.forEach(item => {
-      Object.keys(item).forEach(key => {
-        if (key.startsWith('FY')) years.add(key);
-      });
-    });
-    const yearArray = Array.from(years).sort();
+    const yearArray = selectedYear ? [selectedYear] : [];
 
     const handleCellEdit = (itemIndex: number, year: string, value: string) => {
       if (!financialData) return;
@@ -335,21 +331,18 @@ const QCViewer: React.FC = () => {
                   <td key={year} className="px-4 py-3 text-sm border-b text-right">
                     <input
                       type="text"
-                      value={item[year] !== null && item[year] !== undefined ? item[year] : ''}
-                      onChange={(e) => handleCellEdit(index, year, e.target.value)}
+                      value={item[`FY${year}`] ?? ''}
+                      onChange={(e) => handleCellEdit(index, `FY${year}`, e.target.value)}
                       className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-right"
                       style={{ 
                         color: (() => {
-                          const val = item[year];
+                          const val = item[`FY${year}`];
                           if (val === null || val === undefined) return '#111827';
                           
-                          // Handle string values (including parentheses notation)
                           if (typeof val === 'string') {
-                            // Check if it's in parentheses format like "(7)" or "(4670)"
                             if (val.startsWith('(') && val.endsWith(')')) {
-                              return '#ef4444'; // Red for negative values in parentheses
+                              return '#ef4444'; 
                             }
-                            // Try to convert to number
                             const numVal = Number(val);
                             if (!isNaN(numVal)) {
                               return numVal < 0 ? '#ef4444' : '#111827';
@@ -357,7 +350,6 @@ const QCViewer: React.FC = () => {
                             return '#111827';
                           }
                           
-                          // Handle number values
                           const numVal = Number(val);
                           return isNaN(numVal) ? '#111827' : (numVal < 0 ? '#ef4444' : '#111827');
                         })()
@@ -382,7 +374,15 @@ const QCViewer: React.FC = () => {
   }
 
   return (
-    <div className="p-6 space-y-6 relative">
+    <div className="p-6 space-y-6">
+      {/* 🔹 Back Button (moved out of absolute so it won’t overlap) */}
+      <button
+        onClick={() => navigate('/qc')}
+        className="bg-gray-200 text-gray-800 px-3 py-1.5 rounded-md text-sm font-medium hover:bg-gray-300 transition-colors"
+      >
+        ← Back to QC Table
+      </button>
+
       {/* Header */}
       <div className="border-b pb-4">
         <h2 className="text-xl font-semibold mb-2">Customer Details</h2>
@@ -391,19 +391,34 @@ const QCViewer: React.FC = () => {
         <p><strong>Status:</strong> {data.status ?? 'Pending'}</p>
       </div>
 
-      {/* Collection dropdown */}
-      <div>
-        <label className="block mb-2 font-medium">Select the type of financial document:</label>
-        <select
-          className="border p-2 rounded w-full max-w-md"
-          value={selectedCollection}
-          onChange={(e) => setSelectedCollection(e.target.value)}
-        >
-          <option value="" disabled>Choose the document</option>
-          {collections.map((col) => (
-            <option key={col} value={col}>{col}</option>
-          ))}
-        </select>
+      {/* Collection + Year dropdowns */}
+      <div className="flex gap-4 items-center">
+        <div>
+          <label className="block mb-2 font-medium">Select the type of financial document:</label>
+          <select
+            className="border p-2 rounded w-full max-w-md"
+            value={selectedCollection}
+            onChange={(e) => setSelectedCollection(e.target.value)}
+          >
+            <option value="" disabled>Choose the document</option>
+            {collections.map((col) => (
+              <option key={col} value={col}>{col}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="block mb-2 font-medium">Select a year:</label>
+          <select
+            className="border p-2 rounded w-full max-w-md"
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(e.target.value)}
+          >
+            <option value="" disabled>Select a year</option>
+            {years.map((yr) => (
+              <option key={yr} value={yr}>{yr}</option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* Data display */}

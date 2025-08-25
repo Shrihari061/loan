@@ -41,9 +41,28 @@ const QCTable: React.FC = () => {
     }
   };
 
-  const handleAction = (action: string, id: string) => {
+  const handleAction = async (action: string, id: string) => {
     if (action === "View Data") {
       navigate(`/qc/${id}`);
+    } else if (action === "Revert") {
+      console.log("Reverting QC entry:", id);
+      try {
+        const res = await fetch(`http://localhost:5000/cq/${id}/revert`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+        });
+        if (res.ok) {
+          setData((prev) =>
+            prev.map((entry) =>
+              entry._id === id ? { ...entry, status: "In progress" } : entry
+            )
+          );
+        } else {
+          console.error("Failed to revert entry");
+        }
+      } catch (err) {
+        console.error("Error while reverting:", err);
+      }
     }
     setOpenMenuId(null);
   };
@@ -88,32 +107,21 @@ const QCTable: React.FC = () => {
                 <FigtreeTableCell>{entry.lead_id}</FigtreeTableCell>
                 <FigtreeTableCell>{entry.status}</FigtreeTableCell>
                 <FigtreeTableCell>
-                  {entry.status !== "Approved" && entry.status !== "Declined" && (
+                  {entry.status === "Approved" ? (
                     <button
-                      onClick={(e) => toggleMenu(entry._id, e)}
-                      style={{
-                        padding: '8px',
-                        borderRadius: '4px',
-                        background: 'none',
-                        border: 'none',
-                        cursor: 'pointer',
-                        color: '#6b7280',
-                        transition: 'background-color 0.2s'
-                      }}
-                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f3f4f6'}
-                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                      onClick={() => handleAction("Revert", entry._id)}
+                      className="px-3 py-1.5 rounded-md bg-gray-200 text-gray-800 text-sm font-medium hover:bg-gray-300 transition-colors"
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="20"
-                        height="20"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm0 5.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm0 5.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z" />
-                      </svg>
+                      Revert
                     </button>
-                  )}
+                  ) : entry.status !== "Declined" ? (
+                    <button
+                      onClick={() => handleAction("View Data", entry._id)}
+                      className="px-3 py-1.5 rounded-md bg-gray-200 text-gray-800 text-sm font-medium hover:bg-gray-300 transition-colors"
+                    >
+                      View Details
+                    </button>
+                  ) : null}
                 </FigtreeTableCell>
               </tr>
             ))}

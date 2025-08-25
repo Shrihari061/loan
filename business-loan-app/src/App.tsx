@@ -235,7 +235,7 @@ const Layout: React.FC = () => {
           <Route path="/memos" element={<AppraisalTable />} />
           <Route path="/memos/:id" element={<MemoDetails />} />
           <Route path="/reports" element={<CompanyTable />} />
-          <Route path="/report/:id" element={<CompanyDetails />} />
+          <Route path="/reports/:id" element={<CompanyDetails />} />
           <Route path="/risk" element={<RiskTable />} />
           <Route path="/risk/:id" element={<RiskDetail />} />
           <Route path="/qc" element={<QCTable />} />
