@@ -310,7 +310,7 @@ const QCViewer: React.FC = () => {
           <thead className="bg-gray-50">
             <tr>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                Item <span className="text-xs font-normal text-gray-400 normal-case">(all amounts in Crores of Rs.)</span>
+                <span className="text-xs font-normal text-gray-400 normal-case">(all amounts in Crores of Rs.)</span>
               </th>
               {yearArray.map(year => (
                 <th key={year} className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
@@ -362,9 +362,6 @@ const QCViewer: React.FC = () => {
             ))}
           </tbody>
         </table>
-        <div className="mt-4 text-sm text-gray-600 italic">
-          The values displayed above are those extracted to calculate the ratios in scope.
-        </div>
       </div>
     );
   };

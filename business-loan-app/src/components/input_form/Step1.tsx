@@ -133,7 +133,7 @@ export default function Step1({
     setAmlCompanyStatus('initiated');
     setTimeout(() => setAmlCompanyStatus('pending'), 1000);
     setTimeout(() => {
-      const passed = Math.random() > 0.1;
+      const passed = true; // Always pass AML check
       setAmlCompanyStatus(passed ? 'done' : 'failed');
     }, 2500);
   };
@@ -142,7 +142,7 @@ export default function Step1({
     setAmlDirectorStatus('initiated');
     setTimeout(() => setAmlDirectorStatus('pending'), 1000);
     setTimeout(() => {
-      const passed = Math.random() > 0.1;
+      const passed = true; // Always pass AML check
       setAmlDirectorStatus(passed ? 'done' : 'failed');
     }, 3000);
   };

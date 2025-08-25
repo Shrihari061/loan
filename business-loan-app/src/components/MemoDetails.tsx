@@ -178,7 +178,7 @@ export default function MemoDetails() {
           </div>
         )}
 
-        {/* Security Offered
+        {/* Security Offered */}
         {memo.security_offered && typeof memo.security_offered === 'object' && (
           <div className="bg-white p-6 shadow rounded-xl">
             <h3 className="text-lg font-semibold mb-4">Security Offered</h3>
@@ -201,7 +201,7 @@ export default function MemoDetails() {
               </div>
             )}
           </div>
-        )} }
+        )}
 
         {/* Recommendation */}
         {Array.isArray(memo.recommendation) && memo.recommendation.length > 0 && (

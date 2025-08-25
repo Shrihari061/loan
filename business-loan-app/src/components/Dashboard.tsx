@@ -135,15 +135,7 @@ const Dashboard: React.FC = () => {
         gap: '25px',
         marginBottom: '16px'
       }}>
-        <h1 style={{
-          color: '#1F1F1F',
-          fontFamily: 'Figtree',
-          fontSize: '24px',
-          fontStyle: 'normal',
-          fontWeight: '400',
-          lineHeight: '133.4%',
-          margin: 0
-        }}>
+        <h1 style={{ fontSize: '24px', fontWeight: '600', color: '#111827' }}>
           Dashboard
         </h1>
       </div>
@@ -156,30 +148,7 @@ const Dashboard: React.FC = () => {
         alignItems: 'flex-start',
         gap: '7px'
       }}>
-        <div style={{
-          color: '#1F1F1F',
-          fontFamily: 'Figtree',
-          fontSize: '24px',
-          fontStyle: 'normal',
-          fontWeight: '500',
-          lineHeight: '133.4%',
-          alignSelf: 'stretch'
-        }}>
-          Hi, Aryan
-        </div>
-        <div style={{
-          color: '#7D7D81',
-          fontFeatureSettings: "'liga' off, 'clig' off",
-          fontFamily: 'Figtree',
-          fontSize: '14px',
-          fontStyle: 'normal',
-          fontWeight: '400',
-          lineHeight: '143%',
-          letterSpacing: '0.17px',
-          width: '718px'
-        }}>
-          Welcome back to CLOS
-        </div>
+        
       </div>
 
       {/* ---- Top Cards ---- */}

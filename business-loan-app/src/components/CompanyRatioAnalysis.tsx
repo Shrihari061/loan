@@ -8,18 +8,7 @@ interface RatioItem {
   red_flag?: boolean;
 }
 
-const getCellColor = (ratio: RatioItem) => {
-  if (ratio.red_flag) return "bg-blue-900 text-white"; // 🔴 replaced red → dark blue
-  if (ratio.threshold && typeof ratio.threshold === "string") {
-    const numThreshold = parseFloat(ratio.threshold);
-    if (!isNaN(numThreshold) && ratio.value !== null) {
-      return ratio.value >= numThreshold
-        ? "bg-cyan-100 text-cyan-800" // 🟢 replaced green → cyan/light blue
-        : "bg-blue-100 text-blue-800"; // 🟠 replaced orange/yellow → blue
-    }
-  }
-  return "bg-cyan-100 text-cyan-800"; // default to cyan/light blue
-};
+
 
 const CompanyRatioAnalysis: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -53,35 +42,79 @@ const CompanyRatioAnalysis: React.FC = () => {
   if (loading) return <div className="p-4">Loading ratios...</div>;
 
   return (
-    <div className="px-6">
-      {/* Legend */}
-      <div className="mb-4">
-        <span className="inline-block w-4 h-4 bg-cyan-400 mr-2 rounded-sm" /> Good
-        <span className="inline-block w-4 h-4 bg-blue-400 ml-4 mr-2 rounded-sm" /> Moderate
-        <span className="inline-block w-4 h-4 bg-blue-900 ml-4 mr-2 rounded-sm" /> Poor
+    <div style={{
+      backgroundColor: '#fff',
+      borderRadius: '8px',
+      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+      overflow: 'hidden'
+    }}>
+      {/* Table Header */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '16px 20px',
+        backgroundColor: '#f8f9fa',
+        borderBottom: '1px solid #e5e7eb'
+      }}>
+        <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+          Ratio Analysis & Health Check
+        </h3>
       </div>
 
-      {/* Ratios Table */}
-      <table className="min-w-full table-auto border border-gray-300 text-sm">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="border px-4 py-2 text-left w-1/2">Ratio</th>
-            <th className="border px-4 py-2 text-center w-1/2">Current Year</th>
-          </tr>
-        </thead>
-        <tbody>
-          {ratios.map((ratio) => (
-            <tr key={ratio.name}>
-              <td className="border px-4 py-2 font-medium">{ratio.name}</td>
-              <td
-                className={`border px-4 py-2 text-center ${getCellColor(ratio)}`}
-              >
-                {ratio.value ?? "N/A"}
-              </td>
+      {/* Legend */}
+      <div style={{ padding: '16px 20px', borderBottom: '1px solid #e5e7eb' }}>
+        <span style={{ display: 'inline-block', width: '16px', height: '16px', backgroundColor: '#00bcd4', marginRight: '8px', borderRadius: '2px' }}></span>
+        <span style={{ fontSize: '14px', color: '#374151', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>Good</span>
+        <span style={{ display: 'inline-block', width: '16px', height: '16px', backgroundColor: '#2196f3', marginLeft: '16px', marginRight: '8px', borderRadius: '2px' }}></span>
+        <span style={{ fontSize: '14px', color: '#374151', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>Moderate</span>
+        <span style={{ display: 'inline-block', width: '16px', height: '16px', backgroundColor: '#1a237e', marginLeft: '16px', marginRight: '8px', borderRadius: '2px' }}></span>
+        <span style={{ fontSize: '14px', color: '#374151', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>Poor</span>
+      </div>
+
+      {/* Table Content */}
+      <div style={{ overflow: 'auto' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr style={{ backgroundColor: '#f8f9fa' }}>
+              <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '14px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>Ratio</th>
+              <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '14px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>Current Year</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {ratios.map((ratio, index) => (
+              <tr key={ratio.name} style={{ backgroundColor: index % 2 === 0 ? '#fff' : '#f9fafb' }}>
+                <td style={{ padding: '12px 16px', fontSize: '14px', color: '#111827', textAlign: 'left', borderBottom: '1px solid #f3f4f6', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                  {ratio.name}
+                </td>
+                <td style={{ 
+                  padding: '12px 16px', 
+                  fontSize: '14px', 
+                  textAlign: 'right', 
+                  borderBottom: '1px solid #f3f4f6', 
+                  fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                  backgroundColor: ratio.red_flag ? '#1a237e' : 
+                    ratio.threshold && typeof ratio.threshold === "string" ? 
+                      (() => {
+                        const numThreshold = parseFloat(ratio.threshold);
+                        if (!isNaN(numThreshold) && ratio.value !== null) {
+                          return ratio.value >= numThreshold ? '#e0f7fa' : '#e3f2fd';
+                        }
+                        return '#e0f7fa';
+                      })() : '#e0f7fa',
+                  color: ratio.red_flag ? '#fff' : '#111827'
+                }}>
+                  {ratio.value !== null && ratio.value !== undefined 
+                    ? typeof ratio.value === 'number' 
+                      ? ratio.value.toFixed(2) 
+                      : ratio.value 
+                    : "N/A"}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

@@ -263,7 +263,7 @@ const CompanyDetails: React.FC = () => {
               </p>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <div style={{
+              {/* <div style={{
                 display: 'inline-block',
                 padding: '4px 12px',
                 backgroundColor: getRiskColor(company.ratio_health),
@@ -275,11 +275,8 @@ const CompanyDetails: React.FC = () => {
                 fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
               }}>
                 {company.ratio_health}
-              </div>
+              </div> */}
               <div style={{ fontSize: '14px', color: '#6b7280', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
-                <div>Debt-to-Equity: {company.debt_to_equity || 'N/A'}</div>
-                <div>Net Worth: ₹{formatValue(company.net_worth)}</div>
-                <div>DSCR: {company.dscr || 'N/A'}</div>
                 <div>Year Range: {company.year_range}</div>
               </div>
             </div>

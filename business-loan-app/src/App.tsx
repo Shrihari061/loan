@@ -1,4 +1,5 @@
 import React from 'react';
+import { Coins } from 'lucide-react';
 import {
   BrowserRouter as Router,
   Routes,
@@ -65,11 +66,7 @@ const navItems = [
   { 
     label: 'Risk Assessment', 
     path: '/risk',
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
-      </svg>
-    )
+    icon: <Coins size={20} />
   },
   { 
     label: 'Appraisal Memos', 
