@@ -87,28 +87,72 @@ const CompanyRatioAnalysis: React.FC = () => {
                 <td style={{ padding: '12px 16px', fontSize: '14px', color: '#111827', textAlign: 'left', borderBottom: '1px solid #f3f4f6', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
                   {ratio.name}
                 </td>
-                <td style={{ 
+                <td style={{
                   padding: '12px 16px', 
                   fontSize: '14px', 
                   textAlign: 'right', 
                   borderBottom: '1px solid #f3f4f6', 
                   fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-                  backgroundColor: ratio.red_flag ? '#1a237e' : 
-                    ratio.threshold && typeof ratio.threshold === "string" ? 
-                      (() => {
-                        const numThreshold = parseFloat(ratio.threshold);
-                        if (!isNaN(numThreshold) && ratio.value !== null) {
-                          return ratio.value >= numThreshold ? '#e0f7fa' : '#e3f2fd';
-                        }
-                        return '#e0f7fa';
-                      })() : '#e0f7fa',
-                  color: ratio.red_flag ? '#fff' : '#111827'
+                  color: '#111827',
+                  position: 'relative'
                 }}>
-                  {ratio.value !== null && ratio.value !== undefined 
-                    ? typeof ratio.value === 'number' 
-                      ? ratio.value.toFixed(2) 
-                      : ratio.value 
-                    : "N/A"}
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'flex-end',
+                    position: 'relative',
+                    paddingRight: '8px'
+                  }}>
+                    {ratio.red_flag && (
+                      <div style={{
+                        position: 'absolute',
+                        right: '70px',
+                        width: '8px',
+                        height: '8px',
+                        borderRadius: '50%',
+                        backgroundColor: '#1a237e'
+                      }}></div>
+                    )}
+                    {!ratio.red_flag && ratio.threshold && typeof ratio.threshold === "string" && (() => {
+                      const numThreshold = parseFloat(ratio.threshold);
+                      if (!isNaN(numThreshold) && ratio.value !== null) {
+                        return ratio.value >= numThreshold ? (
+                          <div style={{
+                            position: 'absolute',
+                            right: '70px',
+                            width: '8px',
+                            height: '8px',
+                            borderRadius: '50%',
+                            backgroundColor: '#00bcd4'
+                          }}></div>
+                        ) : (
+                          <div style={{
+                            position: 'absolute',
+                            right: '70px',
+                            width: '8px',
+                            height: '8px',
+                            borderRadius: '50%',
+                            backgroundColor: '#2196f3'
+                          }}></div>
+                        );
+                      }
+                      return (
+                        <div style={{
+                          position: 'absolute',
+                          right: '70px',
+                          width: '8px',
+                          height: '8px',
+                          borderRadius: '50%',
+                          backgroundColor: '#00bcd4'
+                        }}></div>
+                      );
+                    })()}
+                    {ratio.value !== null && ratio.value !== undefined 
+                      ? typeof ratio.value === 'number' 
+                        ? ratio.value.toFixed(2) 
+                        : ratio.value 
+                      : "N/A"}
+                  </div>
                 </td>
               </tr>
             ))}

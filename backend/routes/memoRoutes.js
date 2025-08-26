@@ -25,12 +25,34 @@ router.get('/:id', async (req, res) => {
   try {
     const memo = await Memo.findById(req.params.id);
     if (!memo) return res.status(404).json({ message: 'Memo not found' });
-    res.json(memo);
-  } catch (error) {
+    
+    // Fetch total score from risk assessment
+    let totalScore = null;
+    try {
+      const Risk = require('../models/Risk');
+      const riskRecord = await Risk.findOne({
+        customer_name: memo.customer_name,
+        lead_id: memo.lead_id
+      });
+      if (riskRecord) {
+        totalScore = riskRecord.total_score;
+      }
+    } catch (riskError) {
+      console.log('Could not fetch risk data:', riskError.message);
+    }
+    
+    // Add total score to memo response
+    const memoWithScore = {
+      ...memo.toObject(),
+      total_score: totalScore
+    };
+    
+    res.json(memoWithScore);
+  } catch (error) { ̰
     res.status(500).json({ message: error.message });
   }
-});
-
+}); ̰
+ ̰
 // 🔹 Utility: normalize a field to always be an array of clean strings
 function normalizeToArray(field) {
   if (!field) return [];

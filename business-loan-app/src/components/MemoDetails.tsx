@@ -109,6 +109,10 @@ export default function MemoDetails() {
             <p className="font-medium">{String(memo.customer_name)}</p>
           </div>
           <div>
+            <p className="text-sm text-gray-500">Total Score</p>
+            <p className="font-medium">{memo.total_score ? String(memo.total_score) : 'N/A'}</p>
+          </div>
+          <div>
             <p className="text-sm text-gray-500">Lead ID</p>
             <p className="font-medium">{String(memo.lead_id)}</p>
           </div>
@@ -144,10 +148,10 @@ export default function MemoDetails() {
                 {Object.entries(memo.financial_summary_and_ratios as Record<string, unknown>).map(
                   ([key, value]) => (
                     <tr key={key} className="border-b last:border-none">
-                      <td className="py-2 pr-4 font-medium text-gray-700 w-1/2">
+                      <td className="py-4 pr-4 font-medium text-gray-700 w-1/2">
                         {key}
                       </td>
-                      <td className="py-2 text-gray-900">{String(value)}</td>
+                      <td className="py-4 text-gray-900">{String(value)}</td>
                     </tr>
                   )
                 )}
