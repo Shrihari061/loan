@@ -112,7 +112,7 @@ const QCTable: React.FC = () => {
                       onClick={() => handleAction("Revert", entry._id)}
                       className="px-3 py-1.5 rounded-md bg-gray-200 text-gray-800 text-sm font-medium hover:bg-gray-300 transition-colors"
                     >
-                      Revert
+                      Reopen
                     </button>
                   ) : entry.status !== "Declined" ? (
                     <button

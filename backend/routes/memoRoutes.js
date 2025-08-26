@@ -48,11 +48,11 @@ router.get('/:id', async (req, res) => {
     };
     
     res.json(memoWithScore);
-  } catch (error) { ̰
+  } catch (error) {
     res.status(500).json({ message: error.message });
   }
-}); ̰
- ̰
+});
+
 // 🔹 Utility: normalize a field to always be an array of clean strings
 function normalizeToArray(field) {
   if (!field) return [];
