@@ -151,8 +151,6 @@ const RiskDetail: React.FC = () => {
               <th className="px-4 py-2 text-left font-medium text-gray-600">Ratio</th>
               <th className="px-4 py-2 text-left font-medium text-gray-600">Value</th>
               <th className="px-4 py-2 text-left font-medium text-gray-600">Threshold</th>
-              <th className="px-4 py-2 text-left font-medium text-gray-600">Score</th>
-              <th className="px-4 py-2 text-left font-medium text-gray-600">Max</th>
               <th className="px-4 py-2 text-left font-medium text-gray-600">Flag</th>
             </tr>
           </thead>
@@ -162,13 +160,11 @@ const RiskDetail: React.FC = () => {
                 <td className="px-4 py-2 font-medium">{ratio}</td>
                 <td className="px-4 py-2">{details.value}</td>
                 <td className="px-4 py-2">{details.threshold}</td>
-                <td className="px-4 py-2">{details.score}</td>
-                <td className="px-4 py-2">{details.max}</td>
                 <td className="px-4 py-2">
                   {details.red_flag ? (
-                    <span className="text-red-600">⚠️</span>
+                    <span className="text-red-600">🟥</span>
                   ) : (
-                    <span className="text-green-600">✔</span>
+                    <span className="text-green-600">🟩</span>
                   )}
                 </td>
               </tr>
