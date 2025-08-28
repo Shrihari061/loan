@@ -18,11 +18,15 @@ export default function Step2({
   setLeadData: React.Dispatch<React.SetStateAction<any>>;
 }) {
   const [consent, setConsent] = useState(true);
-  const [uploadedFiles, setUploadedFiles] = useState<Record<string, File[]>>({});
+  const [uploadedFiles, setUploadedFiles] = useState<Record<string, Record<string, File[]>>>({});
   const [selectedDocument, setSelectedDocument] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedYear, setSelectedYear] = useState<string>("");
   const [auditorVerified, setAuditorVerified] = useState<Record<string, boolean>>({});
+
+  // New state for year management
+  const [currentDisplayYear, setCurrentDisplayYear] = useState<string>("");
+  const [selectedYears, setSelectedYears] = useState<string[]>([]);
 
   // Review & Submit state
   const [declarations, setDeclarations] = useState({
@@ -37,10 +41,51 @@ export default function Step2({
   const [signatureFile, setSignatureFile] = useState<File | null>(null);
   const [filesAddedInSession, setFilesAddedInSession] = useState<File[]>([]);
 
+  // Get available years (excluding already selected ones)
+  const getAvailableYears = () => {
+    return years.filter(year => !selectedYears.includes(year));
+  };
+
+  // Handle year selection from main dropdown
+  const handleYearSelection = (year: string) => {
+    if (year && !selectedYears.includes(year)) {
+      setCurrentDisplayYear(year);
+      setSelectedYears(prev => [...prev, year]);
+    }
+  };
+
+  // Remove a year and its associated data
+  const removeYear = (yearToRemove: string) => {
+    const updatedYears = selectedYears.filter(year => year !== yearToRemove);
+    setSelectedYears(updatedYears);
+    
+    // Remove uploaded files for this year
+    setUploadedFiles(prev => {
+      const updated = { ...prev };
+      Object.keys(updated).forEach(docLabel => {
+        if (updated[docLabel][yearToRemove]) {
+          delete updated[docLabel][yearToRemove];
+        }
+      });
+      return updated;
+    });
+
+    // If removing the currently displayed year, switch to the latest remaining year
+    if (currentDisplayYear === yearToRemove) {
+      if (updatedYears.length > 0) {
+        // Set to the latest year (last in the array)
+        setCurrentDisplayYear(updatedYears[updatedYears.length - 1]);
+      } else {
+        setCurrentDisplayYear("");
+      }
+    }
+  };
+
   const openModal = (docLabel: string) => {
     setSelectedDocument(docLabel);
     setIsModalOpen(true);
     setFilesAddedInSession([]);
+    setSelectedYear("");
   };
 
   const closeModal = () => {
@@ -50,12 +95,18 @@ export default function Step2({
   };
 
   const handleCancel = () => {
-    if (selectedDocument && filesAddedInSession.length > 0) {
+    if (selectedDocument && selectedYear && filesAddedInSession.length > 0) {
       // Remove files that were added in this session
       setUploadedFiles((prev) => {
-        const currentFiles = prev[selectedDocument] || [];
+        const currentFiles = prev[selectedDocument]?.[selectedYear] || [];
         const filesToKeep = currentFiles.filter(file => !filesAddedInSession.includes(file));
-        return { ...prev, [selectedDocument]: filesToKeep };
+        return {
+          ...prev,
+          [selectedDocument]: {
+            ...(prev[selectedDocument] || {}),
+            [selectedYear]: filesToKeep,
+          }
+        };
       });
     }
     setFilesAddedInSession([]);
@@ -63,32 +114,49 @@ export default function Step2({
   };
 
   const handleFileChange = (files: FileList | null) => {
-    if (!files || !selectedDocument) return;
+    if (!files || !selectedDocument || !selectedYear) return;
 
     const newFiles = Array.from(files);
     setUploadedFiles((prev) => ({
       ...prev,
-      [selectedDocument]: prev[selectedDocument] ? [...prev[selectedDocument], ...newFiles] : newFiles,
+      [selectedDocument]: {
+        ...(prev[selectedDocument] || {}),
+        [selectedYear]: prev[selectedDocument]?.[selectedYear]
+          ? [...prev[selectedDocument][selectedYear], ...newFiles]
+          : newFiles,
+      },
     }));
     setFilesAddedInSession(prev => [...prev, ...newFiles]);
   };
 
-  const removeFile = (docLabel: string, index: number) => {
+  const removeFile = (docLabel: string, year: string, index: number) => {
     setUploadedFiles((prev) => {
-      const updated = [...(prev[docLabel] || [])];
+      const updated = [...(prev[docLabel]?.[year] || [])];
       updated.splice(index, 1);
-      return { ...prev, [docLabel]: updated };
+      return {
+        ...prev,
+        [docLabel]: {
+          ...(prev[docLabel] || {}),
+          [year]: updated,
+        }
+      };
     });
   };
 
-  const removeAllFiles = (docLabel: string) => {
-    setUploadedFiles((prev) => ({ ...prev, [docLabel]: [] }));
+  const removeAllFiles = (docLabel: string, year: string) => {
+    setUploadedFiles((prev) => ({
+      ...prev,
+      [docLabel]: {
+        ...(prev[docLabel] || {}),
+        [year]: [],
+      }
+    }));
   };
 
   const handleAuditorVerification = (docLabel: string, verified: boolean) => {
     setAuditorVerified(prev => ({
       ...prev,
-      [docLabel]: verified
+      [`${docLabel}_${currentDisplayYear}`]: verified
     }));
   };
 
@@ -112,8 +180,10 @@ export default function Step2({
     // Merge uploaded files and signature into leadData
     const finalLeadData = {
       ...leadData,
-      financialDocuments: Object.entries(uploadedFiles).flatMap(([label, files]) =>
-        files.map(file => file) // actual File object
+      financialDocuments: Object.entries(uploadedFiles).flatMap(([label, yearsObj]) =>
+        Object.entries(yearsObj).flatMap(([yr, files]) =>
+          files.map(file => ({ label, year: yr, file }))
+        )
       ),
       signature: signatureFile || null,
       reviewDeclarations: declarations,
@@ -141,8 +211,8 @@ export default function Step2({
       });
 
       // Append financial documents
-      finalLeadData.financialDocuments.forEach((file: File) => {
-        formData.append("financialDocuments", file, file.name);
+      finalLeadData.financialDocuments.forEach((doc: any) => {
+        formData.append("financialDocuments", doc.file, `${doc.label}-${doc.year}-${doc.file.name}`);
       });
 
       // Append signature
@@ -167,97 +237,120 @@ export default function Step2({
     <div className="p-8 w-full">
       <h2 className="text-2xl font-semibold mb-8 text-gray-800">Step 2: Upload Financial Documents</h2>
 
-      {/* Document Upload Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        {documentTypes.map((doc, idx) => (
-          <div key={idx} className="bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-300 flex flex-col">
-            <div className="p-6 flex-1 flex flex-col">
-              <div className="flex items-start mb-4">
-                <span className="text-3xl mr-3 flex-shrink-0">{doc.icon}</span>
-                <div className="min-h-[3rem]">
-                  <h3 className="text-lg font-semibold text-gray-800 leading-tight">{doc.label}</h3>
-                  {doc.audited && (
-                    <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full inline-block mt-1">Audited Required</span>
-                  )}
-                </div>
-              </div>
-
-              {/* File Name Display */}
-              <div className="mb-4 flex-shrink-0">
-                {uploadedFiles[doc.label]?.length > 0 ? (
-                  <div className="text-sm text-gray-600">
-                    {uploadedFiles[doc.label].length === 1 ? (
-                      <span className="font-medium">{uploadedFiles[doc.label][0].name}</span>
-                    ) : (
-                      <div>
-                        <span className="font-medium">{uploadedFiles[doc.label].length} files uploaded:</span>
-                        <div className="mt-1 space-y-1">
-                          {uploadedFiles[doc.label].map((file, index) => (
-                            <div key={index} className="text-xs text-gray-500 truncate">
-                              • {file.name}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <div className="text-sm text-gray-500">No files uploaded</div>
-                )}
-              </div>
-
-              {/* Verification Checkbox */}
-              {doc.audited && (
-                <div className="mb-4 flex-shrink-0">
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={auditorVerified[doc.label] || false}
-                      onChange={(e) => handleAuditorVerification(doc.label, e.target.checked)}
-                      className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    />
-                    <span className="text-sm text-gray-700">
-                      Auditor Verified
-                    </span>
-                  </label>
-                </div>
-              )}
-
-              {/* Spacer to push button to bottom */}
-              <div className="flex-1"></div>
-
-              {/* Upload Button */}
-              <button
-                onClick={() => openModal(doc.label)}
-                className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium flex-shrink-0"
-              >
-                {uploadedFiles[doc.label]?.length > 0 ? 'Manage Files' : 'Upload Files'}
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Financial Year Selection */}
-      {/* <div className="mt-8 pt-6">
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Financial Year
-          </label>
+      {/* Year Selection Dropdown */}
+      <div className="mb-8">
+        <label className="block text-lg font-medium text-gray-700 mb-4">
+          Select Financial Year
+        </label>
+        <div className="flex items-center gap-4">
           <select
-            value={selectedYear}
-            onChange={(e) => setSelectedYear(e.target.value)}
-            className="w-full max-w-xs border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value=""
+            onChange={(e) => handleYearSelection(e.target.value)}
+            className="border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
           >
             <option value="">Select Financial Year</option>
-            {years.map((yr) => (
+            {getAvailableYears().map((yr) => (
               <option key={yr} value={yr}>{yr}</option>
             ))}
           </select>
+          {getAvailableYears().length === 0 && (
+            <span className="text-sm text-gray-500">All years have been selected</span>
+          )}
         </div>
-      </div> */}
+      </div>
 
+      {/* Selected Years Display */}
+      {selectedYears.length > 0 && (
+        <div className="mb-8">
+          <h3 className="text-lg font-medium text-gray-700 mb-4">Selected Years</h3>
+          <div className="flex flex-wrap gap-3">
+            {selectedYears.map((year) => (
+              <div key={year} className="flex items-center bg-blue-100 text-blue-800 px-4 py-2 rounded-full">
+                <span className="mr-2">{year}</span>
+                <button
+                  onClick={() => removeYear(year)}
+                  className="text-blue-600 hover:text-blue-800 font-bold"
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
+      {/* Document Upload Cards - Only show if a year is currently selected for display */}
+      {currentDisplayYear && (
+        <>
+          <div className="mb-6">
+            <h3 className="text-xl font-semibold text-gray-800">
+              Upload Documents for Financial Year {currentDisplayYear}
+            </h3>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {documentTypes.map((doc, idx) => (
+              <div key={idx} className="bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-300 flex flex-col">
+                <div className="p-6 flex-1 flex flex-col">
+                  <div className="flex items-start mb-4">
+                    <span className="text-3xl mr-3 flex-shrink-0">{doc.icon}</span>
+                    <div className="min-h-[3rem]">
+                      <h3 className="text-lg font-semibold text-gray-800 leading-tight">{doc.label}</h3>
+                      {doc.audited && (
+                        <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full inline-block mt-1">Audited Required</span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* File Name Display */}
+                  <div className="mb-4 flex-shrink-0">
+                    {uploadedFiles[doc.label]?.[currentDisplayYear]?.length > 0 ? (
+                      <div className="text-sm text-gray-600">
+                        <span className="font-medium">{currentDisplayYear}:</span>
+                        <ul className="ml-4 list-disc text-xs text-gray-500">
+                          {uploadedFiles[doc.label][currentDisplayYear].map((file, i) => (
+                            <li key={i}>{file.name}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    ) : (
+                      <div className="text-sm text-gray-500">No files uploaded</div>
+                    )}
+                  </div>
+
+                  {/* Verification Checkbox */}
+                  {doc.audited && (
+                    <div className="mb-4 flex-shrink-0">
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={auditorVerified[`${doc.label}_${currentDisplayYear}`] || false}
+                          onChange={(e) => handleAuditorVerification(doc.label, e.target.checked)}
+                          className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        />
+                        <span className="text-sm text-gray-700">
+                          Auditor Verified
+                        </span>
+                      </label>
+                    </div>
+                  )}
+
+                  {/* Spacer to push button to bottom */}
+                  <div className="flex-1"></div>
+
+                  {/* Upload Button */}
+                  <button
+                    onClick={() => openModal(doc.label)}
+                    className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium flex-shrink-0"
+                  >
+                    {uploadedFiles[doc.label]?.[currentDisplayYear]?.length > 0 ? 'Manage Files' : 'Upload Files'}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
 
       {/* Upload Modal */}
       {isModalOpen && selectedDocument && (
@@ -266,7 +359,7 @@ export default function Step2({
             <div className="p-6 border-b border-gray-200">
               <div className="flex items-center justify-between">
                 <h3 className="text-xl font-semibold text-gray-800">
-                  Upload {selectedDocument}
+                  Upload {selectedDocument} for {currentDisplayYear}
                 </h3>
                 <button
                   onClick={closeModal}
@@ -278,44 +371,59 @@ export default function Step2({
             </div>
 
             <div className="p-6">
-              {/* File Upload Area */}
+              {/* Financial Year Selection - Only show available years for this document */}
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Select Files
+                  Financial Year
                 </label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
-                  <input
-                    type="file"
-                    multiple
-                    className="hidden"
-                    id={`file-upload-${selectedDocument}`}
-                    onChange={(e) => handleFileChange(e.target.files)}
-                  />
-                  <label htmlFor={`file-upload-${selectedDocument}`} className="cursor-pointer">
-                    <div className="text-4xl mb-2">📁</div>
-                    <p className="text-gray-600 mb-1">Click to upload or drag and drop</p>
-                    <p className="text-sm text-gray-500">PDF, DOC, DOCX, XLS, XLSX (Max 10MB each)</p>
-                  </label>
-                </div>
+                <select
+                  value={selectedYear}
+                  onChange={(e) => setSelectedYear(e.target.value)}
+                  className="w-full max-w-xs border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select Financial Year</option>
+                  {selectedYears.map((yr) => (
+                    <option key={yr} value={yr}>{yr}</option>
+                  ))}
+                </select>
               </div>
 
-
-
-
+              {/* File Upload Area - only if year selected */}
+              {selectedYear && (
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Select Files
+                  </label>
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
+                    <input
+                      type="file"
+                      multiple
+                      className="hidden"
+                      id={`file-upload-${selectedDocument}-${selectedYear}`}
+                      onChange={(e) => handleFileChange(e.target.files)}
+                    />
+                    <label htmlFor={`file-upload-${selectedDocument}-${selectedYear}`} className="cursor-pointer">
+                      <div className="text-4xl mb-2">📁</div>
+                      <p className="text-gray-600 mb-1">Click to upload or drag and drop</p>
+                      <p className="text-sm text-gray-500">PDF, DOC, DOCX, XLS, XLSX (Max 10MB each)</p>
+                    </label>
+                  </div>
+                </div>
+              )}
 
               {/* Uploaded Files List */}
-              {uploadedFiles[selectedDocument]?.length > 0 && (
+              {selectedYear && uploadedFiles[selectedDocument]?.[selectedYear]?.length > 0 && (
                 <div className="mb-6">
-                  <h4 className="text-sm font-medium text-gray-700 mb-3">Uploaded Files</h4>
+                  <h4 className="text-sm font-medium text-gray-700 mb-3">Uploaded Files for {selectedYear}</h4>
                   <div className="space-y-2">
-                    {uploadedFiles[selectedDocument].map((file, index) => (
+                    {uploadedFiles[selectedDocument][selectedYear].map((file, index) => (
                       <div key={index} className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded">
                         <div className="flex items-center">
                           <span className="text-sm text-gray-600 mr-2">📄</span>
                           <span className="text-sm text-gray-800">{file.name}</span>
                         </div>
                         <button
-                          onClick={() => removeFile(selectedDocument, index)}
+                          onClick={() => removeFile(selectedDocument, selectedYear, index)}
                           className="text-red-500 hover:text-red-700 text-sm"
                         >
                           Remove
@@ -324,7 +432,7 @@ export default function Step2({
                     ))}
                   </div>
                   <button
-                    onClick={() => removeAllFiles(selectedDocument)}
+                    onClick={() => removeAllFiles(selectedDocument, selectedYear)}
                     className="text-red-600 text-sm mt-2 hover:underline"
                   >
                     Remove All Files
@@ -420,24 +528,6 @@ export default function Step2({
             </span>
           </label>
         </div>
-
-        {/* Signature Upload */}
-        {/* <div className="mb-6">
-          <label className="block text-gray-700 font-medium mb-2">
-            Upload Signature of Authorised Signatory
-          </label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleSignatureUpload}
-            className="w-full border border-gray-300 rounded px-4 py-2"
-          />
-          {signatureFile && (
-            <p className="text-sm text-green-600 mt-2">
-              Selected: {signatureFile.name}
-            </p>
-          )}
-        </div> */}
 
         {/* Final Declaration Checkbox */}
         <div className="mb-6">
