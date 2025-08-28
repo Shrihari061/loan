@@ -41,62 +41,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// 🔹 Debug route to check data structure
-router.get('/debug/all', async (req, res) => {
-  try {
-    const docs = await ExtractedValues.find();
-    res.json({
-      count: docs.length,
-      documents: docs.map(doc => ({
-        _id: doc._id,
-        customer_name: doc.customer_name,
-        lead_id: doc.lead_id,
-        hasData: !!doc._doc,
-        fields: Object.keys(doc._doc || {}).filter(key => !['_id', 'customer_name', 'lead_id', '__v', 'createdAt', 'updatedAt'].includes(key))
-      }))
-    });
-  } catch (err) {
-    console.error('Error in debug route:', err);
-    res.status(500).json({ error: 'Server error' });
-  }
-});
-
-// 🔹 Debug route to check specific document data
-router.get('/debug/:id', async (req, res) => {
-  try {
-    const doc = await ExtractedValues.findById(req.params.id);
-    if (!doc) {
-      return res.status(404).json({ message: 'Document not found' });
-    }
-    
-    const data = doc._doc;
-    const sampleFields = {};
-    
-    // Get sample fields with their year values
-    Object.entries(data).forEach(([key, value]) => {
-      if (value && typeof value === 'object' && value.source) {
-        sampleFields[key] = {
-          source: value.source,
-          unit: value.unit,
-          value_2023: value.value_2023,
-          value_2024: value.value_2024,
-          value_2025: value.value_2025
-        };
-      }
-    });
-    
-    res.json({
-      _id: doc._id,
-      customer_name: doc.customer_name,
-      lead_id: doc.lead_id,
-      sampleFields: sampleFields
-    });
-  } catch (err) {
-    console.error('Error in debug route:', err);
-    res.status(500).json({ error: 'Server error' });
-  }
-});
-
 
 
 
@@ -138,25 +82,17 @@ router.get('/ratios', async (req, res) => {
 // 🔹 Get SINGLE company details by ID
 router.get('/:id', async (req, res) => {
   try {
-    const { year = '2025' } = req.query; // Default to 2025 if no year specified
-    
-    // First try to find by ID directly
-    let doc = await ExtractedValues.findById(req.params.id);
-    
-    // If not found by ID, try to find by customer_name and lead_id
-    if (!doc) {
-      const baseDoc = await ExtractedValues.findById(req.params.id, {
-        customer_name: 1,
-        lead_id: 1
-      });
-      if (!baseDoc) return res.status(404).json({ message: 'Company not found' });
+    const baseDoc = await ExtractedValues.findById(req.params.id, {
+      customer_name: 1,
+      lead_id: 1
+    });
+    if (!baseDoc) return res.status(404).json({ message: 'Company not found' });
 
-      doc = await ExtractedValues.findOne({
-        customer_name: baseDoc.customer_name,
-        lead_id: baseDoc.lead_id
-      });
-      if (!doc) return res.status(404).json({ message: 'Matching company not found' });
-    }
+    const doc = await ExtractedValues.findOne({
+      customer_name: baseDoc.customer_name,
+      lead_id: baseDoc.lead_id
+    });
+    if (!doc) return res.status(404).json({ message: 'Matching company not found' });
 
     const data = doc._doc; // Access the actual fields
 
@@ -168,14 +104,12 @@ router.get('/:id', async (req, res) => {
     const traverse = (obj, parentKey = '') => {
       Object.entries(obj).forEach(([key, value]) => {
         if (value && typeof value === 'object' && value.source) {
-          const yearKey = `value_${year}`;
           const itemObj = {
             _id: `${doc._id}-${parentKey}${key}`,
             item: key,
-            [`FY${year}`]: value[yearKey] ?? null,
-            unit: value.unit || '₹ crore'
+            FY2024: value.value_2024 ?? null,
+            FY2025: value.value_2025 ?? null
           };
-          
           if (value.source === 'bs') balance_sheet.push(itemObj);
           else if (value.source === 'pl') profit_loss.push(itemObj);
           else if (value.source === 'cf') cash_flow.push(itemObj);
@@ -186,10 +120,9 @@ router.get('/:id', async (req, res) => {
     traverse(data);
 
     // ---------------- Compute Net Worth ----------------
-    const yearKey = `value_${year}`;
-    const totalAssets = data["Total assets"]?.[yearKey] || 0;
-    const totalNonCurrentLiab = data["Total non-current liabilities"]?.[yearKey] || 0;
-    const totalCurrentLiab = data["Total current liabilities"]?.[yearKey] || 0;
+    const totalAssets = data["Total assets"]?.value_2025 || 0;
+    const totalNonCurrentLiab = data["Total non-current liabilities"]?.value_2025 || 0;
+    const totalCurrentLiab = data["Total current liabilities"]?.value_2025 || 0;
     const netWorth = totalAssets - (totalNonCurrentLiab + totalCurrentLiab);
 
     // ---------------- Get Ratio Data ----------------
@@ -225,8 +158,7 @@ router.get('/:id', async (req, res) => {
       dscr: dscr,
       debt_to_equity: debt_to_equity,
       ratio_health: ratio_health,
-      selected_year: year,
-      year_range: `2023-2025`,
+      year_range: '2023-2025',
       balance_sheet,
       profit_loss,
       cash_flow

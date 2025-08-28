@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom'; // ⬅️ added useNavigate
 
 type ExtractedData = Record<string, string>;
@@ -56,14 +56,11 @@ const QCViewer: React.FC = () => {
 
   // Collection selector
   const [selectedCollection, setSelectedCollection] = useState<string>('');
-  const [selectedYear, setSelectedYear] = useState<string>('2025'); // ⬅️ new year dropdown state
+  const [selectedYear, setSelectedYear] = useState<string>(''); // ⬅️ new year dropdown state
   const [financialData, setFinancialData] = useState<FinancialData | null>(null);
   const [isFinancialDataEdited, setIsFinancialDataEdited] = useState(false);
   const collections = ['Balance Sheet Summary', 'Profit & Loss Summary', 'Cash Flow Summary'];
   const years = ['2023', '2024', '2025']; // ⬅️ year options
-
-  // Create a stable dependency array to prevent React warnings
-  const financialDataDependencies = useMemo(() => [selectedCollection, id, data, selectedYear], [selectedCollection, id, data, selectedYear]);
 
   const extractedDataToText = (obj?: ExtractedData) => {
     if (!obj) return '';
@@ -138,7 +135,7 @@ const QCViewer: React.FC = () => {
 
   // Fetch selected collection
   useEffect(() => {
-    if (!selectedCollection || !id || !data || !selectedYear) return;
+    if (!selectedCollection || !id || !data) return;
     
     fetch(`http://localhost:5000/analysis/`)
       .then((res) => res.json())
@@ -148,7 +145,7 @@ const QCViewer: React.FC = () => {
           setTextValue('No financial analysis data found for this lead.');
           return;
         }
-        return fetch(`http://localhost:5000/analysis/${matchingEntry._id}?year=${selectedYear}`);
+        return fetch(`http://localhost:5000/analysis/${matchingEntry._id}`);
       })
       .then((res) => res?.json())
       .then((data) => {
@@ -202,7 +199,7 @@ const QCViewer: React.FC = () => {
         console.error('Failed to load financial data:', err);
         setTextValue('Error loading financial data.');
       });
-  }, financialDataDependencies);
+  }, [selectedCollection, id, data]);
 
   const handleSave = () => {
     if (!data) return;
@@ -225,7 +222,7 @@ const QCViewer: React.FC = () => {
         alert('No matching analysis entry found to save changes.');
         return;
       }
-      const response = await fetch(`http://localhost:5000/analysis/${matchingEntry._id}?year=${selectedYear}`, {
+      const response = await fetch(`http://localhost:5000/analysis/${matchingEntry._id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(financialData),
@@ -413,7 +410,7 @@ const QCViewer: React.FC = () => {
             value={selectedYear}
             onChange={(e) => setSelectedYear(e.target.value)}
           >
-
+            <option value="" disabled>Select a year</option>
             {years.map((yr) => (
               <option key={yr} value={yr}>{yr}</option>
             ))}

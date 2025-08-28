@@ -30,7 +30,6 @@ const CompanyDetails: React.FC = () => {
   const [company, setCompany] = useState<CompanyData | null>(null);
   const [activeTab, setActiveTab] = useState<'source' | 'ratio'>('source');
   const [selectedDocument, setSelectedDocument] = useState<'balance_sheet' | 'profit_loss' | 'cash_flow'>('balance_sheet');
-  const [selectedYear, setSelectedYear] = useState('2025');
 
   // Financial document types
   const financialDocuments = [
@@ -43,7 +42,7 @@ const CompanyDetails: React.FC = () => {
   useEffect(() => {
     const fetchCompany = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/analysis/${id}?year=${selectedYear}`);
+        const res = await fetch(`http://localhost:5000/analysis/${id}`);
         const data = await res.json();
 
         // Add dummy values to the financial data for display
@@ -72,7 +71,7 @@ const CompanyDetails: React.FC = () => {
       }
     };
     fetchCompany();
-  }, [id, selectedYear]);
+  }, [id]);
 
   const formatValue = (value: number | string | null) => {
     if (value === null || value === undefined) return 'N/A';
@@ -335,37 +334,6 @@ const CompanyDetails: React.FC = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
               </svg>
               <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>Documents</h3>
-            </div>
-            
-            {/* Year Selection */}
-            <div style={{ marginBottom: '16px' }}>
-              <label style={{
-                fontSize: '14px',
-                fontWeight: '500',
-                color: '#374151',
-                marginBottom: '8px',
-                display: 'block',
-                fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
-              }}>
-                Select Year
-              </label>
-              <select
-                value={selectedYear}
-                onChange={(e) => setSelectedYear(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '8px 12px',
-                  border: '1px solid #d1d5db',
-                  borderRadius: '6px',
-                  fontSize: '14px',
-                  backgroundColor: '#ffffff',
-                  fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
-                }}
-              >
-                <option value="2023">2023</option>
-                <option value="2024">2024</option>
-                <option value="2025">2025</option>
-              </select>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
