@@ -109,7 +109,6 @@ export default function AppraisalTable() {
       </div>
 
       {/* Table Container */}
-
       <FigtreeTableContainer>
         <FigtreeTable style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
@@ -118,18 +117,16 @@ export default function AppraisalTable() {
               <NonSortableHeader>Lead ID</NonSortableHeader>
               <NonSortableHeader>Loan Type</NonSortableHeader>
               <NonSortableHeader>Created By</NonSortableHeader>
-              <SortableHeader sortKey="last_updated" currentSort={null} onSort={() => {}}>Last Updated</SortableHeader>
+              <SortableHeader sortKey="last_updated" currentSort={null} onSort={() => { }}>Last Updated</SortableHeader>
               <NonSortableHeader>Status</NonSortableHeader>
               <NonSortableHeader>Actions</NonSortableHeader>
-
             </tr>
           </thead>
           <tbody>
-            {memos.map((memo: any, idx) => (
-
-              <tr 
-                key={memo._id} 
-                style={{ 
+            {memos.map((memo: any) => (
+              <tr
+                key={memo._id}
+                style={{
                   borderBottom: '1px solid #f3f4f6',
                   transition: 'background-color 0.2s'
                 }}
@@ -138,31 +135,28 @@ export default function AppraisalTable() {
               >
                 <FigtreeTableCell>{memo.customer_name}</FigtreeTableCell>
                 <FigtreeTableCell>{memo.lead_id}</FigtreeTableCell>
-                <FigtreeTableCell>
-                  {memo.loan_type || "N/A"}
-                </FigtreeTableCell>
+                <FigtreeTableCell>{memo.loan_type || "N/A"}</FigtreeTableCell>
                 <FigtreeTableCell>{memo.created_by}</FigtreeTableCell>
                 <FigtreeTableCell>{memo.last_updated}</FigtreeTableCell>
                 <FigtreeTableCell>{memo.status}</FigtreeTableCell>
                 <FigtreeTableCell>
+                  {/* ✅ Replaced 3 dots with a button */}
                   <button
-
-                    onClick={(e) => toggleMenu(memo._id, e)}
+                    onClick={() => handleViewDetail(memo._id)}
                     style={{
-                      padding: '8px',
+                      padding: '8px 12px',
                       borderRadius: '4px',
-                      background: 'none',
-                      border: 'none',
+                      background: '#f3f4f6',
+                      border: '1px solid #e5e7eb',
                       cursor: 'pointer',
-                      color: '#6b7280',
+                      color: '#374151',
+                      fontSize: '14px',
                       transition: 'background-color 0.2s'
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f3f4f6'}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e5e7eb'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#f3f4f6'}
                   >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
-                    </svg>
+                    View Details
                   </button>
                 </FigtreeTableCell>
               </tr>
@@ -171,14 +165,14 @@ export default function AppraisalTable() {
         </FigtreeTable>
       </FigtreeTableContainer>
 
-      {/* Floating Menu */}
+      {/* Floating Menu (kept but unused since we moved to button) */}
       {openMenuId && menuPosition &&
         createPortal(
           <div
             className="fixed z-50 bg-white border rounded-lg shadow-lg"
             style={{ top: menuPosition.y + 4, left: menuPosition.x - 150, width: "150px" }}
           >
-            {["View Detail", "Export", "Edit", "Submit", "Change Status"].map(
+            {["View Detail"].map(
               (action) => (
                 <div
                   key={action}
@@ -213,7 +207,7 @@ export default function AppraisalTable() {
                 .filter((c) => c.status === "Approved")
                 .map((c) => (
                   <option key={c._id} value={c._id}>
-                    {c.customer_name} – {c.lead_id} – {c.loan_type} {/* ✅ show loan_type */}
+                    {c.customer_name} – {c.lead_id} – {c.loan_type}
                   </option>
                 ))}
             </select>
@@ -241,7 +235,7 @@ export default function AppraisalTable() {
             )}
           </div>
         </div>
-              )}
+      )}
     </FigtreeContainer>
   );
 }

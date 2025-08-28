@@ -186,28 +186,21 @@ const RiskTable: React.FC = () => {
                 </FigtreeTableCell>
                 <FigtreeTableCell>
                   <button
-                    onClick={(e) => toggleMenu(entry._id, e)}
+                    onClick={() => handleViewDetail(entry._id)}
                     style={{
-                      padding: '8px',
+                      padding: '8px 12px',
                       borderRadius: '4px',
-                      background: 'none',
-                      border: 'none',
+                      background: '#f3f4f6',
+                      border: '1px solid #e5e7eb',
                       cursor: 'pointer',
-                      color: '#6b7280',
+                      color: '#374151',
+                      fontSize: '14px',
                       transition: 'background-color 0.2s'
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f3f4f6'}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e5e7eb'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#f3f4f6'}
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm0 5.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm0 5.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z" />
-                    </svg>
+                    View Details
                   </button>
                 </FigtreeTableCell>
               </tr>
@@ -215,28 +208,6 @@ const RiskTable: React.FC = () => {
           </tbody>
         </FigtreeTable>
       </FigtreeTableContainer>
-
-      {/* Floating dropdown menu */}
-      {openMenuId && menuPosition &&
-        ReactDOM.createPortal(
-          <div
-            style={{
-              position: "absolute",
-              top: menuPosition.top + 8,
-              left: menuPosition.left,
-              zIndex: 1000,
-            }}
-            className="w-48 bg-white border rounded-xl shadow-lg transform -translate-x-full"
-          >
-            <button
-              onClick={() => handleViewDetail(openMenuId)}
-              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-            >
-              View Detail
-            </button>
-          </div>,
-          document.body
-        )}
     </FigtreeContainer>
   );
 };

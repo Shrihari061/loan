@@ -113,17 +113,6 @@ const CompanyTable: React.FC = () => {
     fetchData();
   }, []);
 
-  const toggleMenu = (id: string, e: React.MouseEvent) => {
-    if (openMenuId === id) {
-      setOpenMenuId(null);
-      setMenuPosition(null);
-    } else {
-      const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-      setOpenMenuId(id);
-      setMenuPosition({ top: rect.bottom + window.scrollY, left: rect.left + window.scrollX });
-    }
-  };
-
   const handleAction = (action: string, company: CompanyData) => {
     if (action === 'View Data') {
       navigate(`/reports/${company._id}`);
@@ -183,23 +172,21 @@ const CompanyTable: React.FC = () => {
                 {/* <FigtreeTableCell>{company.ratio_health}</FigtreeTableCell> */}
                 <FigtreeTableCell>
                   <button
-
-                    onClick={(e) => toggleMenu(company._id, e)}
+                    onClick={() => handleAction('View Data', company)}
                     style={{
-                      padding: '8px',
+                      padding: '8px 12px',
                       borderRadius: '4px',
-                      background: 'none',
-                      border: 'none',
+                      background: '#f3f4f6',
+                      border: '1px solid #e5e7eb',
                       cursor: 'pointer',
-                      color: '#6b7280',
+                      color: '#374151',
+                      fontSize: '14px',
                       transition: 'background-color 0.2s'
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f3f4f6'}
-                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#e5e7eb'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#f3f4f6'}
                   >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
-                    </svg>
+                    View Details
                   </button>
                 </FigtreeTableCell>
               </tr>
@@ -207,23 +194,6 @@ const CompanyTable: React.FC = () => {
           </tbody>
         </FigtreeTable>
       </FigtreeTableContainer>
-
-      {openMenuId && menuPosition && (
-        <div
-          className="fixed z-50 bg-white border rounded-xl shadow-lg w-48 transform -translate-x-full"
-          style={{ top: menuPosition.top + 8, left: menuPosition.left }}
-        >
-          {['View Data', 'Export Comparison', 'Download Comparison'].map((action) => (
-            <div
-              key={action}
-              onClick={() => handleAction(action, data.find((c) => c._id === openMenuId)!)}
-              className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
-            >
-              {action}
-            </div>
-          ))}
-        </div>
-              )}
     </FigtreeContainer>
   );
 };
