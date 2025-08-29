@@ -38,7 +38,16 @@ type RatioDoc = {
   _id: string;
   customer_name?: string;
   lead_id?: string;
-  ratios: { name: string; value: number | null }[];
+  ratios: {
+    name: string;
+    threshold?: string;
+    value_2023?: number | string | null;
+    red_flag_2023?: boolean;
+    value_2024?: number | string | null;
+    red_flag_2024?: boolean;
+    value_2025?: number | string | null;
+    red_flag_2025?: boolean;
+  }[];
   financial_strength?: FinancialStrength;
 };
 
@@ -84,8 +93,9 @@ const CompanyTable: React.FC = () => {
               const debtEquityRatio = ratioDoc.ratios.find((r) => r.name === 'Debt/Equity');
               const dscrRatio = ratioDoc.ratios.find((r) => r.name === 'DSCR');
 
-              debtToEquity = debtEquityRatio?.value ?? 'N/A';
-              dscr = dscrRatio?.value ?? 'N/A';
+              // ✅ Always use latest year (2025) for values
+              debtToEquity = debtEquityRatio?.value_2025 ?? 'N/A';
+              dscr = dscrRatio?.value_2025 ?? 'N/A';
 
               // ✅ calculate ratio health from subtotal
               const subtotal = ratioDoc.financial_strength?.subtotal ?? null;
@@ -136,18 +146,15 @@ const CompanyTable: React.FC = () => {
     <FigtreeContainer style={{ padding: '20px' }}>
       <h2 style={{ fontSize: '24px', fontWeight: '600', color: '#111827', marginBottom: '24px' }}>Financial Analysis</h2>
 
-
       <FigtreeTableContainer>
         <FigtreeTable style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ backgroundColor: '#f8f9fa', borderBottom: '1px solid #e5e7eb' }}>
               {['Company Name','Lead ID','Net Worth','Debt to Equity','DSCR','Year Range'].map((header) => (
                 <NonSortableHeader key={header}>
-
                   {header}
                 </NonSortableHeader>
               ))}
-
               <NonSortableHeader>Actions</NonSortableHeader>
             </tr>
           </thead>

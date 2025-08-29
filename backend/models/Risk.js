@@ -2,11 +2,17 @@ const mongoose = require("mongoose");
 
 const ScoreSchema = new mongoose.Schema(
   {
-    value: { type: Number },
     threshold: { type: String },
-    red_flag: { type: Boolean },
-    score: { type: Number },
     max: { type: Number },
+    value_2023: { type: mongoose.Schema.Types.Mixed },
+    red_flag_2023: { type: Boolean },
+    score_2023: { type: Number },
+    value_2024: { type: mongoose.Schema.Types.Mixed },
+    red_flag_2024: { type: Boolean },
+    score_2024: { type: Number },
+    value_2025: { type: mongoose.Schema.Types.Mixed },
+    red_flag_2025: { type: Boolean },
+    score_2025: { type: Number },
   },
   { _id: false }
 );
@@ -15,21 +21,33 @@ const FinancialStrengthSchema = new mongoose.Schema(
   {
     per_ratio_max: { type: Number },
     scores: { type: Map, of: ScoreSchema }, // dynamic keys like DSCR, Debt/Equity, etc.
-    subtotal: { type: Number },
+    subtotals: {
+      2023: { type: Number },
+      2024: { type: Number },
+      2025: { type: Number },
+    },
   },
   { _id: false }
 );
 
 const ManagementQualitySchema = new mongoose.Schema(
   {
-    score: { type: Number },
+    scores: {
+      2023: { type: Number },
+      2024: { type: Number },
+      2025: { type: Number },
+    },
   },
   { _id: false }
 );
 
 const IndustryRiskSchema = new mongoose.Schema(
   {
-    score: { type: Number },
+    scores: {
+      2023: { type: Number },
+      2024: { type: Number },
+      2025: { type: Number },
+    },
   },
   { _id: false }
 );
@@ -51,9 +69,21 @@ const RiskSchema = new mongoose.Schema(
     financial_strength: FinancialStrengthSchema,
     management_quality: ManagementQualitySchema,
     industry_risk: IndustryRiskSchema,
-    total_score: { type: Number },
-    risk_bucket: { type: String },
-    red_flags: [{ type: String }], // array of flags
+    total_score: {
+      2023: { type: Number },
+      2024: { type: Number },
+      2025: { type: Number },
+    },
+    risk_bucket: {
+      2023: { type: String },
+      2024: { type: String },
+      2025: { type: String },
+    },
+    red_flags: {
+      2023: [{ type: String }],
+      2024: [{ type: String }],
+      2025: [{ type: String }],
+    },
   },
   { timestamps: true } // adds createdAt & updatedAt
 );

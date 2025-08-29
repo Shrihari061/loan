@@ -8,9 +8,21 @@ interface RiskEntry {
   _id: string;
   customer_name: string;
   lead_id: string;
-  total_score?: number;
-  risk_bucket?: string;
-  red_flags?: string[];
+  total_score?: {
+    2023?: number;
+    2024?: number;
+    2025?: number;
+  };
+  risk_bucket?: {
+    2023?: string;
+    2024?: string;
+    2025?: string;
+  };
+  red_flags?: {
+    2023?: string[];
+    2024?: string[];
+    2025?: string[];
+  };
   updatedAt?: string;
 
   // 🔹 keep extra fields but don’t render them in the table
@@ -136,8 +148,6 @@ const RiskTable: React.FC = () => {
     <FigtreeContainer style={{ padding: '20px' }}>
       <h1 style={{ fontSize: '24px', fontWeight: '600', color: '#111827', marginBottom: '24px' }}>Risk Assessment</h1>
 
-
-
       {/* Table */}
       <FigtreeTableContainer>
         <FigtreeTable style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -170,7 +180,7 @@ const RiskTable: React.FC = () => {
               >
                 <FigtreeTableCell>{entry.customer_name}</FigtreeTableCell>
                 <FigtreeTableCell>{entry.lead_id}</FigtreeTableCell>
-                <FigtreeTableCell>{entry.total_score ?? "N/A"}</FigtreeTableCell>
+                <FigtreeTableCell>{entry.total_score?.["2025"] ?? "N/A"}</FigtreeTableCell>
                 <FigtreeTableCell>
                   <span
                     style={{
@@ -178,10 +188,10 @@ const RiskTable: React.FC = () => {
                       borderRadius: '16px',
                       fontSize: '12px',
                       fontWeight: '500',
-                      ...getRiskPillColor(entry.risk_bucket)
+                      ...getRiskPillColor(entry.risk_bucket?.["2025"])
                     }}
                   >
-                    {entry.risk_bucket ?? "—"}
+                    {entry.risk_bucket?.["2025"] ?? "—"}
                   </span>
                 </FigtreeTableCell>
                 <FigtreeTableCell>

@@ -40,9 +40,21 @@ router.get('/:id', async (req, res) => {
       _id: riskRecord._id,
       customer_name: riskRecord.customer_name,
       lead_id: riskRecord.lead_id,
-      total_score: riskRecord.total_score,
-      risk_bucket: riskRecord.risk_bucket,
-      red_flags: riskRecord.red_flags,
+      total_score: {
+        2023: riskRecord.total_score?.["2023"] ?? null,
+        2024: riskRecord.total_score?.["2024"] ?? null,
+        2025: riskRecord.total_score?.["2025"] ?? null
+      },
+      risk_bucket: {
+        2023: riskRecord.risk_bucket?.["2023"] ?? null,
+        2024: riskRecord.risk_bucket?.["2024"] ?? null,
+        2025: riskRecord.risk_bucket?.["2025"] ?? null
+      },
+      red_flags: {
+        2023: riskRecord.red_flags?.["2023"] ?? [],
+        2024: riskRecord.red_flags?.["2024"] ?? [],
+        2025: riskRecord.red_flags?.["2025"] ?? []
+      },
       weights: riskRecord.weights,
       financial_strength: riskRecord.financial_strength,
       management_quality: riskRecord.management_quality,

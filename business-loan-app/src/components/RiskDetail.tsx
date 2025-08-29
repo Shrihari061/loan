@@ -14,15 +14,27 @@ interface FinancialStrength {
   scores: {
     [key: string]: ScoreEntry;
   };
-  subtotal: number;
+  subtotal: {
+    2023?: number;
+    2024?: number;
+    2025?: number;
+  };
 }
 
 interface ManagementQuality {
-  score: number;
+  score: {
+    2023?: number;
+    2024?: number;
+    2025?: number;
+  };
 }
 
 interface IndustryRisk {
-  score: number;
+  score: {
+    2023?: number;
+    2024?: number;
+    2025?: number;
+  };
 }
 
 interface Weights {
@@ -35,9 +47,21 @@ interface RiskDetailData {
   _id: string;
   customer_name: string;
   lead_id: string;
-  total_score: number;
-  risk_bucket: string;
-  red_flags: string[];
+  total_score: {
+    2023?: number;
+    2024?: number;
+    2025?: number;
+  };
+  risk_bucket: {
+    2023?: string;
+    2024?: string;
+    2025?: string;
+  };
+  red_flags: {
+    2023?: string[];
+    2024?: string[];
+    2025?: string[];
+  };
   weights: Weights;
   financial_strength: FinancialStrength;
   management_quality: ManagementQuality;
@@ -50,7 +74,7 @@ interface RiskDetailData {
 
 const RiskDetail: React.FC = () => {
   const { id } = useParams();
-  const navigate = useNavigate(); // 🔹 Added navigate
+  const navigate = useNavigate();
   const [data, setData] = useState<RiskDetailData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -88,23 +112,28 @@ const RiskDetail: React.FC = () => {
       <div className="bg-white p-4 rounded-lg shadow-sm space-y-2">
         <p><span className="font-medium">Customer:</span> {data.customer_name}</p>
         <p><span className="font-medium">Lead ID:</span> {data.lead_id}</p>
-        <p>
-          <span className="font-medium">Total Score:</span> {data.total_score} / 100
-        </p>
-        <p>
-          <span className="font-medium">Risk Bucket:</span>{" "}
-          <span
-            className={`px-2 py-1 rounded ${
-              data.risk_bucket === "Low Risk"
+        <p className="font-medium">Total Score:</p>
+        <div className="flex gap-4">
+          {["2023", "2024", "2025"].map(year => (
+            <span key={year}>{year}: {data.total_score?.[year] ?? "—"} / 100</span>
+          ))}
+        </div>
+        <p className="font-medium">Risk Bucket:</p>
+        <div className="flex gap-4">
+          {["2023", "2024", "2025"].map(year => (
+            <span
+              key={year}
+              className={`px-2 py-1 rounded ${data.risk_bucket?.[year] === "Low Risk"
                 ? "bg-green-100 text-green-700"
-                : data.risk_bucket === "Medium Risk"
-                ? "bg-yellow-100 text-yellow-700"
-                : "bg-red-100 text-red-700"
-            }`}
-          >
-            {data.risk_bucket}
-          </span>
-        </p>
+                : data.risk_bucket?.[year] === "Medium Risk"
+                  ? "bg-yellow-100 text-yellow-700"
+                  : "bg-red-100 text-red-700"
+                }`}
+            >
+              {year}: {data.risk_bucket?.[year] ?? "—"}
+            </span>
+          ))}
+        </div>
       </div>
 
       {/* Risk Breakdown */}
@@ -114,29 +143,29 @@ const RiskDetail: React.FC = () => {
           <thead className="bg-gray-100">
             <tr>
               <th className="px-4 py-2 text-left font-medium text-gray-600">Component</th>
-              <th className="px-4 py-2 text-left font-medium text-gray-600">Weight</th>
-              <th className="px-4 py-2 text-left font-medium text-gray-600">Score</th>
-              <th className="px-4 py-2 text-left font-medium text-gray-600">Max</th>
+              <th className="px-4 py-2 text-left font-medium text-gray-600">2023</th>
+              <th className="px-4 py-2 text-left font-medium text-gray-600">2024</th>
+              <th className="px-4 py-2 text-left font-medium text-gray-600">2025</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td className="px-4 py-2">Financial Strength</td>
-              <td className="px-4 py-2">{data.weights.financial_strength}%</td>
-              <td className="px-4 py-2">{data.financial_strength.subtotal}</td>
-              <td className="px-4 py-2">{data.weights.financial_strength}</td>
+              <td className="px-4 py-2">{data.financial_strength.subtotals?.["2023"]}</td>
+              <td className="px-4 py-2">{data.financial_strength.subtotals?.["2024"]}</td>
+              <td className="px-4 py-2">{data.financial_strength.subtotals?.["2025"]}</td>
             </tr>
             <tr>
               <td className="px-4 py-2">Management Quality</td>
-              <td className="px-4 py-2">{data.weights.management_quality}%</td>
-              <td className="px-4 py-2">{data.management_quality.score}</td>
-              <td className="px-4 py-2">{data.weights.management_quality}</td>
+              <td className="px-4 py-2">{data.management_quality.scores?.["2023"]}</td>
+              <td className="px-4 py-2">{data.management_quality.scores?.["2024"]}</td>
+              <td className="px-4 py-2">{data.management_quality.scores?.["2025"]}</td>
             </tr>
             <tr>
               <td className="px-4 py-2">Industry Risk</td>
-              <td className="px-4 py-2">{data.weights.industry_risk}%</td>
-              <td className="px-4 py-2">{data.industry_risk.score}</td>
-              <td className="px-4 py-2">{data.weights.industry_risk}</td>
+              <td className="px-4 py-2">{data.industry_risk.scores?.["2023"]}</td>
+              <td className="px-4 py-2">{data.industry_risk.scores?.["2024"]}</td>
+              <td className="px-4 py-2">{data.industry_risk.scores?.["2025"]}</td>
             </tr>
           </tbody>
         </table>
@@ -149,43 +178,70 @@ const RiskDetail: React.FC = () => {
           <thead className="bg-gray-100">
             <tr>
               <th className="px-4 py-2 text-left font-medium text-gray-600">Ratio</th>
-              <th className="px-4 py-2 text-left font-medium text-gray-600">Value</th>
               <th className="px-4 py-2 text-left font-medium text-gray-600">Threshold</th>
-              <th className="px-4 py-2 text-left font-medium text-gray-600">Flag</th>
+              <th className="px-4 py-2 text-left font-medium text-gray-600">2023</th>
+              <th className="px-4 py-2 text-left font-medium text-gray-600">2024</th>
+              <th className="px-4 py-2 text-left font-medium text-gray-600">2025</th>
             </tr>
           </thead>
           <tbody>
-            {Object.entries(data.financial_strength.scores).map(([ratio, details]) => (
-              <tr key={ratio}>
-                <td className="px-4 py-2 font-medium">{ratio}</td>
-                <td className="px-4 py-2">{details.value}</td>
-                <td className="px-4 py-2">{details.threshold}</td>
-                <td className="px-4 py-2">
-                  {details.red_flag ? (
-                    <span className="text-red-600">🟥</span>
-                  ) : (
-                    <span className="text-green-600">🟩</span>
-                  )}
-                </td>
-              </tr>
-            ))}
+            {Object.entries(data.financial_strength.scores).map(([ratio, details]) => {
+              const isPercentage =
+                ["2023", "2024", "2025"].some(
+                  (year) =>
+                    typeof (details as any)?.[`value_${year}`] === "string" &&
+                    (details as any)[`value_${year}`].toString().includes("%")
+                );
+                
+              return (
+                <tr key={ratio}>
+                  <td className="px-4 py-2 font-medium">
+                    {ratio}{isPercentage && <strong> (Percentage)</strong>}
+                  </td>
+                  <td className="px-4 py-2">{details?.threshold ?? "—"}</td>
+                  {["2023", "2024", "2025"].map((year) => {
+                    let val = (details as any)?.[`value_${year}`];
+                    if (typeof val === "string" && val.includes("%")) {
+                      val = val.replace("%", ""); // strip % sign from displayed values
+                    }
+                    return (
+                      <td key={year} className="px-4 py-2">
+                        {val ?? "—"}{" "}
+                        {(details as any)?.[`red_flag_${year}`] ? (
+                          <span className="text-red-600 ml-1">🟥</span>
+                        ) : (
+                          <span className="text-green-600 ml-1">🟩</span>
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
 
+
       {/* Red Flags */}
       <div className="bg-white p-4 rounded-lg shadow-sm">
         <h3 className="text-xl font-semibold mb-2">Red Flags</h3>
-        {data.red_flags.length === 0 ? (
-          <p className="text-gray-500">No red flags detected ✅</p>
-        ) : (
-          <ul className="list-disc list-inside text-red-600">
-            {data.red_flags.map((flag, i) => (
-              <li key={i}>{flag}</li>
-            ))}
-          </ul>
-        )}
+        {["2023", "2024", "2025"].map(year => (
+          <div key={year} className="mb-2">
+            <p className="font-medium">{year}</p>
+            {data.red_flags?.[year]?.length === 0 ? (
+              <p className="text-gray-500">No red flags detected ✅</p>
+            ) : (
+              <ul className="list-disc list-inside text-red-600">
+                {data.red_flags[year].map((flag: string, i: number) => (
+                  <li key={i}>{flag}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
       </div>
+
     </div>
   );
 };

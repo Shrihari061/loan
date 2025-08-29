@@ -3,12 +3,14 @@ import { useParams } from "react-router-dom";
 
 interface RatioItem {
   name: string;
-  value: number | null;
   threshold?: string;
-  red_flag?: boolean;
+  value_2023: number | string | null;
+  red_flag_2023?: boolean;
+  value_2024: number | string | null;
+  red_flag_2024?: boolean;
+  value_2025: number | string | null;
+  red_flag_2025?: boolean;
 }
-
-
 
 const CompanyRatioAnalysis: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -23,9 +25,13 @@ const CompanyRatioAnalysis: React.FC = () => {
 
         const transformed: RatioItem[] = data.map((r: any) => ({
           name: r.name,
-          value: r.value ?? null,
           threshold: r.threshold,
-          red_flag: r.red_flag,
+          value_2023: r.value_2023 ?? null,
+          red_flag_2023: r.red_flag_2023,
+          value_2024: r.value_2024 ?? null,
+          red_flag_2024: r.red_flag_2024,
+          value_2025: r.value_2025 ?? null,
+          red_flag_2025: r.red_flag_2025,
         }));
 
         setRatios(transformed);
@@ -78,84 +84,96 @@ const CompanyRatioAnalysis: React.FC = () => {
           <thead>
             <tr style={{ backgroundColor: '#f8f9fa' }}>
               <th style={{ padding: '12px 16px', textAlign: 'left', fontSize: '14px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>Ratio</th>
-              <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '14px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>Current Year</th>
+              <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '14px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>2023</th>
+              <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '14px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>2024</th>
+              <th style={{ padding: '12px 16px', textAlign: 'right', fontSize: '14px', fontWeight: '600', color: '#374151', borderBottom: '1px solid #e5e7eb', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>2025</th>
             </tr>
           </thead>
           <tbody>
-            {ratios.map((ratio, index) => (
-              <tr key={ratio.name} style={{ backgroundColor: index % 2 === 0 ? '#fff' : '#f9fafb' }}>
-                <td style={{ padding: '12px 16px', fontSize: '14px', color: '#111827', textAlign: 'left', borderBottom: '1px solid #f3f4f6', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
-                  {ratio.name}
-                </td>
-                <td style={{
-                  padding: '12px 16px', 
-                  fontSize: '14px', 
-                  textAlign: 'right', 
-                  borderBottom: '1px solid #f3f4f6', 
-                  fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-                  color: '#111827',
-                  position: 'relative'
-                }}>
-                  <div style={{ 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'flex-end',
-                    position: 'relative',
-                    paddingRight: '8px'
-                  }}>
-                    {ratio.red_flag && (
+            {ratios.map((ratio, index) => {
+              const isPercentage =
+                [ratio.value_2023, ratio.value_2024, ratio.value_2025].some(v => typeof v === "string" && v.includes("%"));
+              return (
+                <tr key={ratio.name} style={{ backgroundColor: index % 2 === 0 ? '#fff' : '#f9fafb' }}>
+                  <td style={{ padding: '12px 16px', fontSize: '14px', color: '#111827', textAlign: 'left', borderBottom: '1px solid #f3f4f6', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                    {ratio.name}{isPercentage && <strong> (Percentage)</strong>}
+                  </td>
+                  {[{year:2023, value:ratio.value_2023, red:ratio.red_flag_2023},
+                    {year:2024, value:ratio.value_2024, red:ratio.red_flag_2024},
+                    {year:2025, value:ratio.value_2025, red:ratio.red_flag_2025}].map((yr, idx) => (
+                    <td key={idx} style={{
+                      padding: '12px 16px',
+                      fontSize: '14px',
+                      textAlign: 'right',
+                      borderBottom: '1px solid #f3f4f6',
+                      fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                      color: '#111827',
+                      position: 'relative'
+                    }}>
                       <div style={{
-                        position: 'absolute',
-                        right: '70px',
-                        width: '8px',
-                        height: '8px',
-                        borderRadius: '50%',
-                        backgroundColor: '#1a237e'
-                      }}></div>
-                    )}
-                    {!ratio.red_flag && ratio.threshold && typeof ratio.threshold === "string" && (() => {
-                      const numThreshold = parseFloat(ratio.threshold);
-                      if (!isNaN(numThreshold) && ratio.value !== null) {
-                        return ratio.value >= numThreshold ? (
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'flex-end',
+                        position: 'relative',
+                        paddingRight: '8px'
+                      }}>
+                        {yr.red && (
                           <div style={{
                             position: 'absolute',
                             right: '70px',
                             width: '8px',
                             height: '8px',
                             borderRadius: '50%',
-                            backgroundColor: '#00bcd4'
+                            backgroundColor: '#1a237e'
                           }}></div>
-                        ) : (
-                          <div style={{
-                            position: 'absolute',
-                            right: '70px',
-                            width: '8px',
-                            height: '8px',
-                            borderRadius: '50%',
-                            backgroundColor: '#2196f3'
-                          }}></div>
-                        );
-                      }
-                      return (
-                        <div style={{
-                          position: 'absolute',
-                          right: '70px',
-                          width: '8px',
-                          height: '8px',
-                          borderRadius: '50%',
-                          backgroundColor: '#00bcd4'
-                        }}></div>
-                      );
-                    })()}
-                    {ratio.value !== null && ratio.value !== undefined 
-                      ? typeof ratio.value === 'number' 
-                        ? ratio.value.toFixed(2) 
-                        : ratio.value 
-                      : "N/A"}
-                  </div>
-                </td>
-              </tr>
-            ))}
+                        )}
+                        {!yr.red && ratio.threshold && typeof ratio.threshold === "string" && (() => {
+                          const numThreshold = parseFloat(ratio.threshold);
+                          if (!isNaN(numThreshold) && yr.value !== null && typeof yr.value === 'number') {
+                            return yr.value >= numThreshold ? (
+                              <div style={{
+                                position: 'absolute',
+                                right: '70px',
+                                width: '8px',
+                                height: '8px',
+                                borderRadius: '50%',
+                                backgroundColor: '#00bcd4'
+                              }}></div>
+                            ) : (
+                              <div style={{
+                                position: 'absolute',
+                                right: '70px',
+                                width: '8px',
+                                height: '8px',
+                                borderRadius: '50%',
+                                backgroundColor: '#2196f3'
+                              }}></div>
+                            );
+                          }
+                          return (
+                            <div style={{
+                              position: 'absolute',
+                              right: '70px',
+                              width: '8px',
+                              height: '8px',
+                              borderRadius: '50%',
+                              backgroundColor: '#00bcd4'
+                            }}></div>
+                          );
+                        })()}
+                        {yr.value !== null && yr.value !== undefined 
+                          ? typeof yr.value === 'number' 
+                            ? yr.value.toFixed(2) 
+                            : isPercentage 
+                              ? String(yr.value).replace("%", "") 
+                              : yr.value 
+                          : "N/A"}
+                      </div>
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

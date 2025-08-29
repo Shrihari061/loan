@@ -110,9 +110,13 @@ router.get('/ratios', async (req, res) => {
         .filter(([key]) => !['_id', 'customer_name', 'lead_id', '__v', 'createdAt', 'updatedAt', 'financial_strength'].includes(key))
         .map(([key, val]) => ({
           name: key,
-          value: val?.value ?? null,
           threshold: val?.threshold ?? null,
-          red_flag: val?.red_flag ?? false,
+          value_2023: val?.value_2023 ?? null,
+          red_flag_2023: val?.red_flag_2023 ?? false,
+          value_2024: val?.value_2024 ?? null,
+          red_flag_2024: val?.red_flag_2024 ?? false,
+          value_2025: val?.value_2025 ?? null,
+          red_flag_2025: val?.red_flag_2025 ?? false,
         }));
 
       return {
@@ -133,6 +137,7 @@ router.get('/ratios', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
+
 
 
 // 🔹 Get SINGLE company details by ID
@@ -261,9 +266,13 @@ router.get('/:id/ratios', async (req, res) => {
       .filter(([key]) => !['_id', 'customer_name', 'lead_id', '__v', 'createdAt', 'updatedAt'].includes(key))
       .map(([key, val]) => ({
         name: key,
-        value: val?.value ?? null,
         threshold: val?.threshold ?? null,
-        red_flag: val?.red_flag ?? false
+        value_2023: val?.value_2023 ?? null,
+        red_flag_2023: val?.red_flag_2023 ?? false,
+        value_2024: val?.value_2024 ?? null,
+        red_flag_2024: val?.red_flag_2024 ?? false,
+        value_2025: val?.value_2025 ?? null,
+        red_flag_2025: val?.red_flag_2025 ?? false
       }));
 
     res.json(ratiosArray);
@@ -272,6 +281,7 @@ router.get('/:id/ratios', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
+
 
 // 🔹 Update analysis data
 router.put('/:id', async (req, res) => {

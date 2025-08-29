@@ -1,705 +1,220 @@
 {
   "_id": {
-    "$oid": "68a600baea418d0ef61a26f0"
+    "$oid": "68adeefeda9f443a0eb9df00"
   },
-  "customer_name": "Vardhan Corp Ltd.",
+  "customer_name": "Vardhan Test Corp Ltd.",
   "lead_id": "LOAN/2025/YPL/942",
-  "Property, plant and equipment": {
-    "value_2025": 10070,
-    "value_2024": 10813,
-    "source": "bs",
-    "unit": "₹ crore"
+  "weights": {
+    "financial_strength": 50,
+    "management_quality": 30,
+    "industry_risk": 20
   },
-  "Right-of-use assets": {
-    "value_2025": 3078,
-    "value_2024": 3303,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Capital work-in-progress": {
-    "value_2025": 778,
-    "value_2024": 277,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Goodwill": {
-    "value_2025": 211,
-    "value_2024": 211,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Investments (Non-current)": {
-    "value_2025": 27371,
-    "value_2024": 23352,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Loans (Non-current)": {
-    "value_2025": 26,
-    "value_2024": 34,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Other financial assets (Non-current)": {
-    "value_2025": 2350,
-    "value_2024": 1756,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Deferred tax assets (net)": {
-    "value_2025": 497,
-    "value_2024": "null",
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Income tax assets (net) (Non-current)": {
-    "value_2025": 1164,
-    "value_2024": 2583,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Other non-current assets": {
-    "value_2025": 2223,
-    "value_2024": 1669,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Total non-current assets": {
-    "value_2025": 47768,
-    "value_2024": 43998,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Investments (Current)": {
-    "value_2025": 11147,
-    "value_2024": 11307,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Trade receivables": {
-    "value_2025": 26413,
-    "value_2024": 25152,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Cash and cash equivalents": {
-    "value_2025": 14265,
-    "value_2024": 8191,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Loans (Current)": {
-    "value_2025": 207,
-    "value_2024": 208,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Other financial assets (Current)": {
-    "value_2025": 12569,
-    "value_2024": 10129,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Income tax assets (net) (Current)": {
-    "value_2025": 2949,
-    "value_2024": 6329,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Other current assets": {
-    "value_2025": 9618,
-    "value_2024": 9636,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Total current assets": {
-    "value_2025": 77168,
-    "value_2024": 70952,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Total assets": {
-    "value_2025": 124936,
-    "value_2024": 114950,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Equity share capital": {
-    "value_2025": 2076,
-    "value_2024": 2075,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Other equity": {
-    "value_2025": 85256,
-    "value_2024": 79101,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Total equity": {
-    "value_2025": 87332,
-    "value_2024": 81176,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Lease liabilities (Non-current)": {
-    "value_2025": 2694,
-    "value_2024": 3088,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Other financial liabilities (Non-current)": {
-    "value_2025": 1991,
-    "value_2024": 1941,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Deferred tax liabilities (net)": {
-    "value_2025": 1062,
-    "value_2024": 1509,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Other non-current liabilities": {
-    "value_2025": 95,
-    "value_2024": 150,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Total non-current liabilities": {
-    "value_2025": 5842,
-    "value_2024": 6688,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Lease liabilities (Current)": {
-    "value_2025": 765,
-    "value_2024": 678,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Total outstanding dues of micro enterprises and small enterprises": {
-    "value_2025": 8,
-    "value_2024": 92,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Total outstanding dues of creditors other than micro enterprises and small enterprises": {
-    "value_2025": 2720,
-    "value_2024": 2401,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Other financial liabilities (Current)": {
-    "value_2025": 14101,
-    "value_2024": 11808,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Other current liabilities": {
-    "value_2025": 9159,
-    "value_2024": 7681,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Provisions (Current)": {
-    "value_2025": 993,
-    "value_2024": 1464,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Income tax liabilities (net)": {
-    "value_2025": 4016,
-    "value_2024": 2962,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Total current liabilities": {
-    "value_2025": 31762,
-    "value_2024": 27086,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Total equity and liabilities": {
-    "value_2025": 124936,
-    "value_2024": 114950,
-    "source": "bs",
-    "unit": "₹ crore"
-  },
-  "Revenue from operations": {
-    "value_2025": 136592,
-    "value_2024": 128933,
-    "source": "pl",
-    "unit": "₹ crore"
-  },
-  "Other income, net": {
-    "value_2025": 4782,
-    "value_2024": 7417,
-    "source": "pl",
-    "unit": "₹ crore"
-  },
-  "Total income": {
-    "value_2025": 141374,
-    "value_2024": 136350,
-    "source": "pl",
-    "unit": "₹ crore"
-  },
-  "Employee benefit expenses": {
-    "value_2025": 67466,
-    "value_2024": 65139,
-    "source": "pl",
-    "unit": "₹ crore"
-  },
-  "Cost of technical sub-contractors": {
-    "value_2025": 19353,
-    "value_2024": 18638,
-    "source": "pl",
-    "unit": "₹ crore"
-  },
-  "Travel expenses": {
-    "value_2025": 1467,
-    "value_2024": 1372,
-    "source": "pl",
-    "unit": "₹ crore"
-  },
-  "Cost of software packages and others": {
-    "value_2025": 9617,
-    "value_2024": 6891,
-    "source": "pl",
-    "unit": "₹ crore"
-  },
-  "Communication expenses": {
-    "value_2025": 448,
-    "value_2024": 489,
-    "source": "pl",
-    "unit": "₹ crore"
-  },
-  "Consultancy and professional charges": {
-    "value_2025": 1245,
-    "value_2024": 1059,
-    "source": "pl",
-    "unit": "₹ crore"
-  },
-  "Depreciation and amortization expenses": {
-    "value_2025": 2619,
-    "value_2024": 2944,
-    "source": "pl",
-    "unit": "₹ crore"
-  },
-  "Finance cost": {
-    "value_2025": 221,
-    "value_2024": 277,
-    "source": "pl",
-    "unit": "₹ crore"
-  },
-  "Other expenses": {
-    "value_2025": 3497,
-    "value_2024": 3588,
-    "source": "pl",
-    "unit": "₹ crore"
-  },
-  "Total expenses": {
-    "value_2025": 105933,
-    "value_2024": 100397,
-    "source": "pl",
-    "unit": "₹ crore"
-  },
-  "Profit before tax": {
-    "value_2025": 35441,
-    "value_2024": 35953,
-    "source": "pl",
-    "unit": "₹ crore"
-  },
-  "Current tax": {
-    "value_2025": 10836,
-    "value_2024": 7306,
-    "source": "pl",
-    "unit": "₹ crore"
-  },
-  "Deferred tax": {
-    "value_2025": "(963)",
-    "value_2024": 1413,
-    "source": "pl",
-    "unit": "₹ crore"
-  },
-  "Profit for the year": {
-    "value_2025": 25568,
-    "value_2024": 27234,
-    "source": "pl",
-    "unit": "₹ crore"
-  },
-  "Remeasurement of the net defined benefit liability / asset, net": {
-    "value_2025": "(81)",
-    "value_2024": 128,
-    "source": "pl",
-    "unit": "₹ crore"
-  },
-  "Equity instruments through other comprehensive income, net": {
-    "value_2025": 19,
-    "value_2024": 19,
-    "source": "pl",
-    "unit": "₹ crore"
-  },
-  "Fair value changes on derivatives designated as cash flow hedge, net": {
-    "value_2025": "(24)",
-    "value_2024": 11,
-    "source": "pl",
-    "unit": "₹ crore"
-  },
-  "Fair value changes on investments, net": {
-    "value_2025": 191,
-    "value_2024": 129,
-    "source": "pl",
-    "unit": "₹ crore"
-  },
-  "Total other comprehensive income / (loss), net of tax": {
-    "value_2025": 105,
-    "value_2024": 287,
-    "source": "pl",
-    "unit": "₹ crore"
-  },
-  "Total comprehensive income for the year": {
-    "value_2025": 25673,
-    "value_2024": 27521,
-    "source": "pl",
-    "unit": "₹ crore"
-  },
-  "Earnings per equity share - Basic (in ₹ per share)": {
-    "value_2025": 61.58,
-    "value_2024": 65.62,
-    "source": "pl",
-    "unit": "₹ per share"
-  },
-  "Earnings per equity share - Diluted (in ₹ per share)": {
-    "value_2025": 61.46,
-    "value_2024": 65.56,
-    "source": "pl",
-    "unit": "₹ per share"
-  },
-  "Weighted average equity shares used in computing earnings per equity share - Basic (in shares)": {
-    "value_2025": {
-      "$numberLong": "4151936905"
+  "financial_strength": {
+    "per_ratio_max": 3.85,
+    "scores": {
+      "DSCR": {
+        "threshold": "<1.2",
+        "max": 3.85,
+        "value_2023": 30.76,
+        "red_flag_2023": false,
+        "score_2023": 3.85,
+        "value_2024": 27.02,
+        "red_flag_2024": false,
+        "score_2024": 3.85,
+        "value_2025": 26.3,
+        "red_flag_2025": false,
+        "score_2025": 3.85
+      },
+      "Debt/Equity": {
+        "threshold": ">2.0",
+        "max": 3.85,
+        "value_2023": 0.06,
+        "red_flag_2023": false,
+        "score_2023": 3.85,
+        "value_2024": 0.05,
+        "red_flag_2024": false,
+        "score_2024": 3.85,
+        "value_2025": 0.04,
+        "red_flag_2025": false,
+        "score_2025": 3.85
+      },
+      "PAT Margin": {
+        "threshold": "<10%",
+        "max": 3.85,
+        "value_2023": "18.76%",
+        "red_flag_2023": false,
+        "score_2023": 3.85,
+        "value_2024": "21.12%",
+        "red_flag_2024": false,
+        "score_2024": 3.85,
+        "value_2025": "18.72%",
+        "red_flag_2025": false,
+        "score_2025": 3.85
+      },
+      "Current Ratio": {
+        "threshold": "<1.0",
+        "max": 3.85,
+        "value_2023": 1.9,
+        "red_flag_2023": false,
+        "score_2023": 3.85,
+        "value_2024": 2.62,
+        "red_flag_2024": false,
+        "score_2024": 3.85,
+        "value_2025": 2.43,
+        "red_flag_2025": false,
+        "score_2025": 3.85
+      },
+      "Quick Ratio": {
+        "threshold": "<1.0",
+        "max": 3.85,
+        "value_2023": 1.9,
+        "red_flag_2023": false,
+        "score_2023": 3.85,
+        "value_2024": 2.62,
+        "red_flag_2024": false,
+        "score_2024": 3.85,
+        "value_2025": 2.43,
+        "red_flag_2025": false,
+        "score_2025": 3.85
+      },
+      "Interest Coverage": {
+        "threshold": "<1.5",
+        "max": 3.85,
+        "value_2023": 201.55,
+        "red_flag_2023": false,
+        "score_2023": 3.85,
+        "value_2024": 129.79,
+        "red_flag_2024": false,
+        "score_2024": 3.85,
+        "value_2025": 160.37,
+        "red_flag_2025": false,
+        "score_2025": 3.85
+      },
+      "Net profit Margin": {
+        "threshold": "<5%",
+        "max": 3.85,
+        "value_2023": "18.76%",
+        "red_flag_2023": false,
+        "score_2023": 3.85,
+        "value_2024": "21.12%",
+        "red_flag_2024": false,
+        "score_2024": 3.85,
+        "value_2025": "18.72%",
+        "red_flag_2025": false,
+        "score_2025": 3.85
+      },
+      "Return on Assets": {
+        "threshold": "<5%",
+        "max": 3.85,
+        "value_2023": "22.96%",
+        "red_flag_2023": false,
+        "score_2023": 3.85,
+        "value_2024": "23.69%",
+        "red_flag_2024": false,
+        "score_2024": 3.85,
+        "value_2025": "20.46%",
+        "red_flag_2025": false,
+        "score_2025": 3.85
+      },
+      "Return on equity": {
+        "threshold": "<8%",
+        "max": 3.85,
+        "value_2023": "34.35%",
+        "red_flag_2023": false,
+        "score_2023": 3.85,
+        "value_2024": "33.55%",
+        "red_flag_2024": false,
+        "score_2024": 3.85,
+        "value_2025": "29.28%",
+        "red_flag_2025": false,
+        "score_2025": 3.85
+      },
+      "EBITDA Margin": {
+        "threshold": "<10%",
+        "max": 3.85,
+        "value_2023": "27.74%",
+        "red_flag_2023": false,
+        "score_2023": 3.85,
+        "value_2024": "30.17%",
+        "red_flag_2024": false,
+        "score_2024": 3.85,
+        "value_2025": "27.86%",
+        "red_flag_2025": false,
+        "score_2025": 3.85
+      },
+      "Accounts Receivable Days": {
+        "threshold": ">90",
+        "max": 3.85,
+        "value_2023": 61.14,
+        "red_flag_2023": false,
+        "score_2023": 3.85,
+        "value_2024": 71.2,
+        "red_flag_2024": false,
+        "score_2024": 3.85,
+        "value_2025": 70.58,
+        "red_flag_2025": false,
+        "score_2025": 3.85
+      },
+      "Accounts payable days": {
+        "threshold": ">30",
+        "max": 3.85,
+        "value_2023": 9.2,
+        "red_flag_2023": false,
+        "score_2023": 3.85,
+        "value_2024": 9.06,
+        "red_flag_2024": false,
+        "score_2024": 3.85,
+        "value_2025": 9.4,
+        "red_flag_2025": false,
+        "score_2025": 3.85
+      },
+      "Asset Turnover Ratio": {
+        "threshold": "<1.0",
+        "max": 3.85,
+        "value_2023": 1.22,
+        "red_flag_2023": false,
+        "score_2023": 3.85,
+        "value_2024": 1.12,
+        "red_flag_2024": false,
+        "score_2024": 3.85,
+        "value_2025": 1.09,
+        "red_flag_2025": false,
+        "score_2025": 3.85
+      }
     },
-    "value_2024": {
-      "$numberLong": "4150099796"
-    },
-    "source": "pl",
-    "unit": "in shares"
+    "subtotals": {
+      "2023": 50,
+      "2024": 50,
+      "2025": 50
+    }
   },
-  "Weighted average equity shares used in computing earnings per equity share - Diluted (in shares)": {
-    "value_2025": {
-      "$numberLong": "4159905476"
-    },
-    "value_2024": {
-      "$numberLong": "4153994624"
-    },
-    "source": "pl",
-    "unit": "in shares"
+  "management_quality": {
+    "scores": {
+      "2023": 25,
+      "2024": 25,
+      "2025": 25
+    }
   },
-  "Depreciation and Amortization": {
-    "value_2025": 2619,
-    "value_2024": 2944,
-    "source": "cf",
-    "unit": "₹ crore"
+  "industry_risk": {
+    "scores": {
+      "2023": 15,
+      "2024": 15,
+      "2025": 15
+    }
   },
-  "Income tax expense": {
-    "value_2025": 9873,
-    "value_2024": 8719,
-    "source": "cf",
-    "unit": "₹ crore"
+  "total_score": {
+    "2023": 90,
+    "2024": 90,
+    "2025": 90
   },
-  "Impairment loss recognized / (reversed) under expected credit loss model": {
-    "value_2025": "(7)",
-    "value_2024": 130,
-    "source": "cf",
-    "unit": "₹ crore"
+  "risk_bucket": {
+    "2023": "Low Risk",
+    "2024": "Low Risk",
+    "2025": "Low Risk"
   },
-  "Interest and dividend income": {
-    "value_2025": "(3699)",
-    "value_2024": "(4670)",
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Stock compensation expense": {
-    "value_2025": 712,
-    "value_2024": 575,
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Provision for post-sale client support": {
-    "value_2025": "(114)",
-    "value_2024": 77,
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Exchange differences on translation of assets and liabilities, net": {
-    "value_2025": 170,
-    "value_2024": 63,
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Interest receivable on income tax refund": {
-    "value_2025": "(327)",
-    "value_2024": "(1934)",
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Other adjustments": {
-    "value_2025": 165,
-    "value_2024": 235,
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Trade receivables and unbilled revenue": {
-    "value_2025": "(2994)",
-    "value_2024": "(2933)",
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Loans, other financial assets and other assets": {
-    "value_2025": "(1942)",
-    "value_2024": "(1645)",
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Trade payables": {
-    "value_2025": 236,
-    "value_2024": 67,
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Other financial liabilities, other liabilities and provisions": {
-    "value_2025": 3529,
-    "value_2024": "(117)",
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Cash generated from operations": {
-    "value_2025": 34010,
-    "value_2024": 29022,
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Income taxes paid": {
-    "value_2025": "(4601)",
-    "value_2024": "(8235)",
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Net cash generated by operating activities": {
-    "value_2025": 29409,
-    "value_2024": 20787,
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Expenditure on property, plant and equipment": {
-    "value_2025": "(1587)",
-    "value_2024": "(1832)",
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Deposits placed with corporation": {
-    "value_2025": "(1026)",
-    "value_2024": "(688)",
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Redemption of deposits placed with corporation": {
-    "value_2025": 593,
-    "value_2024": 522,
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Interest and dividend received": {
-    "value_2025": 1672,
-    "value_2024": 1441,
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Dividend received from subsidiary": {
-    "value_2025": 1522,
-    "value_2024": 2976,
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Loan given to subsidiaries": {
-    "value_2025": "(10)",
-    "value_2024": "null",
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Loan repaid by subsidiaries": {
-    "value_2025": "null",
-    "value_2024": 4,
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Investment in subsidiaries": {
-    "value_2025": "(4361)",
-    "value_2024": "(63)",
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Payment towards acquisition of entities": {
-    "value_2025": "(184)",
-    "value_2024": "null",
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Receipt / (payment) towards business transfer for entities under common control": {
-    "value_2025": "null",
-    "value_2024": 35,
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Receipt / (payment) from entities under liquidation": {
-    "value_2025": "null",
-    "value_2024": 80,
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Other receipts": {
-    "value_2025": 2,
-    "value_2024": 123,
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Payments to acquire investments - Liquid mutual fund units": {
-    "value_2025": "(66637)",
-    "value_2024": "(57606)",
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Payments to acquire investments - Commercial papers": {
-    "value_2025": "(6058)",
-    "value_2024": "(9405)",
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Payments to acquire investments - Certificates of deposit": {
-    "value_2025": "(6138)",
-    "value_2024": "(7011)",
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Payments to acquire investments - Non-convertible debentures": {
-    "value_2025": "(3240)",
-    "value_2024": "(1526)",
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Payments to acquire investments - Other investments": {
-    "value_2025": "(25)",
-    "value_2024": "(2)",
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Proceeds on sale of investments - Tax-free bonds and government bonds": {
-    "value_2025": 105,
-    "value_2024": 150,
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Proceeds on sale of investments - Liquid mutual fund units": {
-    "value_2025": 67597,
-    "value_2024": 56124,
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Proceeds on sale of investments - Non-convertible debentures": {
-    "value_2025": 2376,
-    "value_2024": 955,
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Proceeds on sale of investments - Certificates of deposit": {
-    "value_2025": 5984,
-    "value_2024": 6962,
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Proceeds on sale of investments - Commercial papers": {
-    "value_2025": 7260,
-    "value_2024": 5475,
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Proceeds on sale of investments - Government securities": {
-    "value_2025": 200,
-    "value_2024": 5,
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Proceeds on sale of investments - Other investments": {
-    "value_2025": 12,
-    "value_2024": 20,
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Net cash used in investing activities": {
-    "value_2025": "(1943)",
-    "value_2024": "(3261)",
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Payment of lease liabilities": {
-    "value_2025": "(859)",
-    "value_2024": "(850)",
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Shares issued on exercise of employee stock options": {
-    "value_2025": 3,
-    "value_2024": 1,
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Other payments": {
-    "value_2025": "(186)",
-    "value_2024": "(243)",
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Payment of dividends": {
-    "value_2025": "(20337)",
-    "value_2024": "(14733)",
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Net cash used in financing activities": {
-    "value_2025": "(21379)",
-    "value_2024": "(15825)",
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Net increase / (decrease) in cash and cash equivalents": {
-    "value_2025": 6087,
-    "value_2024": 1701,
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Effect of exchange differences on translation of foreign currency cash and cash equivalents": {
-    "value_2025": "(13)",
-    "value_2024": "(44)",
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Cash and cash equivalents at the beginning of the year": {
-    "value_2025": 8191,
-    "value_2024": 6534,
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Cash and cash equivalents at the end of the year": {
-    "value_2025": 14265,
-    "value_2024": 8191,
-    "source": "cf",
-    "unit": "₹ crore"
-  },
-  "Restricted cash balance": {
-    "value_2025": 45,
-    "value_2024": 44,
-    "source": "cf",
-    "unit": "₹ crore"
+  "red_flags": {
+    "2023": [],
+    "2024": [],
+    "2025": []
   }
 }

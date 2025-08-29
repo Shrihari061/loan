@@ -1,9 +1,13 @@
 const mongoose = require('mongoose');
 
 const RatioDetailSchema = new mongoose.Schema({
-  value: { type: Number, required: true },
   threshold: { type: String, required: true },
-  red_flag: { type: Boolean, default: false }
+  value_2023: { type: mongoose.Schema.Types.Mixed, required: true },
+  red_flag_2023: { type: Boolean, default: false },
+  value_2024: { type: mongoose.Schema.Types.Mixed, required: true },
+  red_flag_2024: { type: Boolean, default: false },
+  value_2025: { type: mongoose.Schema.Types.Mixed, required: true },
+  red_flag_2025: { type: Boolean, default: false }
 });
 
 const RatiosSchema = new mongoose.Schema(
