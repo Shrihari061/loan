@@ -90,7 +90,7 @@ export default function AppraisalTable() {
         <button
           onClick={handleGenerateClick}
           style={{
-            backgroundColor: '#2563eb',
+            backgroundColor: '#000000ff',
             color: 'white',
             padding: '12px 20px',
             borderRadius: '8px',
@@ -101,8 +101,8 @@ export default function AppraisalTable() {
             transition: 'background-color 0.2s',
             fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
           }}
-          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1d4ed8'}
-          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#2563eb'}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#464646ff'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#000000ff'}
         >
           Generate New Memo
         </button>

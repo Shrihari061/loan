@@ -137,7 +137,7 @@ const CompanyDetails: React.FC = () => {
     }
   };
 
-  const renderFinancialTable = (title: string, data: FinancialItem[]) => {
+  const renderFinancialTable = (title: string, data: FinancialItem[], headings: string[] = []) => {
     if (!data || data.length === 0) return null;
 
     return (
@@ -173,24 +173,524 @@ const CompanyDetails: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {data.map((row, index) => (
-                <tr key={row._id} style={{ backgroundColor: index % 2 === 0 ? '#fff' : '#f9fafb' }}>
-                  <td style={{ padding: '12px 16px', fontSize: '14px', color: '#111827', textAlign: 'left', borderBottom: '1px solid #f3f4f6', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
-                    {title === 'Cash Flow Summary' && row.item === 'Principal'
-                      ? 'Payment of lease liabilities'
-                      : row.item}
+              {headings.map((heading, i) => (
+                <tr key={`heading-${i}`} style={{ backgroundColor: '#f1f5f9', fontWeight: 600 }}>
+                  <td colSpan={4} style={{ padding: '12px 16px', fontSize: '14px', color: '#111827', borderBottom: '1px solid #f3f4f6', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                    {heading}
                   </td>
-                  <td style={{ padding: '12px 16px', fontSize: '14px', color: getValueColor(row.FY2023), textAlign: 'right', borderBottom: '1px solid #f3f4f6', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>{formatValue(row.FY2023)}</td>
-                  <td style={{ padding: '12px 16px', fontSize: '14px', color: getValueColor(row.FY2024), textAlign: 'right', borderBottom: '1px solid #f3f4f6', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>{formatValue(row.FY2024)}</td>
-                  <td style={{ padding: '12px 16px', fontSize: '14px', color: getValueColor(row.FY2025), textAlign: 'right', borderBottom: '1px solid #f3f4f6', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>{formatValue(row.FY2025)}</td>
                 </tr>
               ))}
+              {data.map((row, index) => {
+                const isTotal = ['Total income', 'Total expenses', 'Profit before tax', 'Profit for the year', 'Total comprehensive income for the year'].includes(row.item);
+                return (
+                  <tr key={row._id} style={{ backgroundColor: isTotal ? '#f1f5f9' : index % 2 === 0 ? '#fff' : '#f9fafb', fontWeight: isTotal ? 600 : 400 }}>
+                    <td style={{ padding: '12px 16px', fontSize: '14px', color: '#111827', textAlign: 'left', borderBottom: '1px solid #f3f4f6', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+                      {row.item}
+                    </td>
+                    <td style={{ padding: '12px 16px', fontSize: '14px', color: getValueColor(row.FY2023), textAlign: 'right', borderBottom: '1px solid #f3f4f6', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>{formatValue(row.FY2023)}</td>
+                    <td style={{ padding: '12px 16px', fontSize: '14px', color: getValueColor(row.FY2024), textAlign: 'right', borderBottom: '1px solid #f3f4f6', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>{formatValue(row.FY2024)}</td>
+                    <td style={{ padding: '12px 16px', fontSize: '14px', color: getValueColor(row.FY2025), textAlign: 'right', borderBottom: '1px solid #f3f4f6', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>{formatValue(row.FY2025)}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
       </div>
     );
   };
+
+  const renderPLTable = (data: FinancialItem[]) => {
+    if (!data || data.length === 0) return null;
+
+    const renderRow = (row: FinancialItem, index: number, isTotal = false) => (
+      <tr
+        key={row._id || `${row.item}-${index}`}
+        className={`${index % 2 === 0 ? "bg-white" : "bg-gray-50"} ${isTotal ? "font-semibold" : ""}`}
+      >
+        <td className="px-4 py-3 text-sm text-gray-900 border-b border-gray-100">
+          {row.item}
+        </td>
+        <td className="px-4 py-3 text-sm text-right border-b border-gray-100 text-gray-900" style={{ color: getValueColor(row.FY2023) }}>
+          {formatValue(row.FY2023)}
+        </td>
+        <td className="px-4 py-3 text-sm text-right border-b border-gray-100 text-gray-900" style={{ color: getValueColor(row.FY2024) }}>
+          {formatValue(row.FY2024)}
+        </td>
+        <td className="px-4 py-3 text-sm text-right border-b border-gray-100 text-gray-900" style={{ color: getValueColor(row.FY2025) }}>
+          {formatValue(row.FY2025)}
+        </td>
+      </tr>
+    );
+
+    const renderHeading = (label: string) => (
+      <tr key={label} className="bg-blue-50 font-semibold">
+        <td colSpan={4} className="px-4 py-3 text-sm text-blue-900 border-b border-gray-100">
+          {label}
+        </td>
+      </tr>
+    );
+
+
+    const firstCardSections = [
+      {
+        heading: "Income",
+        children: ["Revenue from operations", "Other income, net", "Total income"],
+      },
+      {
+        heading: "Expenses",
+        children: [
+          "Employee benefit expenses",
+          "Cost of technical sub-contractors",
+          "Travel expenses",
+          "Cost of software packages and others",
+          "Communication expenses",
+          "Consultancy and professional charges",
+          "Depreciation and amortization expenses",
+          "Finance cost",
+          "Other expenses",
+          "Total expenses",
+        ],
+      },
+      { heading: null, children: ["Profit before tax"] },
+      {
+        heading: "Tax expense",
+        children: ["Current tax", "Deferred tax"],
+      },
+      { heading: null, children: ["Profit for the year"] },
+    ];
+
+    const secondCardSections = [
+      {
+        heading: "Other comprehensive income",
+        children: [
+          "Remeasurement of the net defined benefit liability / asset, net",
+          "Equity instruments through other comprehensive income, net",
+          "Fair value changes on derivatives designated as cash flow hedge, net",
+          "Fair value changes on investments, net",
+          "Total other comprehensive income / (loss), net of tax",
+        ],
+      },
+      { heading: null, children: ["Total comprehensive income for the year"] },
+      {
+        heading: "Earnings per equity share",
+        children: [
+          "Basic earnings per share (in ₹ per share)",
+          "Diluted earnings per share (in ₹ per share)",
+          "Weighted average equity shares used in computing basic earnings per share (in shares)",
+          "Weighted average equity shares used in computing diluted earnings per share (in shares)",
+        ],
+      },
+    ];
+
+
+    const renderCard = (title: string, sections: any[]) => (
+      <div className="bg-white rounded-lg shadow overflow-hidden mt-6 first:mt-0">
+        {/* Table Header */}
+        <div className="flex items-center justify-between px-5 py-4 bg-gray-50 border-b border-gray-200">
+          <h3 className="text-base font-semibold text-gray-900">
+            {title}{" "}
+            <span className="text-sm font-normal text-gray-500">
+              (all amounts in Crores of Rs.)
+            </span>
+          </h3>
+        </div>
+        {/* Table */}
+        <div className="overflow-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="bg-gray-50">
+                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">
+                  Item
+                </th>
+                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
+                  FY2023
+                </th>
+                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
+                  FY2024
+                </th>
+                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
+                  FY2025
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {sections.map((section, sIndex) => (
+                <React.Fragment key={sIndex}>
+                  {section.heading && renderHeading(section.heading)}
+                  {section.children.map((child: string, i: number) => {
+                    const row = data.find((r) => r.item === child);
+                    return row
+                      ? renderRow(
+                        row,
+                        i,
+                        [
+                          "Total income",
+                          "Total expenses",
+                          "Profit before tax",
+                          "Profit for the year",
+                          "Total comprehensive income for the year",
+                        ].includes(row.item)
+                      )
+                      : null;
+                  })}
+                </React.Fragment>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+
+    return (
+      <>
+        {renderCard("Profit & Loss Summary", firstCardSections)}
+        {renderCard("Profit & Loss Summary (contd.)", secondCardSections)}
+      </>
+    );
+  };
+
+
+
+  const renderBSTable = (data: FinancialItem[]) => {
+    if (!data || data.length === 0) return null;
+
+    const sections = [
+      {
+        heading: "Assets",
+        children: [
+          {
+            heading: "Non-current assets", children: [
+              "Property, plant and equipment",
+              "Right-of-use assets",
+              "Capital work-in-progress",
+              "Goodwill",
+              {
+                heading: "Financial assets", children: [
+                  "Financial assets - Investments (Non-current)",
+                  "Financial assets - Loans (Non-current)",
+                  "Other financial assets (Non-current)"
+                ]
+              },
+              "Deferred tax assets (net)",
+              "Income tax assets (net) (Non-current)",
+              "Other non-current assets",
+              "Total non-current assets"
+            ]
+          },
+          {
+            heading: "Current assets", children: [
+              {
+                heading: "Financial assets", children: [
+                  "Financial assets - Investments (Current)",
+                  "Trade receivables",
+                  "Cash and cash equivalents",
+                  "Financial assets - Loans (Current)",
+                  "Other financial assets (Current)"
+                ]
+              },
+              "Income tax assets (net) (Current)",
+              "Other current assets",
+              "Total current assets"
+            ]
+          },
+          "Total assets"
+        ]
+      },
+      {
+        heading: "Equity and liabilities",
+        children: [
+          {
+            heading: "Equity", children: [
+              "Equity share capital",
+              "Other equity",
+              "Total equity"
+            ]
+          },
+          {
+            heading: "Liabilities", children: [
+              {
+                heading: "Non-current liabilities", children: [
+                  {
+                    heading: "Financial liabilities", children: [
+                      "Financial liabilities - Lease liabilities (Non-current)",
+                      "Other financial liabilities (Non-current)"
+                    ]
+                  },
+                  "Deferred tax liabilities (net)",
+                  "Other non-current liabilities",
+                  "Total non-current liabilities"
+                ]
+              },
+              {
+                heading: "Current liabilities", children: [
+                  {
+                    heading: "Financial liabilities", children: [
+                      "Financial liabilities - Lease liabilities (Current)",
+                      "Financial liabilities - Trade payables - Total outstanding dues of micro enterprises and small enterprises",
+                      "Financial liabilities - Trade payables - Total outstanding dues of creditors other than micro enterprises and small enterprises",
+                      "Other financial liabilities (Current)"
+                    ]
+                  },
+                  "Other current liabilities",
+                  "Provisions (Current)",
+                  "Income tax liabilities (net) (Current)",
+                  "Total current liabilities"
+                ]
+              }
+            ]
+          },
+          "Total equity and liabilities"
+        ]
+      }
+    ];
+
+    const renderRows = (items: (string | { heading: string; children: any[] })[]) => {
+      return items.map((item) => {
+        if (typeof item === "string") {
+          const row = data.find((r) => r.item === item);
+          if (!row) return null;
+
+          const isTotal = row.item.toLowerCase().startsWith("total");
+
+          return (
+            <tr key={row.item} className={`${isTotal ? "font-semibold" : ""}`}>
+              <td className="px-4 py-3 text-sm text-gray-900 border-b border-gray-100">
+                {row.item}
+              </td>
+              <td
+                className="px-4 py-3 text-sm text-right border-b border-gray-100 text-gray-900"
+                style={{ color: getValueColor(row.FY2023) }}
+              >
+                {formatValue(row.FY2023)}
+              </td>
+              <td
+                className="px-4 py-3 text-sm text-right border-b border-gray-100 text-gray-900"
+                style={{ color: getValueColor(row.FY2024) }}
+              >
+                {formatValue(row.FY2024)}
+              </td>
+              <td
+                className="px-4 py-3 text-sm text-right border-b border-gray-100 text-gray-900"
+                style={{ color: getValueColor(row.FY2025) }}
+              >
+                {formatValue(row.FY2025)}
+              </td>
+            </tr>
+          );
+        }
+
+        // Heading row
+        return (
+          <React.Fragment key={item.heading}>
+            <tr className="bg-blue-50 font-semibold">
+              <td colSpan={4} className="px-4 py-3 text-sm text-blue-900 border-b border-gray-100">
+                {item.heading}
+              </td>
+            </tr>
+            {renderRows(item.children)}
+          </React.Fragment>
+        );
+      });
+    };
+
+    return (
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        {/* Table Header */}
+        <div className="flex items-center justify-between px-5 py-4 bg-gray-50 border-b border-gray-200">
+          <h3 className="text-base font-semibold text-gray-900">
+            Balance Sheet Summary{" "}
+            <span className="text-sm font-normal text-gray-500">
+              (all amounts in Crores of Rs.)
+            </span>
+          </h3>
+        </div>
+
+        {/* Table Content */}
+        <div className="overflow-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="bg-gray-50">
+                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">Item</th>
+                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">FY2023</th>
+                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">FY2024</th>
+                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">FY2025</th>
+              </tr>
+            </thead>
+            <tbody>{renderRows(sections)}</tbody>
+          </table>
+        </div>
+      </div>
+    );
+  };
+
+
+  const renderCFTable = (data: FinancialItem[]) => {
+    if (!data || data.length === 0) return null;
+
+    // Sections and sub-items exactly as per your document
+    const sections = [
+      {
+        heading: "Cash Flow from Operating Activities",
+        children: [
+          "Profit for the year",
+          "Depreciation and Amortization",
+          "Income tax expense",
+          "Impairment loss recognized / (reversed) under expected credit loss model",
+          "Interest and dividend income",
+          "Stock compensation expense",
+          "Provision for post-sale client support",
+          "Exchange differences on translation of assets and liabilities, net",
+          "Interest receivable on income tax refund",
+          "Other adjustments",
+          "Trade receivables and unbilled revenue",
+          "Loans, other financial assets and other assets",
+          "Trade payables",
+          "Other financial liabilities, other liabilities and provisions",
+          "Cash generated from operations",
+          "Income taxes paid",
+          "Net cash generated by operating activities",
+        ],
+      },
+      {
+        heading: "Cash Flow from Investing Activities",
+        children: [
+          "Expenditure on property, plant and equipment",
+          "Deposits placed with corporation",
+          "Redemption of deposits placed with corporation",
+          "Interest and dividend received",
+          "Dividend received from subsidiary",
+          "Loan given to subsidiaries",
+          "Loan repaid by subsidiaries",
+          "Investment in subsidiaries",
+          "Payment towards acquisition of entities",
+          "Receipt / (payment) towards business transfer for entities under common control",
+          "Receipt / (payment) from entities under liquidation",
+          "Other receipts",
+          "Payments to acquire investments - Liquid mutual fund units",
+          "Payments to acquire investments - Commercial papers",
+          "Payments to acquire investments - Certificates of deposit",
+          "Payments to acquire investments - Non-convertible debentures",
+          "Payments to acquire investments - Other investments",
+          "Proceeds on sale of investments - Tax-free bonds and government bonds",
+          "Proceeds on sale of investments - Liquid mutual fund units",
+          "Proceeds on sale of investments - Non-convertible debentures",
+          "Proceeds on sale of investments - Certificates of deposit",
+          "Proceeds on sale of investments - Commercial papers",
+          "Proceeds on sale of investments - Government securities",
+          "Proceeds on sale of investments - Other investments",
+          "Net cash used in investing activities",
+        ],
+      },
+      {
+        heading: "Cash Flow from Financing Activities",
+        children: [
+          "Payment of lease liabilities",
+          "Shares issued on exercise of employee stock options",
+          "Other payments",
+          "Payment of dividends",
+          "Net cash used in financing activities",
+          "Net increase / (decrease) in cash and cash equivalents",
+          "Effect of exchange differences on translation of foreign currency cash and cash equivalents",
+          "Cash and cash equivalents at the beginning of the year",
+          "Cash and cash equivalents at the end of the year",
+        ],
+      },
+      {
+        heading: "Supplementary information",
+        children: ["Restricted cash balance"],
+      },
+    ];
+
+    // Recursive row rendering
+    const renderRows = (items: (string | { heading: string; children: any[] })[]) => {
+      return items.map((item) => {
+        if (typeof item === "string") {
+          const row = data.find((r) => r.item === item);
+          if (!row) return null;
+
+          const isTotal =
+            (row.item.toLowerCase().startsWith("net") ||
+              row.item.toLowerCase().startsWith("cash and cash equivalents")) &&
+            row.item !== "Cash and cash equivalents at the beginning of the year";
+
+          return (
+            <tr key={row.item} className={`${isTotal ? "font-semibold" : ""}`}>
+              <td className="px-4 py-3 text-sm text-gray-900 border-b border-gray-100 text-left">
+                {row.item}
+              </td>
+              <td
+                className="px-4 py-3 text-sm text-right border-b border-gray-100"
+                style={{ color: getValueColor(row.FY2023) }}
+              >
+                {formatValue(row.FY2023)}
+              </td>
+              <td
+                className="px-4 py-3 text-sm text-right border-b border-gray-100"
+                style={{ color: getValueColor(row.FY2024) }}
+              >
+                {formatValue(row.FY2024)}
+              </td>
+              <td
+                className="px-4 py-3 text-sm text-right border-b border-gray-100"
+                style={{ color: getValueColor(row.FY2025) }}
+              >
+                {formatValue(row.FY2025)}
+              </td>
+            </tr>
+          );
+        }
+
+        return (
+          <React.Fragment key={item.heading}>
+            <tr className="bg-blue-50 font-semibold">
+              <td colSpan={4} className="px-4 py-3 text-sm text-blue-900 border-b border-gray-100 text-left">
+                {item.heading}
+              </td>
+            </tr>
+            {renderRows(item.children)}
+          </React.Fragment>
+        );
+      });
+    };
+
+    return (
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="flex items-center justify-between px-5 py-4 bg-gray-50 border-b border-gray-200">
+          <h3 className="text-base font-semibold text-gray-900">
+            Cash Flow Summary{" "}
+            <span className="text-sm font-normal text-gray-500">
+              (all amounts in Crores of Rs.)
+            </span>
+          </h3>
+        </div>
+        <div className="overflow-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="bg-gray-50">
+                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">
+                  Item
+                </th>
+                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
+                  FY2023
+                </th>
+                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
+                  FY2024
+                </th>
+                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
+                  FY2025
+                </th>
+              </tr>
+            </thead>
+            <tbody>{renderRows(sections)}</tbody>
+          </table>
+        </div>
+      </div>
+    );
+  };
+
+
+
 
   if (!company) {
     return (
@@ -264,19 +764,6 @@ const CompanyDetails: React.FC = () => {
               </p>
             </div>
             <div style={{ textAlign: 'right' }}>
-              {/* <div style={{
-                display: 'inline-block',
-                padding: '4px 12px',
-                backgroundColor: getRiskColor(company.ratio_health),
-                color: '#fff',
-                borderRadius: '16px',
-                fontSize: '12px',
-                fontWeight: '500',
-                marginBottom: '8px',
-                fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
-              }}>
-                {company.ratio_health}
-              </div> */}
               <div style={{ fontSize: '14px', color: '#6b7280', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
                 <div>Year Range: {company.year_range}</div>
               </div>
@@ -336,7 +823,7 @@ const CompanyDetails: React.FC = () => {
               </svg>
               <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>Documents</h3>
             </div>
-            
+
             {/* Year Selection */}
             <div style={{ marginBottom: '16px' }}>
               <label style={{
@@ -408,9 +895,9 @@ const CompanyDetails: React.FC = () => {
               <CompanyRatioAnalysis />
             ) : (
               <>
-                {selectedDocument === 'balance_sheet' && renderFinancialTable('Balance Sheet Summary', company.balance_sheet)}
-                {selectedDocument === 'profit_loss' && renderFinancialTable('Profit & Loss Summary', company.profit_loss)}
-                {selectedDocument === 'cash_flow' && renderFinancialTable('Cash Flow Summary', company.cash_flow)}
+                {selectedDocument === 'balance_sheet' && renderBSTable(company.balance_sheet)}
+                {selectedDocument === 'profit_loss' && renderPLTable(company.profit_loss)}
+                {selectedDocument === 'cash_flow' && renderCFTable(company.cash_flow)}
               </>
             )}
           </div>
