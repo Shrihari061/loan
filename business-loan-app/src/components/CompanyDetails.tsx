@@ -222,40 +222,53 @@ const CompanyDetails: React.FC = () => {
   const renderPLTable = (data: FinancialItem[]) => {
     if (!data || data.length === 0) return null;
 
-    const renderRow = (row: FinancialItem, index: number, isTotal = false) => (
-      <tr
-        key={row._id || `${row.item}-${index}`}
-        className={`${index % 2 === 0 ? "bg-white" : "bg-gray-50"} ${isTotal ? "font-semibold" : ""}`}
-      >
-        <td className="px-4 py-3 text-sm text-gray-900 border-b border-gray-100">
-          {row.item}
-        </td>
-        <td className="px-4 py-3 text-sm text-right border-b border-gray-100 text-gray-900" style={{ color: getValueColor(row.FY2023) }}>
-          {formatValue(row.FY2023)}
-        </td>
-        <td className="px-4 py-3 text-sm text-right border-b border-gray-100 text-gray-900" style={{ color: getValueColor(row.FY2024) }}>
-          {formatValue(row.FY2024)}
-        </td>
-        <td className="px-4 py-3 text-sm text-right border-b border-gray-100 text-gray-900" style={{ color: getValueColor(row.FY2025) }}>
-          {formatValue(row.FY2025)}
-        </td>
-      </tr>
-    );
+    const renderRow = (row: FinancialItem, index: number, isTotal = false, isIndented = false) => {
+      const isBlueTotal = row.item === "Total income" || row.item === "Total expenses";
+      const isRedTotal = isTotal && !isBlueTotal;
+      
+      return (
+        <tr
+          key={row._id || `${row.item}-${index}`}
+          className={`${isRedTotal ? "bg-red-50 font-semibold" : isBlueTotal ? "bg-blue-50 font-semibold" : index % 2 === 0 ? "bg-white" : "bg-gray-50"}`}
+        >
+          <td className={`py-3 text-sm border-b border-gray-100 ${isRedTotal ? "text-red-900" : isBlueTotal ? "text-blue-900" : "text-gray-900"}`} style={{ paddingLeft: isIndented ? '2rem' : '1rem' }}>
+            {row.item}
+          </td>
+          <td className={`px-4 py-3 text-sm text-right border-b border-gray-100 ${isRedTotal ? "text-red-900" : isBlueTotal ? "text-blue-900" : "text-gray-900"}`} style={!isRedTotal && !isBlueTotal ? { color: getValueColor(row.FY2023) } : {}}>
+            {formatValue(row.FY2023)}
+          </td>
+          <td className={`px-4 py-3 text-sm text-right border-b border-gray-100 ${isRedTotal ? "text-red-900" : isBlueTotal ? "text-blue-900" : "text-gray-900"}`} style={!isRedTotal && !isBlueTotal ? { color: getValueColor(row.FY2024) } : {}}>
+            {formatValue(row.FY2024)}
+          </td>
+          <td className={`px-4 py-3 text-sm text-right border-b border-gray-100 ${isRedTotal ? "text-red-900" : isBlueTotal ? "text-blue-900" : "text-gray-900"}`} style={!isRedTotal && !isBlueTotal ? { color: getValueColor(row.FY2025) } : {}}>
+            {formatValue(row.FY2025)}
+          </td>
+        </tr>
+      );
+    };
 
-    const renderHeading = (label: string) => (
-      <tr key={label} className="bg-blue-50 font-semibold">
-        <td colSpan={4} className="px-4 py-3 text-sm text-blue-900 border-b border-gray-100">
-          {label}
-        </td>
-      </tr>
-    );
+    const renderHeading = (label: string) => {
+      const isRedHeading = [
+        "Other comprehensive income",
+        "Total other comprehensive income / (loss), net of tax",
+        "Total comprehensive income for the year",
+        "Earnings per equity share"
+      ].includes(label);
+      
+      return (
+        <tr key={label} className={`${isRedHeading ? "bg-red-50" : "bg-blue-50"} font-semibold`}>
+          <td colSpan={4} className={`px-4 py-3 text-sm ${isRedHeading ? "text-red-900" : "text-blue-900"} border-b border-gray-100`}>
+            {label}
+          </td>
+        </tr>
+      );
+    };
 
 
     const firstCardSections = [
-      {
-        heading: "Income",
-        children: ["Revenue from operations", "Other income, net", "Total income"],
-      },
+      "Revenue from operations",
+      "Other income, net",
+      "Total income",
       {
         heading: "Expenses",
         children: [
@@ -271,35 +284,57 @@ const CompanyDetails: React.FC = () => {
           "Total expenses",
         ],
       },
-      { heading: null, children: ["Profit before tax"] },
+      "Profit before tax",
       {
         heading: "Tax expense",
         children: ["Current tax", "Deferred tax"],
       },
-      { heading: null, children: ["Profit for the year"] },
+      "Profit for the year",
     ];
 
     const secondCardSections = [
       {
         heading: "Other comprehensive income",
         children: [
-          "Remeasurement of the net defined benefit liability / asset, net",
-          "Equity instruments through other comprehensive income, net",
-          "Fair value changes on derivatives designated as cash flow hedge, net",
-          "Fair value changes on investments, net",
-          "Total other comprehensive income / (loss), net of tax",
+          {
+            heading: "Items that will not be reclassified subsequently to profit or loss",
+            children: [
+              "Remeasurement of the net defined benefit liability / asset, net",
+              "Equity instruments through other comprehensive income, net",
+            ],
+          },
+          {
+            heading: "Items that will be reclassified subsequently to profit or loss",
+            children: [
+              "Fair value changes on derivatives designated as cash flow hedge, net",
+              "Fair value changes on investments, net (OCI)",
+            ],
+          },
         ],
       },
-      { heading: null, children: ["Total comprehensive income for the year"] },
       {
-        heading: "Earnings per equity share",
-        children: [
-          "Basic earnings per share (in ₹ per share)",
-          "Diluted earnings per share (in ₹ per share)",
-          "Weighted average equity shares used in computing basic earnings per share (in shares)",
-          "Weighted average equity shares used in computing diluted earnings per share (in shares)",
-        ],
+        heading: "Total other comprehensive income / (loss), net of tax",
       },
+      { heading: "Total comprehensive income for the year" },
+              {
+          heading: "Earnings per equity share",
+          children: [
+            {
+              heading: "Equity shares of par value ₹5/- each",
+              children: [
+                "Basic earnings per share (in ₹ per share)",
+                "Diluted earnings per share (in ₹ per share)",
+              ],
+            },
+            {
+              heading: "Weighted average equity shares used in computing earnings per equity share",
+              children: [
+                "Weighted average equity shares used in computing basic earnings per share (in shares)",
+                "Weighted average equity shares used in computing diluted earnings per share (in shares)",
+              ],
+            },
+          ],
+        },
     ];
 
 
@@ -336,23 +371,66 @@ const CompanyDetails: React.FC = () => {
             <tbody>
               {sections.map((section, sIndex) => (
                 <React.Fragment key={sIndex}>
-                  {section.heading && renderHeading(section.heading)}
-                  {section.children.map((child: string, i: number) => {
-                    const row = data.find((r) => r.item === child);
-                    return row
-                      ? renderRow(
-                        row,
-                        i,
-                        [
-                          "Total income",
-                          "Total expenses",
-                          "Profit before tax",
-                          "Profit for the year",
-                          "Total comprehensive income for the year",
-                        ].includes(row.item)
-                      )
-                      : null;
-                  })}
+                  {typeof section === 'string' ? (
+                    // Handle string items directly
+                    (() => {
+                      const row = data.find((r) => r.item === section);
+                      return row
+                        ? renderRow(
+                          row,
+                          sIndex,
+                          [
+                            "Profit before tax",
+                            "Profit for the year"
+                          ].includes(row.item)
+                        )
+                        : null;
+                    })()
+                  ) : (
+                    // Handle section objects with heading and children
+                    <>
+                      {section.heading && renderHeading(section.heading)}
+                      {section.children && section.children.map((child: any, i: number) => {
+                        if (typeof child === 'string') {
+                          // Handle string items
+                          const row = data.find((r) => r.item === child);
+                          return row
+                            ? renderRow(
+                              row,
+                              i,
+                              [
+                                "Profit before tax",
+                                "Profit for the year"
+                              ].includes(row.item),
+                              !["Total expenses"].includes(row.item) // Indent all children except totals
+                            )
+                            : null;
+                        } else if (child.heading) {
+                          // Handle nested section objects
+                          return (
+                            <React.Fragment key={i}>
+                              {renderHeading(child.heading)}
+                              {child.children.map((grandChild: string, j: number) => {
+                                const row = data.find((r) => r.item === grandChild);
+                                return row
+                                  ? renderRow(
+                                    row,
+                                    j,
+                                    [
+                                      "Profit before tax",
+                                      "Profit for the year"
+                                    ].includes(row.item),
+                                    true // Indent grandchildren
+                                  )
+                                  : null;
+                              })}
+                            </React.Fragment>
+                          );
+                        }
+                        return null;
+                      })}
+                    </>
+                  )}
                 </React.Fragment>
               ))}
             </tbody>
