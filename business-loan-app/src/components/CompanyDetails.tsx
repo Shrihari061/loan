@@ -30,7 +30,7 @@ const CompanyDetails: React.FC = () => {
   const [company, setCompany] = useState<CompanyData | null>(null);
   const [activeTab, setActiveTab] = useState<'source' | 'ratio'>('source');
   const [selectedDocument, setSelectedDocument] = useState<'balance_sheet' | 'profit_loss' | 'cash_flow'>('balance_sheet');
-  const [selectedYear, setSelectedYear] = useState('2025');
+
 
   // Financial document types
   const financialDocuments = [
@@ -39,40 +39,82 @@ const CompanyDetails: React.FC = () => {
     { key: 'cash_flow', name: 'Cash Flow Data', icon: '💰' }
   ];
 
-  // Fetch company details
+  // Helper function to merge financial data from all years
+  const mergeFinancialData = (data2023: any, data2024: any, data2025: any, dataType: string) => {
+    const items2023 = data2023?.[dataType] || [];
+    const items2024 = data2024?.[dataType] || [];
+    const items2025 = data2025?.[dataType] || [];
+
+    // Create a map of all unique items
+    const itemMap = new Map();
+
+    // Add items from all years
+    [...items2023, ...items2024, ...items2025].forEach((item: FinancialItem) => {
+      if (!itemMap.has(item.item)) {
+        itemMap.set(item.item, {
+          _id: item._id,
+          item: item.item,
+          FY2023: null,
+          FY2024: null,
+          FY2025: null
+        });
+      }
+    });
+
+    // Populate values for each year
+    items2023.forEach((item: FinancialItem) => {
+      if (itemMap.has(item.item)) {
+        itemMap.get(item.item).FY2023 = item.FY2023; // API returns FY2023 when year=2023
+      }
+    });
+
+    items2024.forEach((item: FinancialItem) => {
+      if (itemMap.has(item.item)) {
+        itemMap.get(item.item).FY2024 = item.FY2024; // API returns FY2024 when year=2024
+      }
+    });
+
+    items2025.forEach((item: FinancialItem) => {
+      if (itemMap.has(item.item)) {
+        itemMap.get(item.item).FY2025 = item.FY2025; // API returns FY2025 when year=2025
+      }
+    });
+
+    return Array.from(itemMap.values());
+  };
+
+  // Fetch company details for all years
   useEffect(() => {
     const fetchCompany = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/analysis/${id}?year=${selectedYear}`);
-        const data = await res.json();
+        // Fetch data for all three years concurrently
+        const [res2023, res2024, res2025] = await Promise.all([
+          fetch(`http://localhost:5000/analysis/${id}?year=2023`),
+          fetch(`http://localhost:5000/analysis/${id}?year=2024`),
+          fetch(`http://localhost:5000/analysis/${id}?year=2025`)
+        ]);
 
-        // Add dummy values to the financial data for display
-        const dataWithDummyValues = {
-          ...data,
-          balance_sheet: (data.balance_sheet || []).map((item: FinancialItem) => ({
-            ...item,
-            FY2023: item.FY2023 || generateDummyValue(item.item, 'balance_sheet', 2023),
-            FY2024: item.FY2024 || generateDummyValue(item.item, 'balance_sheet', 2024)
-          })),
-          profit_loss: (data.profit_loss || []).map((item: FinancialItem) => ({
-            ...item,
-            FY2023: item.FY2023 || generateDummyValue(item.item, 'profit_loss', 2023),
-            FY2024: item.FY2024 || generateDummyValue(item.item, 'profit_loss', 2024)
-          })),
-          cash_flow: (data.cash_flow || []).map((item: FinancialItem) => ({
-            ...item,
-            FY2023: item.FY2023 || generateDummyValue(item.item, 'cash_flow', 2023),
-            FY2024: item.FY2024 || generateDummyValue(item.item, 'cash_flow', 2024)
-          }))
+        const [data2023, data2024, data2025] = await Promise.all([
+          res2023.json(),
+          res2024.json(),
+          res2025.json()
+        ]);
+
+        // Merge data from all years
+        const mergedData = {
+          ...data2025, // Use 2025 as base for company info
+          balance_sheet: mergeFinancialData(data2023, data2024, data2025, 'balance_sheet'),
+          profit_loss: mergeFinancialData(data2023, data2024, data2025, 'profit_loss'),
+          cash_flow: mergeFinancialData(data2023, data2024, data2025, 'cash_flow')
         };
 
-        setCompany(dataWithDummyValues);
+        setCompany(mergedData);
       } catch (error) {
         console.error('Failed to fetch company data:', error);
       }
     };
     fetchCompany();
-  }, [id, selectedYear]);
+  }, [id]);
 
   const formatValue = (value: number | string | null) => {
     if (value === null || value === undefined) return 'N/A';
@@ -101,30 +143,7 @@ const CompanyDetails: React.FC = () => {
     return numValue < 0 ? '#ef4444' : '#111827';
   };
 
-  const generateDummyValue = (itemName: string, documentType: string, year: number): number => {
-    const baseValue = 50000;
-    const yearMultiplier = 1 + (year - 2022) * 0.15;
 
-    let itemMultiplier = 1;
-
-    if (documentType === 'balance_sheet') {
-      if (itemName.includes('Assets')) itemMultiplier = 2.5;
-      else if (itemName.includes('Equity')) itemMultiplier = 1.8;
-      else if (itemName.includes('Debt')) itemMultiplier = 0.8;
-      else if (itemName.includes('Liabilities')) itemMultiplier = 1.2;
-      else if (itemName.includes('Receivables')) itemMultiplier = 0.6;
-      else if (itemName.includes('Payables')) itemMultiplier = 0.4;
-    } else if (documentType === 'profit_loss') {
-      if (itemName.includes('Revenue') || itemName.includes('Sales')) itemMultiplier = 3.0;
-      else if (itemName.includes('Profit')) itemMultiplier = 1.5;
-      else if (itemName.includes('Expense')) itemMultiplier = 0.7;
-      else if (itemName.includes('Depreciation')) itemMultiplier = 0.3;
-    } else if (documentType === 'cash_flow') {
-      if (itemName.includes('Principal')) itemMultiplier = 0.2;
-    }
-
-    return Math.round(baseValue * itemMultiplier * yearMultiplier);
-  };
 
   const getRiskColor = (health: string | undefined) => {
     if (!health) return '#6b7280';
@@ -354,12 +373,24 @@ const CompanyDetails: React.FC = () => {
 
   const renderBSTable = (data: FinancialItem[]) => {
     if (!data || data.length === 0) return null;
+    
+    const formatDisplayLabel = (label: string): string => {
+      let result = label;
+      if (result.startsWith("Financial liabilities - ")) {
+        result = result.replace(/^Financial liabilities - /, "");
+      }
+      if (result.startsWith("Financial assets - ")) {
+        result = result.replace(/^Financial assets - /, "");
+      }
+      result = result.replace(/ \(Non-current\)$/i, "").replace(/ \(Current\)$/i, "");
+      return result;
+    };
 
     const sections = [
       {
         heading: "Assets",
         children: [
-          {
+                    {
             heading: "Non-current assets", children: [
               "Property, plant and equipment",
               "Right-of-use assets",
@@ -378,22 +409,22 @@ const CompanyDetails: React.FC = () => {
               "Total non-current assets"
             ]
           },
-          {
-            heading: "Current assets", children: [
-              {
-                heading: "Financial assets", children: [
-                  "Financial assets - Investments (Current)",
-                  "Trade receivables",
-                  "Cash and cash equivalents",
-                  "Financial assets - Loans (Current)",
-                  "Other financial assets (Current)"
-                ]
-              },
-              "Income tax assets (net) (Current)",
-              "Other current assets",
-              "Total current assets"
-            ]
-          },
+                                  {
+              heading: "Current assets", children: [
+                {
+                  heading: "Financial assets", children: [
+                    "Financial assets - Investments (Current)",
+                    "Trade receivables",
+                    "Cash and cash equivalents",
+                    "Financial assets - Loans (Current)",
+                    "Other financial assets (Current)"
+                  ]
+                },
+                "Income tax assets (net) (Current)",
+                "Other current assets",
+                "Total current assets"
+              ]
+            },
           "Total assets"
         ]
       },
@@ -409,7 +440,7 @@ const CompanyDetails: React.FC = () => {
           },
           {
             heading: "Liabilities", children: [
-              {
+                                            {
                 heading: "Non-current liabilities", children: [
                   {
                     heading: "Financial liabilities", children: [
@@ -427,8 +458,12 @@ const CompanyDetails: React.FC = () => {
                   {
                     heading: "Financial liabilities", children: [
                       "Financial liabilities - Lease liabilities (Current)",
-                      "Financial liabilities - Trade payables - Total outstanding dues of micro enterprises and small enterprises",
-                      "Financial liabilities - Trade payables - Total outstanding dues of creditors other than micro enterprises and small enterprises",
+                      {
+                        heading: "Trade payables", children: [
+                          "Financial liabilities - Trade payables - Total outstanding dues of micro enterprises and small enterprises",
+                          "Financial liabilities - Trade payables - Total outstanding dues of creditors other than micro enterprises and small enterprises"
+                        ]
+                      },
                       "Other financial liabilities (Current)"
                     ]
                   },
@@ -445,18 +480,32 @@ const CompanyDetails: React.FC = () => {
       }
     ];
 
-    const renderRows = (items: (string | { heading: string; children: any[] })[]) => {
+    const renderRows = (items: (string | { heading: string; children: any[] })[], level = 0) => {
       return items.map((item) => {
         if (typeof item === "string") {
           const row = data.find((r) => r.item === item);
           if (!row) return null;
 
           const isTotal = row.item.toLowerCase().startsWith("total");
+          let itemPaddingLeft = `${16 + (level * 24)}px`; // Default indentation
+
+          // Apply special indentation for total rows as per the image
+          if (isTotal) {
+            if (row.item === "Total assets") {
+              itemPaddingLeft = "16px"; // One level indentation for "Total assets"
+            } else if (row.item === "Total non-current assets" || row.item === "Total current assets") {
+              itemPaddingLeft = "40px"; // Two level indentation for these subtotals
+            } else if (row.item === "Total equity" || row.item === "Total non-current liabilities" || row.item === "Total current liabilities") {
+              itemPaddingLeft = "40px"; // Two level indentation for these subtotals
+            } else if (row.item === "Total equity and liabilities") {
+              itemPaddingLeft = "16px"; // One level indentation for grand total
+            }
+          }
 
           return (
             <tr key={row.item} className={`${isTotal ? "font-semibold" : ""}`}>
-              <td className="px-4 py-3 text-sm text-gray-900 border-b border-gray-100">
-                {row.item}
+              <td className="px-4 py-3 text-sm text-gray-900 border-b border-gray-100" style={{ paddingLeft: itemPaddingLeft }}>
+                {formatDisplayLabel(row.item)}
               </td>
               <td
                 className="px-4 py-3 text-sm text-right border-b border-gray-100 text-gray-900"
@@ -481,14 +530,39 @@ const CompanyDetails: React.FC = () => {
         }
 
         // Heading row
+        const isMainHeading = item.heading === "Assets" || item.heading === "Equity and liabilities";
+        const isFinancialAssets = item.heading === "Financial assets";
+        const isNeutralSubheading = item.heading === "Financial liabilities" || item.heading === "Trade payables";
+        
+        let headingStyle, textColor, headingPaddingLeft;
+        
+        if (isMainHeading) {
+          headingStyle = "bg-red-50 font-semibold";
+          textColor = "text-red-900";
+          headingPaddingLeft = "16px";
+        } else if (isFinancialAssets || isNeutralSubheading) {
+          headingStyle = "bg-white";
+          textColor = "text-gray-900";
+          headingPaddingLeft = `${16 + (level * 24)}px`;
+        } else {
+          headingStyle = "bg-blue-50 font-semibold";
+          textColor = "text-blue-900";
+          
+          if (item.heading === "Non-current liabilities" || item.heading === "Current liabilities") {
+            headingPaddingLeft = `${16 + ((level - 1) * 24)}px`;
+          } else {
+            headingPaddingLeft = `${16 + (level * 24)}px`;
+          }
+        }
+
         return (
           <React.Fragment key={item.heading}>
-            <tr className="bg-blue-50 font-semibold">
-              <td colSpan={4} className="px-4 py-3 text-sm text-blue-900 border-b border-gray-100">
+            <tr className={headingStyle}>
+              <td colSpan={4} className={`px-4 py-3 text-sm ${textColor} border-b border-gray-100`} style={{ paddingLeft: headingPaddingLeft }}>
                 {item.heading}
               </td>
             </tr>
-            {renderRows(item.children)}
+            {renderRows(item.children, level + 1)}
           </React.Fragment>
         );
       });
@@ -824,7 +898,7 @@ const CompanyDetails: React.FC = () => {
               <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>Documents</h3>
             </div>
 
-            {/* Year Selection */}
+            {/* Year Selection
             <div style={{ marginBottom: '16px' }}>
               <label style={{
                 fontSize: '14px',
@@ -853,7 +927,7 @@ const CompanyDetails: React.FC = () => {
                 <option value="2024">2024</option>
                 <option value="2025">2025</option>
               </select>
-            </div>
+            </div> */}
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {financialDocuments.map((doc) => (
