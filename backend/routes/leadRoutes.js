@@ -2,8 +2,6 @@ const express = require('express');
 const multer = require('multer');
 const Lead = require('../models/Lead');
 const router = express.Router();
-const { spawn } = require('child_process');
-const path = require('path');
 
 // Multer setup - store files in memory to save directly in MongoDB
 const storage = multer.memoryStorage();
@@ -87,22 +85,6 @@ router.post(
       // -------------------- Save to MongoDB --------------------
       const newLead = new Lead(leadData);
       await newLead.save();
-
-      // -------------------- Run Python model in detached mode --------------------
-      console.log(">>> [Model] Starting Python pipeline...");
-
-      const scriptPath = path.join(__dirname, 'BFSI-LOS-Model_Pdf', 'run_pipeline.py');
-      const pythonCmd = process.platform === 'win32' ? 'python' : 'python3';
-
-      const pythonProcess = spawn(pythonCmd, [scriptPath], {
-        cwd: path.dirname(scriptPath),
-        detached: true,
-        stdio: ['ignore', 'ignore', 'ignore'] // fully detached
-      });
-
-      pythonProcess.unref();
-
-      console.log(">>> [Model] Python process started (detached). Check system logs or model outputs for progress.");
 
       // -------------------- Send response --------------------
       res.status(201).json(newLead);

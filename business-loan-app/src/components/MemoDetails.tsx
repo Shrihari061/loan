@@ -18,13 +18,13 @@ export default function MemoDetails() {
 
   const handleApprove = async () => {
     if (!id) return;
-    
+
     setIsActionDisabled(true);
     try {
       await axios.put(`http://localhost:5000/memos/${id}`, {
         status: 'Approved'
       });
-      
+
       // Update local state
       setMemo(prev => prev ? { ...prev, status: 'Approved' } : null);
       alert('Memo approved successfully!');
@@ -37,13 +37,13 @@ export default function MemoDetails() {
 
   const handleDecline = async () => {
     if (!id) return;
-    
+
     setIsActionDisabled(true);
     try {
       await axios.put(`http://localhost:5000/memos/${id}`, {
         status: 'Declined'
       });
-      
+
       // Update local state
       setMemo(prev => prev ? { ...prev, status: 'Declined' } : null);
       alert('Memo declined successfully!');
@@ -62,7 +62,7 @@ export default function MemoDetails() {
   const renderList = (items: unknown) => {
     // Handle different data formats
     let listItems: string[] = [];
-    
+
     if (Array.isArray(items)) {
       listItems = items.map(item => String(item));
     } else if (typeof items === 'string') {
@@ -72,11 +72,11 @@ export default function MemoDetails() {
       // If it's an object, try to extract values
       listItems = Object.values(items).map(item => String(item));
     }
-    
+
     if (listItems.length === 0) {
       return <p className="text-gray-500">No data available</p>;
     }
-    
+
     return (
       <ul className="list-disc pl-6 space-y-2 text-gray-700">
         {listItems.map((item, idx) => (
@@ -109,10 +109,6 @@ export default function MemoDetails() {
             <p className="font-medium">{String(memo.customer_name)}</p>
           </div>
           <div>
-            <p className="text-sm text-gray-500">Total Score</p>
-            <p className="font-medium">{memo.total_score ? String(memo.total_score) : 'N/A'}</p>
-          </div>
-          <div>
             <p className="text-sm text-gray-500">Lead ID</p>
             <p className="font-medium">{String(memo.lead_id)}</p>
           </div>
@@ -124,6 +120,24 @@ export default function MemoDetails() {
             <p className="text-sm text-gray-500">Status</p>
             <p className="font-medium">{String(memo.status)}</p>
           </div>
+          <div>
+            <p className="text-sm text-gray-500">Loan Type</p>
+            <p className="font-medium">{memo.loan_type ? String(memo.loan_type) : 'N/A'}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Total Score</p>
+            <p className="font-medium">
+              {memo.total_score
+                ? typeof memo.total_score === "object"
+                  ? Object.entries(memo.total_score as Record<string, unknown>)
+                    .map(([year, score]) => `${year}: ${score}`)
+                    .join(", ")
+                  : String(memo.total_score)
+                : "N/A"}
+            </p>
+          </div>
+
+
         </div>
       </div>
 
@@ -160,7 +174,6 @@ export default function MemoDetails() {
           </div>
         )}
 
-
         {/* Loan Purpose */}
         {Array.isArray(memo.loan_purpose) && memo.loan_purpose.length > 0 && (
           <div className="bg-white p-6 shadow rounded-xl">
@@ -170,120 +183,48 @@ export default function MemoDetails() {
         )}
 
         {/* SWOT Analysis */}
-        {memo.swot_analysis && typeof memo.swot_analysis === 'object' && (
+        {memo.swot_analysis && (
           <div className="bg-white p-6 shadow rounded-xl">
             <h3 className="text-lg font-semibold mb-4">SWOT Analysis</h3>
-            {Object.entries(memo.swot_analysis as Record<string, unknown>).map(([key, values]) => (
-              <div key={key} className="mb-4">
-                <strong className="block text-gray-700 mb-1">{key}</strong>
-                {renderList(values)}
-              </div>
-            ))}
+            {typeof memo.swot_analysis === 'object'
+              ? Object.entries(memo.swot_analysis as Record<string, unknown>).map(([key, values]) => (
+                <div key={key} className="mb-4">
+                  <strong className="block text-gray-700 mb-1">{key}</strong>
+                  {renderList(values)}
+                </div>
+              ))
+              : <p className="text-gray-700">{String(memo.swot_analysis)}</p>
+            }
           </div>
         )}
 
         {/* Security Offered */}
-        {memo.security_offered && typeof memo.security_offered === 'object' && (
+        {memo.security_offered && (
           <div className="bg-white p-6 shadow rounded-xl">
             <h3 className="text-lg font-semibold mb-4">Security Offered</h3>
-            {Array.isArray((memo.security_offered as any).primary_security) && (memo.security_offered as any).primary_security.length > 0 && (
-              <div className="mb-3">
-                <strong className="block mb-1">Primary</strong>
-                {renderList((memo.security_offered as any).primary_security)}
-              </div>
-            )}
-            {Array.isArray((memo.security_offered as any).collateral_security) && (memo.security_offered as any).collateral_security.length > 0 && (
-              <div className="mb-3">
-                <strong className="block mb-1">Collateral</strong>
-                {renderList((memo.security_offered as any).collateral_security)}
-              </div>
-            )}
-            {Array.isArray((memo.security_offered as any).personal_guarantees) && (memo.security_offered as any).personal_guarantees.length > 0 && (
-              <div className="mb-3">
-                <strong className="block mb-1">Personal Guarantees</strong>
-                {renderList((memo.security_offered as any).personal_guarantees)}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Recommendation */}
-        {Array.isArray(memo.recommendation) && memo.recommendation.length > 0 && (
-          <div className="bg-white p-6 shadow rounded-xl">
-            <h3 className="text-lg font-semibold mb-4">Recommendation</h3>
-            {renderList(memo.recommendation)}
-          </div>
-        )}
-
-        {/* Loan Type */}
-        {memo.loan_type && (
-          <div className="bg-white p-6 shadow rounded-xl">
-            <h3 className="text-lg font-semibold mb-4">Loan Type</h3>
-            <p className="text-gray-700">{String(memo.loan_type)}</p>
-          </div>
-        )}
-
-        {/* Created at */}
-        {(memo.createdAt || memo.created_at) && (
-          <div className="bg-white p-6 shadow rounded-xl">
-            <h3 className="text-lg font-semibold mb-4">Created at</h3>
-            <p className="text-gray-700">
-              {(() => {
-                try {
-                  const date = new Date(String(memo.createdAt || memo.created_at));
-                  if (isNaN(date.getTime())) {
-                    return String(memo.createdAt || memo.created_at || 'N/A');
-                  }
-                  
-                  // Convert to IST (UTC+5:30)
-                  const istDate = new Date(date.getTime() + (5.5 * 60 * 60 * 1000));
-                  
-                  // Format as YYYY-MM-DD HH:MM:SS
-                  const year = istDate.getFullYear();
-                  const month = String(istDate.getMonth() + 1).padStart(2, '0');
-                  const day = String(istDate.getDate()).padStart(2, '0');
-                  const hours = String(istDate.getHours()).padStart(2, '0');
-                  const minutes = String(istDate.getMinutes()).padStart(2, '0');
-                  const seconds = String(istDate.getSeconds()).padStart(2, '0');
-                  
-                  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-                } catch {
-                  return String(memo.createdAt || memo.created_at || 'N/A');
-                }
-              })()}
-            </p>
-          </div>
-        )}
-
-        {/* Updated at */}
-        {(memo.updatedAt || memo.updated_at || memo.last_updated) && (
-          <div className="bg-white p-6 shadow rounded-xl">
-            <h3 className="text-lg font-semibold mb-4">Updated at</h3>
-            <p className="text-gray-700">
-              {(() => {
-                try {
-                  const date = new Date(String(memo.updatedAt || memo.updated_at || memo.last_updated));
-                  if (isNaN(date.getTime())) {
-                    return String(memo.updatedAt || memo.updated_at || memo.last_updated || 'N/A');
-                  }
-                  
-                  // Convert to IST (UTC+5:30)
-                  const istDate = new Date(date.getTime() + (5.5 * 60 * 60 * 1000));
-                  
-                  // Format as YYYY-MM-DD HH:MM:SS
-                  const year = istDate.getFullYear();
-                  const month = String(istDate.getMonth() + 1).padStart(2, '0');
-                  const day = String(istDate.getDate()).padStart(2, '0');
-                  const hours = String(istDate.getHours()).padStart(2, '0');
-                  const minutes = String(istDate.getMinutes()).padStart(2, '0');
-                  const seconds = String(istDate.getSeconds()).padStart(2, '0');
-                  
-                  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-                } catch {
-                  return String(memo.updatedAt || memo.updated_at || memo.last_updated || 'N/A');
-                }
-              })()}
-            </p>
+            {typeof memo.security_offered === 'object'
+              ? <>
+                {Array.isArray((memo.security_offered as any).primary_security) && (memo.security_offered as any).primary_security.length > 0 && (
+                  <div className="mb-3">
+                    <strong className="block mb-1">Primary</strong>
+                    {renderList((memo.security_offered as any).primary_security)}
+                  </div>
+                )}
+                {Array.isArray((memo.security_offered as any).collateral_security) && (memo.security_offered as any).collateral_security.length > 0 && (
+                  <div className="mb-3">
+                    <strong className="block mb-1">Collateral</strong>
+                    {renderList((memo.security_offered as any).collateral_security)}
+                  </div>
+                )}
+                {Array.isArray((memo.security_offered as any).personal_guarantees) && (memo.security_offered as any).personal_guarantees.length > 0 && (
+                  <div className="mb-3">
+                    <strong className="block mb-1">Personal Guarantees</strong>
+                    {renderList((memo.security_offered as any).personal_guarantees)}
+                  </div>
+                )}
+              </>
+              : <p className="text-gray-700">{String(memo.security_offered)}</p>
+            }
           </div>
         )}
 
@@ -310,7 +251,8 @@ export default function MemoDetails() {
               "updated_at",       // 🚫 exclude updated_at
               "createdAt",        // 🚫 exclude createdAt (shown separately)
               "updatedAt",        // 🚫 exclude updatedAt (shown separately)
-              "loan_type",        // 🚫 exclude loan_type (shown separately)
+              "loan_type",        // 🚫 exclude loan_type (now shown at top)
+              "total_score",      // 🚫 exclude total_score (now shown at top)
               "__v",
             ].includes(key)
           ) {
@@ -328,6 +270,14 @@ export default function MemoDetails() {
             </div>
           );
         })}
+
+        {/* Recommendation (moved to end) */}
+        {Array.isArray(memo.recommendation) && memo.recommendation.length > 0 && (
+          <div className="bg-white p-6 shadow rounded-xl">
+            <h3 className="text-lg font-semibold mb-4">Recommendation</h3>
+            {renderList(memo.recommendation)}
+          </div>
+        )}
       </div>
 
       {/* Action Buttons */}
@@ -335,11 +285,10 @@ export default function MemoDetails() {
         <button
           onClick={handleApprove}
           disabled={isActionDisabled || String(memo.status) === 'Approved' || String(memo.status) === 'Declined'}
-          className={`px-6 py-3 rounded-lg font-medium transition-colors ${
-            isActionDisabled || String(memo.status) === 'Approved' || String(memo.status) === 'Declined'
-              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'text-white hover:opacity-90'
-          }`}
+          className={`px-6 py-3 rounded-lg font-medium transition-colors ${isActionDisabled || String(memo.status) === 'Approved' || String(memo.status) === 'Declined'
+            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            : 'text-white hover:opacity-90'
+            }`}
           style={{
             backgroundColor: isActionDisabled || String(memo.status) === 'Approved' || String(memo.status) === 'Declined'
               ? '#d1d5db'
@@ -351,11 +300,10 @@ export default function MemoDetails() {
         <button
           onClick={handleDecline}
           disabled={isActionDisabled || String(memo.status) === 'Approved' || String(memo.status) === 'Declined'}
-          className={`px-6 py-3 rounded-lg font-medium transition-colors ${
-            isActionDisabled || String(memo.status) === 'Approved' || String(memo.status) === 'Declined'
-              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'text-white hover:opacity-90'
-          }`}
+          className={`px-6 py-3 rounded-lg font-medium transition-colors ${isActionDisabled || String(memo.status) === 'Approved' || String(memo.status) === 'Declined'
+            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            : 'text-white hover:opacity-90'
+            }`}
           style={{
             backgroundColor: isActionDisabled || String(memo.status) === 'Approved' || String(memo.status) === 'Declined'
               ? '#d1d5db'
