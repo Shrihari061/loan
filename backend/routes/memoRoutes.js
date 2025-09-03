@@ -25,7 +25,7 @@ router.get('/:id', async (req, res) => {
   try {
     const memo = await Memo.findById(req.params.id);
     if (!memo) return res.status(404).json({ message: 'Memo not found' });
-    
+
     // Fetch total score from risk assessment
     let totalScore = null;
     try {
@@ -40,13 +40,13 @@ router.get('/:id', async (req, res) => {
     } catch (riskError) {
       console.log('Could not fetch risk data:', riskError.message);
     }
-    
+
     // Add total score to memo response
     const memoWithScore = {
       ...memo.toObject(),
       total_score: totalScore
     };
-    
+
     res.json(memoWithScore);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -83,10 +83,10 @@ function normalizeFinancialSummary(finSummary) {
   return out;
 }
 
-// 🔹 Create a new memo
+// 🔹 Create a new memo by copying from summary
 router.post('/create', async (req, res) => {
   try {
-    const { customer_name, lead_id, loan_type, ...rest } = req.body;
+    const { customer_name, lead_id, loan_type, created_by } = req.body;
 
     // Find matching summary
     const summaryData = await Summary.findOne({ customer_name, lead_id });
@@ -96,19 +96,20 @@ router.post('/create', async (req, res) => {
 
     const summaryObj = summaryData.toObject();
 
+    // Copy directly as strings
     const memoData = {
-      ...rest,
       lead_id,
       customer_name,
       loan_type,
+      created_by,
+      status: req.body.status || "Draft",
+      last_updated: req.body.last_updated || new Date().toISOString(),
       executive_summary: summaryObj.executive_summary,
-
-      // 🔹 Dynamic normalization
-      financial_summary_and_ratios: normalizeFinancialSummary(summaryObj["financial_summary_&_ratios"]),
-      loan_purpose: normalizeToArray(summaryObj.loan_purpose),
+      financial_summary_and_ratios: summaryObj["financial_summary_&_ratios"],
+      loan_purpose: summaryObj.loan_purpose,
       swot_analysis: summaryObj.swot_analysis,
       security_offered: summaryObj.security_offered,
-      recommendation: normalizeToArray(summaryObj.recommendation),
+      recommendation: summaryObj.recommendation,
     };
 
     const memo = new Memo(memoData);
@@ -125,7 +126,7 @@ router.post('/create', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const { status } = req.body;
-    
+
     if (!status || !['Approved', 'Declined'].includes(status)) {
       return res.status(400).json({ message: 'Invalid status. Must be "approved" or "declined"' });
     }

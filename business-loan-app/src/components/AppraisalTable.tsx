@@ -64,11 +64,10 @@ export default function AppraisalTable() {
       await axios.post("http://localhost:5000/memos/create", {
         lead_id: customer.lead_id,
         customer_name: customer.customer_name,
-        loan_type: customer.loan_type, // ✅ use loan_type directly from cqs
+        loan_type: customer.loan_type,
         status: "In progres",
         created_by: "CurrentUser",
         last_updated: new Date().toISOString(),
-        loan_purpose_table: "To be filled",
       });
 
       await fetchMemos();
