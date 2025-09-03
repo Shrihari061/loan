@@ -115,7 +115,7 @@ const RiskDetail: React.FC = () => {
         <p className="font-medium">Total Score:</p>
         <div className="flex gap-4">
           {["2023", "2024", "2025"].map(year => (
-            <span key={year}>{year}: {data.total_score?.[year] ?? "—"} / 100</span>
+                            <span key={year}><strong>{year}</strong>: {data.total_score?.[year] ?? "—"} / 100</span>
           ))}
         </div>
         <p className="font-medium">Risk Bucket:</p>
@@ -196,7 +196,7 @@ const RiskDetail: React.FC = () => {
               return (
                 <tr key={ratio}>
                   <td className="px-4 py-2 font-medium">
-                    {ratio}{isPercentage && <strong> (Percentage)</strong>}
+                    {ratio}{isPercentage && <strong> (%)</strong>}
                   </td>
                   <td className="px-4 py-2">{details?.threshold ?? "—"}</td>
                   {["2023", "2024", "2025"].map((year) => {

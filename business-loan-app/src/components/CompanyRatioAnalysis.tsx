@@ -96,7 +96,7 @@ const CompanyRatioAnalysis: React.FC = () => {
               return (
                 <tr key={ratio.name} style={{ backgroundColor: index % 2 === 0 ? '#fff' : '#f9fafb' }}>
                   <td style={{ padding: '12px 16px', fontSize: '14px', color: '#111827', textAlign: 'left', borderBottom: '1px solid #f3f4f6', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
-                    {ratio.name}{isPercentage && <strong> (Percentage)</strong>}
+                    {ratio.name}{isPercentage && <strong> (%)</strong>}
                   </td>
                   {[{year:2023, value:ratio.value_2023, red:ratio.red_flag_2023},
                     {year:2024, value:ratio.value_2024, red:ratio.red_flag_2024},
