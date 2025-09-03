@@ -206,12 +206,16 @@ const RiskDetail: React.FC = () => {
                     }
                     return (
                       <td key={year} className="px-4 py-2">
-                        {val ?? "—"}{" "}
-                        {(details as any)?.[`red_flag_${year}`] ? (
-                          <span className="text-red-600 ml-1">🟥</span>
-                        ) : (
-                          <span className="text-green-600 ml-1">🟩</span>
-                        )}
+                        <div className="flex items-center justify-between">
+                          <span className="flex-1">{val ?? "—"}</span>
+                          <span className="w-6 text-center">
+                            {(details as any)?.[`red_flag_${year}`] ? (
+                              <span className="text-red-600">🟥</span>
+                            ) : (
+                              <span className="text-green-600">🟩</span>
+                            )}
+                          </span>
+                        </div>
                       </td>
                     );
                   })}
