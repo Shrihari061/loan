@@ -140,11 +140,8 @@ router.get('/ratios', async (req, res) => {
 
 
 
-// 🔹 Get SINGLE company details by ID
 router.get('/:id', async (req, res) => {
   try {
-    const { year = '2025' } = req.query; // Default to 2025 if no year specified
-    
     // First try to find by ID directly
     let doc = await ExtractedValues.findById(req.params.id);
     
@@ -173,14 +170,16 @@ router.get('/:id', async (req, res) => {
     const traverse = (obj, parentKey = '') => {
       Object.entries(obj).forEach(([key, value]) => {
         if (value && typeof value === 'object' && value.source) {
-          const yearKey = `value_${year}`;
+          // Collect values for all years (2023-2025)
           const itemObj = {
             _id: `${doc._id}-${parentKey}${key}`,
             item: key,
-            [`FY${year}`]: value[yearKey] ?? null,
+            FY2023: value.value_2023 ?? null,
+            FY2024: value.value_2024 ?? null,
+            FY2025: value.value_2025 ?? null,
             unit: value.unit || '₹ crore'
           };
-          
+
           if (value.source === 'bs') balance_sheet.push(itemObj);
           else if (value.source === 'pl') profit_loss.push(itemObj);
           else if (value.source === 'cf') cash_flow.push(itemObj);
@@ -190,12 +189,15 @@ router.get('/:id', async (req, res) => {
 
     traverse(data);
 
-    // ---------------- Compute Net Worth ----------------
-    const yearKey = `value_${year}`;
-    const totalAssets = data["Total assets"]?.[yearKey] || 0;
-    const totalNonCurrentLiab = data["Total non-current liabilities"]?.[yearKey] || 0;
-    const totalCurrentLiab = data["Total current liabilities"]?.[yearKey] || 0;
-    const netWorth = totalAssets - (totalNonCurrentLiab + totalCurrentLiab);
+    // ---------------- Compute Net Worth for all years ----------------
+    const netWorth = {};
+    ["2023", "2024", "2025"].forEach(year => {
+      const yearKey = `value_${year}`;
+      const totalAssets = data["Total assets"]?.[yearKey] || 0;
+      const totalNonCurrentLiab = data["Total non-current liabilities"]?.[yearKey] || 0;
+      const totalCurrentLiab = data["Total current liabilities"]?.[yearKey] || 0;
+      netWorth[`FY${year}`] = totalAssets - (totalNonCurrentLiab + totalCurrentLiab);
+    });
 
     // ---------------- Get Ratio Data ----------------
     const ratioDoc = await Ratios.findOne({
@@ -203,17 +205,19 @@ router.get('/:id', async (req, res) => {
       lead_id: doc.lead_id
     });
 
-    let dscr = 'N/A';
-    let debt_to_equity = 'N/A';
-    let ratio_health = 'N/A';
+    let ratios = {
+      dscr: 'N/A',
+      debt_to_equity: 'N/A',
+      ratio_health: 'N/A'
+    };
 
     if (ratioDoc) {
       const dscrRatio = ratioDoc.DSCR;
       const debtToEquityRatio = ratioDoc['Debt/Equity'];
       
-      dscr = dscrRatio?.value ?? 'N/A';
-      debt_to_equity = debtToEquityRatio?.value ?? 'N/A';
-      ratio_health = ratioDoc.financial_strength?.subtotal ? 
+      ratios.dscr = dscrRatio?.value ?? 'N/A';
+      ratios.debt_to_equity = debtToEquityRatio?.value ?? 'N/A';
+      ratios.ratio_health = ratioDoc.financial_strength?.subtotal ? 
         (ratioDoc.financial_strength.subtotal >= 3 ? 'Good' : 
          ratioDoc.financial_strength.subtotal >= 2 ? 'Moderate' : 'Poor') : 'N/A';
     }
@@ -227,11 +231,8 @@ router.get('/:id', async (req, res) => {
         ? new Date(doc.updatedAt).toISOString().split('T')[0]
         : 'N/A',
       net_worth: netWorth,
-      dscr: dscr,
-      debt_to_equity: debt_to_equity,
-      ratio_health: ratio_health,
-      selected_year: year,
-      year_range: `2023-2025`,
+      ratios,
+      year_range: "2023-2025",
       balance_sheet,
       profit_loss,
       cash_flow
@@ -241,6 +242,7 @@ router.get('/:id', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
+
 
 
 // 🔹 Get Ratios by customer_name & lead_id

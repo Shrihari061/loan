@@ -25,7 +25,6 @@ export default function MemoDetails() {
         status: 'Approved'
       });
 
-      // Update local state
       setMemo(prev => prev ? { ...prev, status: 'Approved' } : null);
       alert('Memo approved successfully!');
     } catch (error) {
@@ -44,7 +43,6 @@ export default function MemoDetails() {
         status: 'Declined'
       });
 
-      // Update local state
       setMemo(prev => prev ? { ...prev, status: 'Declined' } : null);
       alert('Memo declined successfully!');
     } catch (error) {
@@ -58,18 +56,14 @@ export default function MemoDetails() {
     return <div className="p-6">Loading memo data...</div>;
   }
 
-  // helper to render list-based fields
   const renderList = (items: unknown) => {
-    // Handle different data formats
     let listItems: string[] = [];
 
     if (Array.isArray(items)) {
       listItems = items.map(item => String(item));
     } else if (typeof items === 'string') {
-      // If it's a string, split by newlines or commas
       listItems = items.split(/[\n,]+/).map(item => item.trim()).filter(item => item.length > 0);
     } else if (typeof items === 'object' && items !== null) {
-      // If it's an object, try to extract values
       listItems = Object.values(items).map(item => String(item));
     }
 
@@ -84,6 +78,16 @@ export default function MemoDetails() {
         ))}
       </ul>
     );
+  };
+
+  const renderTextWithSemicolons = (text: string) => {
+    const parts = text.split(/;|\.\s+/).map(p => p.trim()).filter(Boolean);
+
+    return parts.map((part, idx) => (
+      <p key={idx} className="text-gray-700 leading-relaxed">
+        {part}
+      </p>
+    ));
   };
 
   return (
@@ -101,7 +105,7 @@ export default function MemoDetails() {
         </div>
       </div>
 
-      {/* Top Section (basic info) */}
+      {/* Top Section */}
       <div className="bg-white p-6 shadow mt-4 mx-6 rounded-xl">
         <div className="grid grid-cols-2 gap-6">
           <div>
@@ -136,49 +140,38 @@ export default function MemoDetails() {
                 : "N/A"}
             </p>
           </div>
-
-
         </div>
       </div>
 
-      {/* Loop through each major section dynamically */}
+      {/* Sections */}
       <div className="space-y-6 mt-4 mx-6">
         {/* Executive Summary */}
         {memo.executive_summary && (
           <div className="bg-white p-6 shadow rounded-xl">
             <h3 className="text-lg font-semibold mb-2">Executive Summary</h3>
-            <p>{String(memo.executive_summary)}</p>
+            {renderTextWithSemicolons(String(memo.executive_summary))}
           </div>
         )}
 
         {/* Financial Summary & Ratios */}
-        {memo.financial_summary_and_ratios && typeof memo.financial_summary_and_ratios === 'object' && (
+        {memo["financial_summary_&_ratios"] && (
           <div className="bg-white p-6 shadow rounded-xl">
             <h3 className="text-lg font-semibold mb-4">
-              Financial Summary & Ratios
+              Financial Summary and Ratios
             </h3>
-            <table className="w-full text-sm">
-              <tbody>
-                {Object.entries(memo.financial_summary_and_ratios as Record<string, unknown>).map(
-                  ([key, value]) => (
-                    <tr key={key} className="border-b last:border-none">
-                      <td className="py-4 pr-4 font-medium text-gray-700 w-1/2">
-                        {key}
-                      </td>
-                      <td className="py-4 text-gray-900">{String(value)}</td>
-                    </tr>
-                  )
-                )}
-              </tbody>
-            </table>
+            <div className="text-gray-700">
+              {renderTextWithSemicolons(String(memo["financial_summary_&_ratios"]))}
+            </div>
           </div>
         )}
 
         {/* Loan Purpose */}
-        {Array.isArray(memo.loan_purpose) && memo.loan_purpose.length > 0 && (
+        {memo.loan_purpose && (
           <div className="bg-white p-6 shadow rounded-xl">
             <h3 className="text-lg font-semibold mb-4">Loan Purpose</h3>
-            {renderList(memo.loan_purpose)}
+            <div className="text-gray-700">
+              {renderTextWithSemicolons(String(memo.loan_purpose))}
+            </div>
           </div>
         )}
 
@@ -186,15 +179,9 @@ export default function MemoDetails() {
         {memo.swot_analysis && (
           <div className="bg-white p-6 shadow rounded-xl">
             <h3 className="text-lg font-semibold mb-4">SWOT Analysis</h3>
-            {typeof memo.swot_analysis === 'object'
-              ? Object.entries(memo.swot_analysis as Record<string, unknown>).map(([key, values]) => (
-                <div key={key} className="mb-4">
-                  <strong className="block text-gray-700 mb-1">{key}</strong>
-                  {renderList(values)}
-                </div>
-              ))
-              : <p className="text-gray-700">{String(memo.swot_analysis)}</p>
-            }
+            <div className="text-gray-700">
+              {renderTextWithSemicolons(String(memo.swot_analysis))}
+            </div>
           </div>
         )}
 
@@ -202,61 +189,24 @@ export default function MemoDetails() {
         {memo.security_offered && (
           <div className="bg-white p-6 shadow rounded-xl">
             <h3 className="text-lg font-semibold mb-4">Security Offered</h3>
-            {typeof memo.security_offered === 'object'
-              ? <>
-                {Array.isArray((memo.security_offered as any).primary_security) && (memo.security_offered as any).primary_security.length > 0 && (
-                  <div className="mb-3">
-                    <strong className="block mb-1">Primary</strong>
-                    {renderList((memo.security_offered as any).primary_security)}
-                  </div>
-                )}
-                {Array.isArray((memo.security_offered as any).collateral_security) && (memo.security_offered as any).collateral_security.length > 0 && (
-                  <div className="mb-3">
-                    <strong className="block mb-1">Collateral</strong>
-                    {renderList((memo.security_offered as any).collateral_security)}
-                  </div>
-                )}
-                {Array.isArray((memo.security_offered as any).personal_guarantees) && (memo.security_offered as any).personal_guarantees.length > 0 && (
-                  <div className="mb-3">
-                    <strong className="block mb-1">Personal Guarantees</strong>
-                    {renderList((memo.security_offered as any).personal_guarantees)}
-                  </div>
-                )}
-              </>
-              : <p className="text-gray-700">{String(memo.security_offered)}</p>
-            }
+            <div className="text-gray-700">
+              {renderTextWithSemicolons(String(memo.security_offered))}
+            </div>
           </div>
         )}
 
-        {/* Catch-all for any extra fields not explicitly listed */}
+        {/* Catch-all */}
         {Object.entries(memo).map(([key, value]) => {
           if (
             [
-              "_id",
-              "memo_id",
-              "lead_id",
-              "customer_name",
-              "created_by",
-              "last_updated",
-              "status",
-              "loan_purpose_table",
-              "executive_summary",
-              "financial_summary_and_ratios",
-              "loan_purpose",
-              "swot_analysis",
-              "security_offered",
-              "recommendation",
-              "attachments",      // 🚫 exclude attachments
-              "created_at",       // 🚫 exclude created_at
-              "updated_at",       // 🚫 exclude updated_at
-              "createdAt",        // 🚫 exclude createdAt (shown separately)
-              "updatedAt",        // 🚫 exclude updatedAt (shown separately)
-              "loan_type",        // 🚫 exclude loan_type (now shown at top)
-              "total_score",      // 🚫 exclude total_score (now shown at top)
-              "__v",
+              "_id", "memo_id", "lead_id", "customer_name", "created_by", "last_updated",
+              "status", "loan_purpose_table", "executive_summary", "financial_summary_&_ratios",
+              "loan_purpose", "swot_analysis", "security_offered", "recommendation",
+              "attachments", "created_at", "updated_at", "createdAt", "updatedAt",
+              "loan_type", "total_score", "__v",
             ].includes(key)
           ) {
-            return null; // skip ones already shown
+            return null;
           }
 
           return (
@@ -266,16 +216,18 @@ export default function MemoDetails() {
                 ? renderList(value)
                 : typeof value === "object"
                   ? JSON.stringify(value, null, 2)
-                  : String(value)}
+                  : <div>{renderTextWithSemicolons(String(value))}</div>}
             </div>
           );
         })}
 
-        {/* Recommendation (moved to end) */}
-        {Array.isArray(memo.recommendation) && memo.recommendation.length > 0 && (
+        {/* Recommendation */}
+        {memo.recommendation && (
           <div className="bg-white p-6 shadow rounded-xl">
             <h3 className="text-lg font-semibold mb-4">Recommendation</h3>
-            {renderList(memo.recommendation)}
+            <div className="text-gray-700">
+              {renderTextWithSemicolons(String(memo.recommendation))}
+            </div>
           </div>
         )}
       </div>
@@ -285,14 +237,16 @@ export default function MemoDetails() {
         <button
           onClick={handleApprove}
           disabled={isActionDisabled || String(memo.status) === 'Approved' || String(memo.status) === 'Declined'}
-          className={`px-6 py-3 rounded-lg font-medium transition-colors ${isActionDisabled || String(memo.status) === 'Approved' || String(memo.status) === 'Declined'
-            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            : 'text-white hover:opacity-90'
-            }`}
+          className={`px-6 py-3 rounded-lg font-medium transition-colors ${
+            isActionDisabled || String(memo.status) === 'Approved' || String(memo.status) === 'Declined'
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              : 'text-white hover:opacity-90'
+          }`}
           style={{
-            backgroundColor: isActionDisabled || String(memo.status) === 'Approved' || String(memo.status) === 'Declined'
-              ? '#d1d5db'
-              : '#0266F4'
+            backgroundColor:
+              isActionDisabled || String(memo.status) === 'Approved' || String(memo.status) === 'Declined'
+                ? '#d1d5db'
+                : '#0266F4'
           }}
         >
           {String(memo.status) === 'Approved' ? 'Approved' : 'Approve'}
@@ -300,14 +254,16 @@ export default function MemoDetails() {
         <button
           onClick={handleDecline}
           disabled={isActionDisabled || String(memo.status) === 'Approved' || String(memo.status) === 'Declined'}
-          className={`px-6 py-3 rounded-lg font-medium transition-colors ${isActionDisabled || String(memo.status) === 'Approved' || String(memo.status) === 'Declined'
-            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            : 'text-white hover:opacity-90'
-            }`}
+          className={`px-6 py-3 rounded-lg font-medium transition-colors ${
+            isActionDisabled || String(memo.status) === 'Approved' || String(memo.status) === 'Declined'
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              : 'text-white hover:opacity-90'
+          }`}
           style={{
-            backgroundColor: isActionDisabled || String(memo.status) === 'Approved' || String(memo.status) === 'Declined'
-              ? '#d1d5db'
-              : '#00306E'
+            backgroundColor:
+              isActionDisabled || String(memo.status) === 'Approved' || String(memo.status) === 'Declined'
+                ? '#d1d5db'
+                : '#00306E'
           }}
         >
           {String(memo.status) === 'Declined' ? 'Declined' : 'Decline'}

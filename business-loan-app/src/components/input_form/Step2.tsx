@@ -7,7 +7,7 @@ const documentTypes = [
   { label: "Cash Flow Statement", audited: true, icon: "💰" },
 ];
 
-const years = ["2021", "2022", "2023", "2024", "2025"];
+const years = ["2023", "2024", "2025"];
 
 export default function Step2({
   leadData,
