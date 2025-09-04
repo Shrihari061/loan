@@ -48,14 +48,17 @@ export default function Step2({
   // Handle year selection from main dropdown
   const handleYearSelection = (year: string) => {
     if (year && !selectedYears.includes(year)) {
+      const updated = [...selectedYears, year].sort();
+      setSelectedYears(updated);
       setCurrentDisplayYear(year);
-      setSelectedYears(prev => [...prev, year]);
     }
   };
 
   // Remove a year and its associated data
   const removeYear = (yearToRemove: string) => {
-    const updatedYears = selectedYears.filter(year => year !== yearToRemove);
+    const updatedYears = selectedYears
+      .filter(year => year !== yearToRemove)
+      .sort();
     setSelectedYears(updatedYears);
 
     // Remove uploaded files for this year
@@ -164,12 +167,6 @@ export default function Step2({
     }));
   };
 
-  const handleSignatureUpload = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setSignatureFile(e.target.files[0]);
-    }
-  };
-
   const handleSubmit = async () => {
     if (!leadData) return;
 
@@ -222,6 +219,22 @@ export default function Step2({
     }
   };
 
+  // === Added logic for enabling submit button ===
+  const allAuditorsVerified =
+    selectedYears.length > 0 &&
+    selectedYears.every((year) =>
+      documentTypes.every((doc) =>
+        doc.audited ? auditorVerified[`${doc.label}_${year}`] === true : true
+      )
+    );
+  const allDeclarationsChecked =
+    declarations.allDocumentsComplete &&
+    declarations.auditedSigned &&
+    declarations.financialsConsistent &&
+    declarations.identifiersValidated &&
+    declarations.cmaMatches;
+  const canSubmit = allAuditorsVerified && allDeclarationsChecked;
+
   return (
     <div className="p-8 w-full">
       <h2 className="text-2xl font-semibold mb-8 text-gray-800">Step 2: Upload Financial Documents</h2>
@@ -253,7 +266,7 @@ export default function Step2({
         <div className="mb-8">
           <h3 className="text-lg font-medium text-gray-700 mb-4">Selected Years</h3>
           <div className="flex flex-wrap gap-3">
-            {selectedYears.map((year) => (
+            {selectedYears.sort().map((year) => (
               <div key={year} className="flex items-center bg-blue-100 text-blue-800 px-4 py-2 rounded-full">
                 <span className="mr-2">{year}</span>
                 <button
@@ -271,7 +284,7 @@ export default function Step2({
       {/* Document Upload Cards */}
       {selectedYears.length > 0 && (
         <div className="space-y-10">
-          {selectedYears.map((year) => (
+          {selectedYears.sort().map((year) => (
             <div key={year}>
               <div className="mb-6">
                 <h3 className="text-xl font-semibold text-gray-800">
@@ -485,7 +498,7 @@ export default function Step2({
               onChange={() => handleCheckboxChange("identifiersValidated")}
             />
             <span className="text-gray-700">
-              CIN, PAN, and GSTIN have been validated and are correct
+              PAN, GSTIN, and other identifiers are validated and match uploaded documents
             </span>
           </label>
 
@@ -497,34 +510,15 @@ export default function Step2({
               onChange={() => handleCheckboxChange("cmaMatches")}
             />
             <span className="text-gray-700">
-              CMA data (if uploaded) is complete and matches projections
-            </span>
-          </label>
-        </div>
-
-        <div className="mb-6">
-          <hr className="border-gray-300 my-4" />
-          <label className="flex items-start gap-3">
-            <input
-              type="checkbox"
-              className="mt-1"
-              checked={declarations.finalConfirmation}
-              onChange={() => handleCheckboxChange("finalConfirmation")}
-            />
-            <span className="text-gray-700">
-              I confirm that the above is true to the best of my knowledge
+              CMA data matches financial statements
             </span>
           </label>
         </div>
 
         <button
           onClick={handleSubmit}
-          disabled={!consent || !declarations.finalConfirmation}
-          className={`px-6 py-3 rounded text-white transition ${
-            consent && declarations.finalConfirmation
-              ? "bg-blue-600 hover:bg-blue-700"
-              : "bg-gray-400 cursor-not-allowed"
-          }`}
+          disabled={!canSubmit}
+          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
         >
           Submit Application
         </button>
