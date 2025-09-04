@@ -87,6 +87,36 @@ export default function MemoDetails() {
     ));
   };
 
+  // Special render just for SWOT analysis
+const renderSwotWithNewLine = (text: string) => {
+  return text
+    .split(/;|\.\s+/) // break on semicolons or periods
+    .map((segment, idx) => {
+      const colonIndex = segment.indexOf(":");
+      if (colonIndex === -1) {
+        return (
+          <div key={idx}>
+            <p className="text-gray-700 leading-relaxed">{segment.trim()}</p>
+          </div>
+        );
+      }
+
+      const firstWord = segment.slice(0, colonIndex).trim().split(/\s+/)[0];
+      const restAfterWord = segment.slice(colonIndex + 1).trim();
+
+      return (
+        <div key={idx}>
+          {/* Bold word + colon */}
+          <p className="text-gray-700 font-bold">{firstWord}:</p>
+          {/* Value on next line (no margin) */}
+          <p className="text-gray-700 leading-relaxed">{restAfterWord}</p>
+        </div>
+      );
+    });
+};
+
+
+
   return (
     <div className="flex flex-col w-full bg-gray-100 min-h-screen py-6">
       {/* Header */}
@@ -180,10 +210,11 @@ export default function MemoDetails() {
           <div className="bg-white p-6 shadow rounded-xl">
             <h3 className="text-lg font-semibold mb-4">SWOT Analysis</h3>
             <div className="text-gray-700">
-              {renderTextWithSemicolons(String(memo.swot_analysis))}
+              {renderSwotWithNewLine(String(memo.swot_analysis))}
             </div>
           </div>
         )}
+
 
         {/* Security Offered */}
         {memo.security_offered && (
@@ -241,10 +272,10 @@ export default function MemoDetails() {
             String(memo.status) === "Declined"
           }
           className={`px-6 py-3 rounded-lg font-medium transition-colors ${isActionDisabled ||
-              String(memo.status) === "Approved" ||
-              String(memo.status) === "Declined"
-              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-              : "text-white hover:opacity-90"
+            String(memo.status) === "Approved" ||
+            String(memo.status) === "Declined"
+            ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+            : "text-white hover:opacity-90"
             }`}
           style={{
             backgroundColor:
@@ -265,10 +296,10 @@ export default function MemoDetails() {
             String(memo.status) === "Declined"
           }
           className={`px-6 py-3 rounded-lg font-medium transition-colors ${isActionDisabled ||
-              String(memo.status) === "Approved" ||
-              String(memo.status) === "Declined"
-              ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-              : "text-white hover:opacity-90"
+            String(memo.status) === "Approved" ||
+            String(memo.status) === "Declined"
+            ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+            : "text-white hover:opacity-90"
             }`}
           style={{
             backgroundColor:

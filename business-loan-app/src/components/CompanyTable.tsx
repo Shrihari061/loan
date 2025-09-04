@@ -150,7 +150,7 @@ const CompanyTable: React.FC = () => {
         <FigtreeTable style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ backgroundColor: '#f8f9fa', borderBottom: '1px solid #e5e7eb' }}>
-              {['Company Name','Lead ID','Net Worth','Debt to Equity','DSCR','Year Range'].map((header) => (
+              {['Company Name','Lead ID','Net Worth','Debt to Equity','DSCR','Year Ending'].map((header) => (
                 <NonSortableHeader key={header}>
                   {header}
                 </NonSortableHeader>
@@ -175,7 +175,7 @@ const CompanyTable: React.FC = () => {
                 <FigtreeTableCell>{formatNumber(company.net_worth)}</FigtreeTableCell>
                 <FigtreeTableCell>{company.debt_to_equity}</FigtreeTableCell>
                 <FigtreeTableCell>{company.dscr}</FigtreeTableCell>
-                <FigtreeTableCell>{company.year_range}</FigtreeTableCell>
+                <FigtreeTableCell>2025</FigtreeTableCell>
                 {/* <FigtreeTableCell>{company.ratio_health}</FigtreeTableCell> */}
                 <FigtreeTableCell>
                   <button
