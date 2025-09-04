@@ -179,9 +179,9 @@ const RiskDetail: React.FC = () => {
             <tr>
               <th className="px-4 py-2 text-left font-medium text-gray-600">Ratio</th>
               <th className="px-4 py-2 text-left font-medium text-gray-600">Threshold</th>
-              <th className="px-4 py-2 text-left font-medium text-gray-600">2023</th>
-              <th className="px-4 py-2 text-left font-medium text-gray-600">2024</th>
-              <th className="px-4 py-2 text-left font-medium text-gray-600">2025</th>
+              <th className="px-4 py-2 text-right font-medium text-gray-600">2023</th>
+              <th className="px-4 py-2 text-right font-medium text-gray-600">2024</th>
+              <th className="px-4 py-2 text-right font-medium text-gray-600">2025</th>
             </tr>
           </thead>
           <tbody>
@@ -206,8 +206,8 @@ const RiskDetail: React.FC = () => {
                     }
                     return (
                       <td key={year} className="px-4 py-2">
-                        <div className="flex items-center justify-between">
-                          <span className="flex-1">{val ?? "—"}</span>
+                        <div className="flex items-center justify-end">
+                          <span className="mr-2">{val ?? "—"}</span>
                           <span className="w-6 text-center">
                             {(details as any)?.[`red_flag_${year}`] ? (
                               <span className="text-red-600">🟥</span>
@@ -236,9 +236,14 @@ const RiskDetail: React.FC = () => {
             {data.red_flags?.[year]?.length === 0 ? (
               <p className="text-gray-500">No red flags detected ✅</p>
             ) : (
-              <ul className="list-disc list-inside text-red-600">
+              <ul className="list-disc list-inside">
                 {data.red_flags[year].map((flag: string, i: number) => (
-                  <li key={i}>{flag}</li>
+                  <li key={i}>{flag.split(' ').map((word, idx) => {
+                      if (['Poor', 'High', 'Low', 'Weak'].includes(word)) {
+                        return <span key={idx} className="text-red-600">{word}</span>;
+                      }
+                      return <span key={idx} className="text-black">{word}</span>;
+                    }).reduce((prev, curr, idx) => [prev, idx > 0 ? ' ' : null, curr])}</li>
                 ))}
               </ul>
             )}

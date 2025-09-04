@@ -18,7 +18,7 @@ import { TrendingUp, FileText, CheckCircle, XCircle, Coins } from 'lucide-react'
 import { FigtreeContainer, FigtreeCard, FigtreeHeading } from './ReusableComponents';
 import { globalStyles } from '../styles/globalStyles';
 
-const COLORS = ['#00306E', '#0266F4', '#A8CBFF'];
+const COLORS = ['#A8CBFF', '#0266F4', '#00306E'];
 
 const Dashboard: React.FC = () => {
   const [data, setData] = useState<any>(null);
@@ -276,6 +276,9 @@ const Dashboard: React.FC = () => {
             padding: '24px'
           }}>
             <h2 className="text-lg font-semibold mb-4 text-center" style={{ color: '#1F1F1F' }}>Risk Ratio</h2>
+            <p className="text-sm text-center mb-4" style={{ color: '#6B7280' }}>
+              (Approved Applications)
+            </p>
             <ResponsiveContainer width="100%" height="80%">
               <PieChart>
                 <Pie
@@ -301,9 +304,8 @@ const Dashboard: React.FC = () => {
                 />
               </PieChart>
             </ResponsiveContainer>
-          </div>
-
           {/* Pending Card */}
+          </div>
           <div style={{
             display: 'flex',
             padding: '23px 72px 29px 23px',
@@ -531,22 +533,8 @@ const Dashboard: React.FC = () => {
         ))}
       </tbody>
     </table>
-    
-    {/* Pagination Footer */}
-    <div style={{ 
-      display: 'flex', 
-      justifyContent: 'flex-end', 
-      alignItems: 'center', 
-      marginTop: '20px',
-      padding: '0 20px'
-    }}>
-      <div style={{ color: '#6b7280', fontSize: '14px', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
-        1-{data.recent_applications.length} of {data.recent_applications.length}
-      </div>
-    </div>
-  </div>
 </div>
-
+    </div>
 
     </div>
   );
