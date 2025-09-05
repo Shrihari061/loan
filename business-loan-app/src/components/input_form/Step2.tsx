@@ -23,11 +23,9 @@ export default function Step2({
   const [selectedYear, setSelectedYear] = useState<string>("");
   const [auditorVerified, setAuditorVerified] = useState<Record<string, boolean>>({});
 
-  // New state for year management
   const [currentDisplayYear, setCurrentDisplayYear] = useState<string>("");
   const [selectedYears, setSelectedYears] = useState<string[]>([]);
 
-  // Review & Submit state
   const [declarations, setDeclarations] = useState({
     allDocumentsComplete: false,
     auditedSigned: false,
@@ -37,15 +35,12 @@ export default function Step2({
     finalConfirmation: false,
   });
 
-  const [signatureFile, setSignatureFile] = useState<File | null>(null);
   const [filesAddedInSession, setFilesAddedInSession] = useState<File[]>([]);
 
-  // Get available years (excluding already selected ones)
   const getAvailableYears = () => {
     return years.filter(year => !selectedYears.includes(year));
   };
 
-  // Handle year selection from main dropdown
   const handleYearSelection = (year: string) => {
     if (year && !selectedYears.includes(year)) {
       const updated = [...selectedYears, year].sort();
@@ -54,14 +49,12 @@ export default function Step2({
     }
   };
 
-  // Remove a year and its associated data
   const removeYear = (yearToRemove: string) => {
     const updatedYears = selectedYears
       .filter(year => year !== yearToRemove)
       .sort();
     setSelectedYears(updatedYears);
 
-    // Remove uploaded files for this year
     setUploadedFiles(prev => {
       const updated = { ...prev };
       Object.keys(updated).forEach(docLabel => {
@@ -159,7 +152,6 @@ export default function Step2({
     }));
   };
 
-  // Review & Submit handlers
   const handleCheckboxChange = (field: keyof typeof declarations) => {
     setDeclarations((prev) => ({
       ...prev,
@@ -177,7 +169,6 @@ export default function Step2({
           files.map(file => ({ label, year: yr, file }))
         )
       ),
-      signature: signatureFile || null,
       reviewDeclarations: declarations,
     };
 
@@ -219,7 +210,6 @@ export default function Step2({
     }
   };
 
-  // === Added logic for enabling submit button ===
   const allAuditorsVerified =
     selectedYears.length > 0 &&
     selectedYears.every((year) =>
@@ -239,7 +229,6 @@ export default function Step2({
     <div className="p-8 w-full">
       <h2 className="text-2xl font-semibold mb-8 text-gray-800">Step 2: Upload Financial Documents</h2>
 
-      {/* Year Selection Dropdown */}
       <div className="mb-8">
         <label className="block text-lg font-medium text-gray-700 mb-4">
           Select Financial Year
@@ -261,7 +250,6 @@ export default function Step2({
         </div>
       </div>
 
-      {/* Selected Years Display */}
       {selectedYears.length > 0 && (
         <div className="mb-8">
           <h3 className="text-lg font-medium text-gray-700 mb-4">Selected Years</h3>
@@ -281,7 +269,6 @@ export default function Step2({
         </div>
       )}
 
-      {/* Document Upload Cards */}
       {selectedYears.length > 0 && (
         <div className="space-y-10">
           {selectedYears.sort().map((year) => (
@@ -308,48 +295,48 @@ export default function Step2({
                         </div>
                       </div>
 
-                      <div className="mb-4 flex-shrink-0">
-                        {uploadedFiles[doc.label]?.[year]?.length > 0 ? (
-                          <div className="text-sm text-gray-600">
-                            <span className="font-medium">{year}:</span>
-                            <ul className="ml-4 list-disc text-xs text-gray-500">
-                              {uploadedFiles[doc.label][year].map((file, i) => (
-                                <li key={i}>{file.name}</li>
-                              ))}
-                            </ul>
-                          </div>
-                        ) : (
-                          <div className="text-sm text-gray-500">No files uploaded</div>
-                        )}
-                      </div>
-
-                      {doc.audited && (
-                        <div className="mb-4 flex-shrink-0">
-                          <label className="flex items-center">
-                            <input
-                              type="checkbox"
-                              checked={auditorVerified[`${doc.label}_${year}`] || false}
-                              onChange={(e) =>
-                                setAuditorVerified((prev) => ({
-                                  ...prev,
-                                  [`${doc.label}_${year}`]: e.target.checked,
-                                }))
-                              }
-                              className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                            />
-                            <span className="text-sm text-gray-700">Auditor Verified</span>
-                          </label>
+                      <div className="mt-auto">
+                        <div className="mb-4 min-h-[3.5rem]">
+                          {uploadedFiles[doc.label]?.[year]?.length > 0 ? (
+                            <div className="text-sm text-gray-600">
+                              <span className="font-medium">{year}:</span>
+                              <ul className="ml-4 list-disc text-xs text-gray-500">
+                                {uploadedFiles[doc.label][year].map((file, i) => (
+                                  <li key={i}>{file.name}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          ) : (
+                            <div className="text-sm text-gray-500">No files uploaded</div>
+                          )}
                         </div>
-                      )}
 
-                      <div className="flex-1"></div>
+                        {doc.audited && (
+                          <div className="mb-4">
+                            <label className="flex items-center">
+                              <input
+                                type="checkbox"
+                                checked={auditorVerified[`${doc.label}_${year}`] || false}
+                                onChange={(e) =>
+                                  setAuditorVerified((prev) => ({
+                                    ...prev,
+                                    [`${doc.label}_${year}`]: e.target.checked,
+                                  }))
+                                }
+                                className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                              />
+                              <span className="text-sm text-gray-700">Auditor Verified</span>
+                            </label>
+                          </div>
+                        )}
 
-                      <button
-                        onClick={() => openModal(doc.label, year)}
-                        className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium flex-shrink-0"
-                      >
-                        {uploadedFiles[doc.label]?.[year]?.length > 0 ? "Manage Files" : "Upload Files"}
-                      </button>
+                        <button
+                          onClick={() => openModal(doc.label, year)}
+                          className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium"
+                        >
+                          {uploadedFiles[doc.label]?.[year]?.length > 0 ? "Manage Files" : "Upload Files"}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -359,7 +346,6 @@ export default function Step2({
         </div>
       )}
 
-      {/* Upload Modal */}
       {isModalOpen && selectedDocument && selectedYear && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
@@ -378,7 +364,6 @@ export default function Step2({
             </div>
 
             <div className="p-6">
-              {/* File Upload Area */}
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Select Files
@@ -399,7 +384,6 @@ export default function Step2({
                 </div>
               </div>
 
-              {/* Uploaded Files List */}
               {uploadedFiles[selectedDocument]?.[selectedYear]?.length > 0 && (
                 <div className="mb-6">
                   <h4 className="text-sm font-medium text-gray-700 mb-3">Uploaded Files for {selectedYear}</h4>
@@ -447,7 +431,6 @@ export default function Step2({
         </div>
       )}
 
-      {/* Review & Submit Section */}
       <div className="mt-12 border-t pt-8">
         <h3 className="text-xl font-semibold text-gray-800 mb-6">
           Review & Declarations
@@ -510,18 +493,29 @@ export default function Step2({
               onChange={() => handleCheckboxChange("cmaMatches")}
             />
             <span className="text-gray-700">
-              CMA data matches financial statements
+              CMA data matches the uploaded documents
             </span>
           </label>
         </div>
 
-        <button
-          onClick={handleSubmit}
-          disabled={!canSubmit}
-          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
-        >
-          Submit Application
-        </button>
+        <div className="flex items-center justify-between mt-8">
+          <button
+            onClick={handleSubmit}
+            disabled={!canSubmit}
+            className={`px-6 py-3 rounded-lg text-white font-medium transition-colors ${
+              canSubmit
+                ? "bg-blue-600 hover:bg-blue-700"
+                : "bg-gray-400 cursor-not-allowed"
+            }`}
+          >
+            Submit Application
+          </button>
+          {!allAuditorsVerified && (
+            <span className="text-sm text-red-600">
+              All Auditor Verified checkboxes must be ticked
+            </span>
+          )}
+        </div>
       </div>
     </div>
   );
