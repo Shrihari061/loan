@@ -70,11 +70,11 @@ const CompanyRatioAnalysis: React.FC = () => {
 
       {/* Legend */}
       <div style={{ padding: '16px 20px', borderBottom: '1px solid #e5e7eb' }}>
-        <span style={{ display: 'inline-block', width: '16px', height: '16px', backgroundColor: '#00bcd4', marginRight: '8px', borderRadius: '2px' }}></span>
+        <span style={{ display: 'inline-block', width: '20px', height: '20px', backgroundColor: '#22c55e', marginRight: '8px', borderRadius: '50%' }}></span>
         <span style={{ fontSize: '14px', color: '#374151', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>Good</span>
-        <span style={{ display: 'inline-block', width: '16px', height: '16px', backgroundColor: '#2196f3', marginLeft: '16px', marginRight: '8px', borderRadius: '2px' }}></span>
+        <span style={{ display: 'inline-block', width: '20px', height: '20px', backgroundColor: '#f59e0b', marginLeft: '16px', marginRight: '8px', borderRadius: '50%' }}></span>
         <span style={{ fontSize: '14px', color: '#374151', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>Moderate</span>
-        <span style={{ display: 'inline-block', width: '16px', height: '16px', backgroundColor: '#1a237e', marginLeft: '16px', marginRight: '8px', borderRadius: '2px' }}></span>
+        <span style={{ display: 'inline-block', width: '20px', height: '20px', backgroundColor: '#ef4444', marginLeft: '16px', marginRight: '8px', borderRadius: '50%' }}></span>
         <span style={{ fontSize: '14px', color: '#374151', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>Poor</span>
       </div>
 
@@ -121,10 +121,10 @@ const CompanyRatioAnalysis: React.FC = () => {
                           <div style={{
                             position: 'absolute',
                             right: '70px',
-                            width: '8px',
-                            height: '8px',
+                            width: '14px',
+                            height: '14px',
                             borderRadius: '50%',
-                            backgroundColor: '#1a237e'
+                            backgroundColor: '#ef4444'
                           }}></div>
                         )}
                         {!yr.red && ratio.threshold && typeof ratio.threshold === "string" && (() => {
@@ -134,19 +134,19 @@ const CompanyRatioAnalysis: React.FC = () => {
                               <div style={{
                                 position: 'absolute',
                                 right: '70px',
-                                width: '8px',
-                                height: '8px',
+                                width: '14px',
+                                height: '14px',
                                 borderRadius: '50%',
-                                backgroundColor: '#00bcd4'
+                                backgroundColor: '#22c55e'
                               }}></div>
                             ) : (
                               <div style={{
                                 position: 'absolute',
                                 right: '70px',
-                                width: '8px',
-                                height: '8px',
+                                width: '14px',
+                                height: '14px',
                                 borderRadius: '50%',
-                                backgroundColor: '#2196f3'
+                                backgroundColor: '#f59e0b'
                               }}></div>
                             );
                           }
@@ -154,10 +154,10 @@ const CompanyRatioAnalysis: React.FC = () => {
                             <div style={{
                               position: 'absolute',
                               right: '70px',
-                              width: '8px',
-                              height: '8px',
+                              width: '14px',
+                              height: '14px',
                               borderRadius: '50%',
-                              backgroundColor: '#00bcd4'
+                              backgroundColor: '#22c55e'
                             }}></div>
                           );
                         })()}
