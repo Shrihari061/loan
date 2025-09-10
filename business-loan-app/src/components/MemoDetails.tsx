@@ -176,23 +176,20 @@ export default function MemoDetails() {
           </div>
           <div>
             <p className="text-sm text-gray-500">Total Score</p>
-            {memo.total_score ? (
-              typeof memo.total_score === "object" ? (
-                <ul className="list-disc pl-6 space-y-1 text-gray-700">
-                  {Object.entries(memo.total_score as Record<string, unknown>).map(
+            <div className="font-medium">
+              {memo.total_score
+                ? typeof memo.total_score === "object"
+                  ? Object.entries(memo.total_score as Record<string, unknown>).map(
                     ([year, score]) => (
-                      <li key={year} className="font-medium">
-                        {year}: {score}
-                      </li>
+                      <span key={year} className="mr-2">
+                        <span className="font-medium">{year}</span>{" "}
+                        <span className="font-normal">({score});</span>{"  "}
+                      </span>
                     )
-                  )}
-                </ul>
-              ) : (
-                <p className="font-medium">{String(memo.total_score)}</p>
-              )
-            ) : (
-              <p className="font-medium">N/A</p>
-            )}
+                  )
+                  : String(memo.total_score)
+                : "N/A"}
+            </div>
           </div>
         </div>
       </div>

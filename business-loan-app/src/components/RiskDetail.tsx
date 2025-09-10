@@ -229,28 +229,25 @@ const RiskDetail: React.FC = () => {
 
 
       {/* Red Flags */}
-      <div className="bg-white p-4 rounded-lg shadow-sm">
-        <h3 className="text-xl font-semibold mb-2">Red Flags</h3>
-        {["2023", "2024", "2025"].map(year => (
-          <div key={year} className="mb-2">
-            <p className="font-medium">{year}</p>
-            {data.red_flags?.[year]?.length === 0 ? (
-              <p className="text-gray-500">No red flags detected ✅</p>
-            ) : (
-              <ul className="list-disc list-inside">
-                {data.red_flags[year].map((flag: string, i: number) => (
-                  <li key={i}>{flag.split(' ').map((word, idx) => {
-                      if (['Poor', 'High', 'Low', 'Weak'].includes(word)) {
-                        return <span key={idx} className="text-red-600">{word}</span>;
-                      }
-                      return <span key={idx} className="text-black">{word}</span>;
-                    }).reduce((prev, curr, idx) => [prev, idx > 0 ? ' ' : null, curr])}</li>
-                ))}
-              </ul>
-            )}
-          </div>
-        ))}
-      </div>
+<div className="bg-white p-4 rounded-lg shadow-sm">
+  <h3 className="text-xl font-semibold mb-2">Red Flags</h3>
+  {["2023", "2024", "2025"].map((year) => (
+    <div key={year} className="mb-4">
+      <p className="font-bold mb-2">{year}</p>
+      {data.red_flags?.[year]?.length === 0 ? (
+        <p className="text-gray-500">No red flags detected ✅</p>
+      ) : (
+        <ul className="list-disc list-inside">
+          {data.red_flags[year].map((flag: string, i: number) => {
+            // plain text for red flags
+            return <li key={i}>{flag}</li>;
+          })}
+        </ul>
+      )}
+    </div>
+  ))}
+</div>
+
 
     </div>
   );
