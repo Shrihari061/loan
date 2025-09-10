@@ -150,7 +150,8 @@ export default function Step1({
   const handleSaveAndContinue = () => {
     if (!companyDetails) return;
 
-    setLeadData({
+    setLeadData(prevData => ({
+      ...prevData,
       lead_id: companyDetails.lead_id,
       cin: cin,
       registration_no: companyDetails.registrationNo,
@@ -166,7 +167,7 @@ export default function Step1({
       loan_amount: loanAmount ? Number(loanAmount) : undefined,
       aml_company_status: amlCompanyStatus,
       aml_director_status: amlDirectorStatus,
-    });
+    }));
 
     goToNextStep();
   };

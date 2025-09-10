@@ -1,0 +1,67 @@
+{
+  "DSCR_2024": {
+    "threshold": "<1.2",
+    "value_2024": 27.02,
+    "red_flag_2024": false
+  },
+  "Debt/Equity_2024": {
+    "threshold": ">2.0",
+    "value_2024": 0.0,
+    "red_flag_2024": false
+  },
+  "PAT Margin_2024": {
+    "threshold": "<10%",
+    "value_2024": "21.12%",
+    "red_flag_2024": false
+  },
+  "Current Ratio_2024": {
+    "threshold": "<1.0",
+    "value_2024": 2.62,
+    "red_flag_2024": false
+  },
+  "Quick Ratio_2024": {
+    "threshold": "<1.0",
+    "value_2024": 2.62,
+    "red_flag_2024": false
+  },
+  "Interest Coverage_2024": {
+    "threshold": "<1.5",
+    "value_2024": 129.79,
+    "red_flag_2024": false
+  },
+  "Net profit Margin_2024": {
+    "threshold": "<5%",
+    "value_2024": "21.12%",
+    "red_flag_2024": false
+  },
+  "Return on Assets_2024": {
+    "threshold": "<5%",
+    "value_2024": "23.69%",
+    "red_flag_2024": false
+  },
+  "Return on equity_2024": {
+    "threshold": "<8%",
+    "value_2024": "33.55%",
+    "red_flag_2024": false
+  },
+  "EBITDA Margin_2024": {
+    "threshold": "<10%",
+    "value_2024": "30.17%",
+    "red_flag_2024": false
+  },
+  "Accounts Receivable Days_2024": {
+    "threshold": ">90",
+    "value_2024": 0.0,
+    "red_flag_2024": false
+  },
+  "Accounts payable days_2024": {
+    "threshold": ">30",
+    "value_2024": 0.0,
+    "red_flag_2024": false
+  },
+  "Asset Turnover Ratio_2024": {
+    "threshold": "<1.0",
+    "value_2024": 1.12,
+    "red_flag_2024": false
+  }
+}

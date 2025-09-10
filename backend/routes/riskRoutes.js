@@ -6,6 +6,14 @@ const ExtractedValues = require('../models/ExtractedValues'); // ✅ uncommented
 // -------------------- GET all risks --------------------
 router.get('/', async (req, res) => {
   try {
+    // Check if lead_id query parameter is provided
+    const { lead_id } = req.query;
+    if (lead_id) {
+      const data = await Risk.find({ lead_id: lead_id });
+      return res.json(data);
+    }
+    
+    // Otherwise return all risks
     const data = await Risk.find();
     res.json(data);
   } catch (err) {

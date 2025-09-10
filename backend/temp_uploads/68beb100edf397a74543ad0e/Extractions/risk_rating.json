@@ -1,0 +1,215 @@
+{
+  "weights": {
+    "financial_strength": 50.0,
+    "management_quality": 30.0,
+    "industry_risk": 20.0
+  },
+  "financial_strength": {
+    "per_ratio_max": 3.85,
+    "scores": {
+      "DSCR": {
+        "threshold": "<1.2",
+        "max": 3.85,
+        "value_2023": 30.76,
+        "red_flag_2023": false,
+        "score_2023": 3.85,
+        "value_2024": 27.02,
+        "red_flag_2024": false,
+        "score_2024": 3.85,
+        "value_2025": 26.3,
+        "red_flag_2025": false,
+        "score_2025": 3.85
+      },
+      "Debt/Equity": {
+        "threshold": ">2.0",
+        "max": 3.85,
+        "value_2023": 0.0,
+        "red_flag_2023": false,
+        "score_2023": 3.85,
+        "value_2024": 0.0,
+        "red_flag_2024": false,
+        "score_2024": 3.85,
+        "value_2025": 0.0,
+        "red_flag_2025": false,
+        "score_2025": 3.85
+      },
+      "PAT Margin": {
+        "threshold": "<10%",
+        "max": 3.85,
+        "value_2023": "18.76%",
+        "red_flag_2023": false,
+        "score_2023": 3.85,
+        "value_2024": "21.12%",
+        "red_flag_2024": false,
+        "score_2024": 3.85,
+        "value_2025": "18.72%",
+        "red_flag_2025": false,
+        "score_2025": 3.85
+      },
+      "Current Ratio": {
+        "threshold": "<1.0",
+        "max": 3.85,
+        "value_2023": 1.9,
+        "red_flag_2023": false,
+        "score_2023": 3.85,
+        "value_2024": 2.62,
+        "red_flag_2024": false,
+        "score_2024": 3.85,
+        "value_2025": 2.43,
+        "red_flag_2025": false,
+        "score_2025": 3.85
+      },
+      "Quick Ratio": {
+        "threshold": "<1.0",
+        "max": 3.85,
+        "value_2023": 1.9,
+        "red_flag_2023": false,
+        "score_2023": 3.85,
+        "value_2024": 2.62,
+        "red_flag_2024": false,
+        "score_2024": 3.85,
+        "value_2025": 2.43,
+        "red_flag_2025": false,
+        "score_2025": 3.85
+      },
+      "Interest Coverage": {
+        "threshold": "<1.5",
+        "max": 3.85,
+        "value_2023": 201.55,
+        "red_flag_2023": false,
+        "score_2023": 3.85,
+        "value_2024": 129.79,
+        "red_flag_2024": false,
+        "score_2024": 3.85,
+        "value_2025": 160.37,
+        "red_flag_2025": false,
+        "score_2025": 3.85
+      },
+      "Net profit Margin": {
+        "threshold": "<5%",
+        "max": 3.85,
+        "value_2023": "18.76%",
+        "red_flag_2023": false,
+        "score_2023": 3.85,
+        "value_2024": "21.12%",
+        "red_flag_2024": false,
+        "score_2024": 3.85,
+        "value_2025": "18.72%",
+        "red_flag_2025": false,
+        "score_2025": 3.85
+      },
+      "Return on Assets": {
+        "threshold": "<5%",
+        "max": 3.85,
+        "value_2023": "22.96%",
+        "red_flag_2023": false,
+        "score_2023": 3.85,
+        "value_2024": "23.69%",
+        "red_flag_2024": false,
+        "score_2024": 3.85,
+        "value_2025": "20.46%",
+        "red_flag_2025": false,
+        "score_2025": 3.85
+      },
+      "Return on equity": {
+        "threshold": "<8%",
+        "max": 3.85,
+        "value_2023": "34.35%",
+        "red_flag_2023": false,
+        "score_2023": 3.85,
+        "value_2024": "33.55%",
+        "red_flag_2024": false,
+        "score_2024": 3.85,
+        "value_2025": "29.28%",
+        "red_flag_2025": false,
+        "score_2025": 3.85
+      },
+      "EBITDA Margin": {
+        "threshold": "<10%",
+        "max": 3.85,
+        "value_2023": "27.74%",
+        "red_flag_2023": false,
+        "score_2023": 3.85,
+        "value_2024": "30.17%",
+        "red_flag_2024": false,
+        "score_2024": 3.85,
+        "value_2025": "27.86%",
+        "red_flag_2025": false,
+        "score_2025": 3.85
+      },
+      "Accounts Receivable Days": {
+        "threshold": ">90",
+        "max": 3.85,
+        "value_2023": 0.0,
+        "red_flag_2023": false,
+        "score_2023": 3.85,
+        "value_2024": 0.0,
+        "red_flag_2024": false,
+        "score_2024": 3.85,
+        "value_2025": 0.0,
+        "red_flag_2025": false,
+        "score_2025": 3.85
+      },
+      "Accounts payable days": {
+        "threshold": ">30",
+        "max": 3.85,
+        "value_2023": 0.0,
+        "red_flag_2023": false,
+        "score_2023": 3.85,
+        "value_2024": 0.0,
+        "red_flag_2024": false,
+        "score_2024": 3.85,
+        "value_2025": 0.0,
+        "red_flag_2025": false,
+        "score_2025": 3.85
+      },
+      "Asset Turnover Ratio": {
+        "threshold": "<1.0",
+        "max": 3.85,
+        "value_2023": 1.22,
+        "red_flag_2023": false,
+        "score_2023": 3.85,
+        "value_2024": 1.12,
+        "red_flag_2024": false,
+        "score_2024": 3.85,
+        "value_2025": 1.09,
+        "red_flag_2025": false,
+        "score_2025": 3.85
+      }
+    },
+    "subtotals": {
+      "2023": 50.0,
+      "2024": 50.0,
+      "2025": 50.0
+    }
+  },
+  "management_quality": {
+    "scores": {
+      "2023": 25.0,
+      "2024": 25.0,
+      "2025": 25.0
+    }
+  },
+  "industry_risk": {
+    "scores": {
+      "2023": 15.0,
+      "2024": 15.0,
+      "2025": 15.0
+    }
+  },
+  "total_score": {
+    "2023": 90.0,
+    "2024": 90.0,
+    "2025": 90.0
+  },
+  "risk_bucket": {
+    "2023": "Low Risk",
+    "2024": "Low Risk",
+    "2025": "Low Risk"
+  },
+  "red_flags": {
+    "2023": [],
+    "2024": [],
+    "2025": []
+  }
+}

@@ -1,0 +1,67 @@
+
+
+===== PAGE 1 / 2 =====
+Infosys Integrated Annual Report 2023-24219Statement of Profit and Loss
+(In ₹ crore, except equity share and per equity share data)
+Particulars Note Year ended March 31,
+2024 2023
+Revenue from operations 2.18  1,28,933  1,24,014
+Other income, net 2.19  7,417  3,859
+Total income   1,36,350  1,27, 873
+Expenses    
+Employee benefit expenses 2.20  65,139  62,764
+Cost of technical sub-contractors   18,638  19,096
+Travel expenses   1,372  1,227
+Cost of software packages and others 2.20  6,891  5,214
+Communication expenses   489  502
+Consultancy and professional charges   1,059  1,236
+Depreciation and amortization expenses 2.1, 2.2.2 and 2.3  2,944  2,753
+Finance cost   277  157
+Other expenses 2.20  3,588  3,281
+Total expenses   1,00,397  96,230
+Profit before tax   35,953  31,643
+Tax expense:    
+Current tax 2.17  7, 30 6  8,167
+Deferred tax 2.17  1,413  208
+Profit for the year   27,234  23,268
+
+===== PAGE 2 / 2 =====
+Infosys Integrated Annual Report 2023-24220
+Standalone Financial StatementsParticulars Note Year ended March 31,
+2024 2023
+Other comprehensive income    
+Items that will not be reclassified subsequently to profit or loss    
+Remeasurement of the net defined benefit liability / asset, net 2.17 and 2.21  128  (19)
+Equity instruments through other comprehensive income, net 2.5 and 2.17  19  (6)
+Items that will be reclassified subsequently to profit or loss    
+Fair value changes on derivatives designated as cash flow hedge, net 2.11 and 2.17  11  (7)
+Fair value changes on investments, net 2.5 and 2.17  129  (236)
+Total other comprehensive income / (loss), net of tax   287  (268)
+Total comprehensive income for the year   27,521  23,000
+Earnings per equity share    
+Equity shares of par value ₹5 each    
+Basic (in ₹ per share)   65.62  55.48
+Diluted (in ₹ per share)   65.56  55.42
+Weighted average equity shares used in computing earnings per equity share    
+Basic (in shares) 2.22  415,00,99,796  419,38,13,881
+Diluted (in shares) 2.22  415,39,94,624  419,82,34,378
+The accompanying notes form an integral part of the Standalone financial statements .
+As per our report of even date attached
+for Deloitte Haskins & Sells LLP
+Chartered Accountants
+Firm’s Registration No:
+117366W/ W-100018for and on behalf of the Board of Directors of Infosys Limited
+Sanjiv V. Pilgaonkar
+Partner
+Membership No. 039826D. Sundaram
+Lead Independent DirectorSalil Parekh
+Chief Executive Officer
+and Managing DirectorBobby Parikh
+Director
+DIN: 00016304 DIN: 00019437
+DIN: 01876159
+Bengaluru
+April 18, 2024Jayesh Sanghrajka
+Chief Financial OfficerA.G.S. Manikantha
+Company Secretary
+Membership No. A21918Statement of Profit and Loss (contd.)

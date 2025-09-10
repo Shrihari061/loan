@@ -1,0 +1,85 @@
+
+
+===== PAGE 1 / 2 =====
+Infosys Integrated Annual Report 2023-24217Balance Sheet
+(In ₹ crore)
+Particulars Note As at March 31,
+ 2024  2023
+Assets  
+Non-current assets    
+Property, plant and equipment 2.1  10,813  11,656
+Right-of-use assets 2.3  3,303  3,561
+Capital work-in-progress 2.4  277  275
+Goodwill 2.2  211  211
+Other intangible assets  –  3
+Financial assets    
+Investments 2.5  23,352  23,686
+Loans 2.6  34  39
+Other financial assets 2.7  1,756  1,341
+Deferred tax assets (net) 2.17 –  779
+Income tax assets (net) 2.17  2,583  5,916
+Other non-current assets 2.10  1,669  1,788
+Total non-current assets   43,998  49,255
+Current assets    
+Financial assets    
+Investments 2.5  11, 307  4,476
+Trade receivables 2.8  25,152  20,773
+Cash and cash equivalents 2.9  8,191  6,534
+Loans 2.6  208  291
+Other financial assets 2.7  10,129  9,088
+Income tax assets (net) 2.17  6,329 –
+Other current assets 2.10  9,636  10,920
+Total current assets   70,952  52,082
+Total assets   1,14,950  1,01,337
+
+===== PAGE 2 / 2 =====
+Infosys Integrated Annual Report 2023-24218
+Standalone Financial StatementsParticulars Note As at March 31,
+ 2024  2023
+Equity and liabilities    
+Equity    
+Equity share capital 2.12  2,075  2,074
+Other equity   79,101  65,671
+Total equity   81,176  67,745
+Liabilities    
+Non-current liabilities    
+Financial liabilities    
+Lease liabilities 2.3  3,088  3,553
+Other financial liabilities 2.13  1,941  1,317
+Deferred tax liabilities (net) 2.17  1,509  866
+Other non-current liabilities 2.15  150  414
+Total non-current liabilities   6,688  6,150
+Current liabilities    
+Financial liabilities    
+Lease liabilities 2.3  678  713
+Trade payables 2.14   
+Total outstanding dues of micro enterprises and small 
+enterprises  92  97
+Total outstanding dues of creditors other than micro 
+enterprises and small enterprises  2,401  2,329
+Other financial liabilities 2.13  11,808  12,697
+Other current liabilities 2.15  7,6 81  7,609
+Provisions 2.16  1,464  1,163
+Income tax liabilities (net)   2,962  2,834
+Total current liabilities   27,086  27,4 42
+Total equity and liabilities   1,14,950  1,01,337
+The accompanying notes form an integral part of the Standalone financial statements .
+As per our report of even date attached
+for Deloitte Haskins & Sells LLP
+Chartered Accountants
+Firm’s Registration No:
+117366W/ W-100018for and on behalf of the Board of Directors of Infosys Limited
+Sanjiv V. Pilgaonkar
+Partner
+Membership No. 039826D. Sundaram
+Lead Independent DirectorSalil Parekh
+Chief Executive Officer
+and Managing DirectorBobby Parikh
+Director
+DIN: 00016304 DIN: 00019437
+DIN: 01876159
+Bengaluru
+April 18, 2024Jayesh Sanghrajka
+Chief Financial OfficerA.G.S. Manikantha
+Company Secretary
+Membership No. A21918Balance Sheet (contd.)

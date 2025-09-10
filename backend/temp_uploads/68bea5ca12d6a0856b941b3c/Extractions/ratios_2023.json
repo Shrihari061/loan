@@ -1,0 +1,67 @@
+{
+  "DSCR_2023": {
+    "threshold": "<1.2",
+    "value_2023": 30.76,
+    "red_flag_2023": false
+  },
+  "Debt/Equity_2023": {
+    "threshold": ">2.0",
+    "value_2023": 0.0,
+    "red_flag_2023": false
+  },
+  "PAT Margin_2023": {
+    "threshold": "<10%",
+    "value_2023": "18.76%",
+    "red_flag_2023": false
+  },
+  "Current Ratio_2023": {
+    "threshold": "<1.0",
+    "value_2023": 1.9,
+    "red_flag_2023": false
+  },
+  "Quick Ratio_2023": {
+    "threshold": "<1.0",
+    "value_2023": 1.9,
+    "red_flag_2023": false
+  },
+  "Interest Coverage_2023": {
+    "threshold": "<1.5",
+    "value_2023": 201.55,
+    "red_flag_2023": false
+  },
+  "Net profit Margin_2023": {
+    "threshold": "<5%",
+    "value_2023": "18.76%",
+    "red_flag_2023": false
+  },
+  "Return on Assets_2023": {
+    "threshold": "<5%",
+    "value_2023": "22.96%",
+    "red_flag_2023": false
+  },
+  "Return on equity_2023": {
+    "threshold": "<8%",
+    "value_2023": "34.35%",
+    "red_flag_2023": false
+  },
+  "EBITDA Margin_2023": {
+    "threshold": "<10%",
+    "value_2023": "27.74%",
+    "red_flag_2023": false
+  },
+  "Accounts Receivable Days_2023": {
+    "threshold": ">90",
+    "value_2023": 61.14,
+    "red_flag_2023": false
+  },
+  "Accounts payable days_2023": {
+    "threshold": ">30",
+    "value_2023": 27.82,
+    "red_flag_2023": false
+  },
+  "Asset Turnover Ratio_2023": {
+    "threshold": "<1.0",
+    "value_2023": 1.22,
+    "red_flag_2023": false
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "DSCR_2025": {
+    "threshold": "<1.2",
+    "value_2025": 26.3,
+    "red_flag_2025": false
+  },
+  "Debt/Equity_2025": {
+    "threshold": ">2.0",
+    "value_2025": 0.0,
+    "red_flag_2025": false
+  },
+  "PAT Margin_2025": {
+    "threshold": "<10%",
+    "value_2025": "18.72%",
+    "red_flag_2025": false
+  },
+  "Current Ratio_2025": {
+    "threshold": "<1.0",
+    "value_2025": 2.43,
+    "red_flag_2025": false
+  },
+  "Quick Ratio_2025": {
+    "threshold": "<1.0",
+    "value_2025": 2.43,
+    "red_flag_2025": false
+  },
+  "Interest Coverage_2025": {
+    "threshold": "<1.5",
+    "value_2025": 160.37,
+    "red_flag_2025": false
+  },
+  "Net profit Margin_2025": {
+    "threshold": "<5%",
+    "value_2025": "18.72%",
+    "red_flag_2025": false
+  },
+  "Return on Assets_2025": {
+    "threshold": "<5%",
+    "value_2025": "20.46%",
+    "red_flag_2025": false
+  },
+  "Return on equity_2025": {
+    "threshold": "<8%",
+    "value_2025": "29.28%",
+    "red_flag_2025": false
+  },
+  "EBITDA Margin_2025": {
+    "threshold": "<10%",
+    "value_2025": "27.86%",
+    "red_flag_2025": false
+  },
+  "Accounts Receivable Days_2025": {
+    "threshold": ">90",
+    "value_2025": 70.58,
+    "red_flag_2025": false
+  },
+  "Accounts payable days_2025": {
+    "threshold": ">30",
+    "value_2025": 26.23,
+    "red_flag_2025": false
+  },
+  "Asset Turnover Ratio_2025": {
+    "threshold": "<1.0",
+    "value_2025": 1.09,
+    "red_flag_2025": false
+  }
+}

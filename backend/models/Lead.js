@@ -27,8 +27,8 @@ const LeadSchema = new mongoose.Schema({
   // Lead Identification
   lead_id: {
     type: String,
-    unique: true
-    // default: () => 'LEAD-' + Math.random().toString(36).substring(2, 10).toUpperCase()
+    unique: true,
+    default: () => 'LEAD-' + Math.random().toString(36).substring(2, 10).toUpperCase()
   },
 
   // Company Identification
@@ -78,7 +78,15 @@ const LeadSchema = new mongoose.Schema({
 
   // Files
   financialDocuments: [FileSchema],
-  signature: FileSchema
+  signature: FileSchema,
+
+  // Analysis Status (only status, results stored in separate collections)
+  analysis_status: {
+    type: String,
+    enum: ["pending", "processing", "completed", "failed"],
+    default: "pending"
+  },
+  analysis_date: { type: String, default: null }
 });
 
 module.exports = mongoose.model('Lead', LeadSchema, 'leads');

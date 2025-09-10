@@ -1,0 +1,292 @@
+const express = require('express');
+const multer = require('multer');
+const Lead = require('../models/Lead');
+const fs = require('fs');
+const path = require('path');
+const { PythonShell } = require('python-shell');
+const router = express.Router();
+
+// Multer setup - store files in memory to save directly in MongoDB
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
+
+// -------------------- GET ALL LEADS --------------------
+router.get('/', async (req, res) => {
+  try {
+    const leads = await Lead.find({}).sort({ created_date: -1 });
+    res.json(leads);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch leads' });
+  }
+});
+
+// -------------------- GET LEAD BY ID --------------------
+router.get('/:id', async (req, res) => {
+  try {
+    const lead = await Lead.findById(req.params.id);
+    if (!lead) {
+      return res.status(404).json({ error: 'Lead not found' });
+    }
+    res.json(lead);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch lead' });
+  }
+});
+
+// -------------------- CREATE NEW LEAD --------------------
+router.post(
+  '/',
+  upload.fields([
+    { name: 'financialDocuments', maxCount: 10 },
+    { name: 'signature', maxCount: 1 }
+  ]),
+  async (req, res) => {
+    try {
+      let leadData = {};
+
+      // If JSON is sent in body as "data" string (multipart/form-data with files)
+      if (req.body.data) {
+        try {
+          leadData = JSON.parse(req.body.data);
+        } catch {
+          return res.status(400).json({ error: 'Invalid JSON in data field' });
+        }
+      } else {
+        leadData = req.body;
+      }
+
+      // -------------------- Ensure proper structured fields --------------------
+      if (leadData.address && typeof leadData.address === 'string') {
+        try { leadData.address = JSON.parse(leadData.address); } catch {}
+      }
+      if (leadData.directors && typeof leadData.directors === 'string') {
+        try { leadData.directors = JSON.parse(leadData.directors); } catch { leadData.directors = []; }
+      }
+
+      leadData.aml_company_status = leadData.aml_company_status || 'idle';
+      leadData.aml_director_status = leadData.aml_director_status || 'idle';
+      leadData.last_updated = new Date().toISOString();
+
+      // -------------------- Handle uploaded files --------------------
+      if (req.files?.financialDocuments) {
+        leadData.financialDocuments = req.files.financialDocuments.map(file => ({
+          fileName: file.originalname,
+          fileType: file.mimetype,
+          fileSize: file.size,
+          fileData: file.buffer
+        }));
+      }
+      if (req.files?.signature?.[0]) {
+        leadData.signature = {
+          fileName: req.files.signature[0].originalname,
+          fileType: req.files.signature[0].mimetype,
+          fileSize: req.files.signature[0].size,
+          fileData: req.files.signature[0].buffer
+        };
+      }
+
+      // -------------------- Save to MongoDB --------------------
+      const newLead = new Lead(leadData);
+      await newLead.save();
+
+      // -------------------- Send response --------------------
+      res.status(201).json(newLead);
+
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Failed to create lead' });
+    }
+  }
+);
+
+// -------------------- UPDATE LEAD --------------------
+router.put('/:id', upload.none(), async (req, res) => {
+  try {
+    let updateData = req.body;
+
+    // If body contains JSON strings for structured fields, parse them
+    if (updateData.address && typeof updateData.address === 'string') {
+      try {
+        updateData.address = JSON.parse(updateData.address);
+      } catch {}
+    }
+
+    if (updateData.directors && typeof updateData.directors === 'string') {
+      try {
+        updateData.directors = JSON.parse(updateData.directors);
+      } catch {
+        updateData.directors = [];
+      }
+    }
+
+    // Update last_updated timestamp
+    updateData.last_updated = new Date().toISOString();
+
+    const updatedLead = await Lead.findByIdAndUpdate(req.params.id, updateData, {
+      new: true
+    });
+
+    if (!updatedLead) {
+      return res.status(404).json({ error: 'Lead not found' });
+    }
+    res.json(updatedLead);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update lead' });
+  }
+});
+
+// -------------------- DELETE LEAD --------------------
+router.delete('/:id', async (req, res) => {
+  try {
+    const deletedLead = await Lead.findByIdAndDelete(req.params.id);
+    if (!deletedLead) {
+      return res.status(404).json({ error: 'Lead not found' });
+    }
+    res.json({ message: 'Lead deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete lead' });
+  }
+});
+
+// -------------------- TRIGGER BFSI-LOS PIPELINE --------------------
+router.post('/:id/analyze', async (req, res) => {
+  try {
+    const leadId = req.params.id;
+    const lead = await Lead.findById(leadId);
+
+    if (!lead) {
+      return res.status(404).json({ error: 'Lead not found' });
+    }
+
+    if (!lead.financialDocuments || lead.financialDocuments.length === 0) {
+      return res.status(400).json({ error: 'No financial documents found for analysis' });
+    }
+
+    // Create temporary directory for BFSI-LOS processing
+    const tempDir = path.join(__dirname, '../temp_uploads', leadId);
+    const standaloneDir = path.join(tempDir, 'Standalone');
+    const year2024Dir = path.join(standaloneDir, '2024-25');
+    const year2023Dir = path.join(standaloneDir, '2023-24');
+
+    // Create directory structure
+    fs.mkdirSync(year2024Dir, { recursive: true });
+    fs.mkdirSync(year2023Dir, { recursive: true });
+
+    // Save uploaded files to appropriate directories
+    let filesProcessed = 0;
+    const expectedFiles = ['BS.pdf', 'PL.pdf', 'CF.pdf'];
+
+    for (const doc of lead.financialDocuments) {
+      const fileName = doc.fileName;
+      const fileBuffer = doc.fileData;
+
+      // Determine document type and year from filename
+      let docType = '';
+      let year = '';
+
+      if (fileName.includes('Balance Sheet') || fileName.includes('BS')) {
+        docType = 'BS.pdf';
+      } else if (fileName.includes('Profit') || fileName.includes('PL')) {
+        docType = 'PL.pdf';
+      } else if (fileName.includes('Cash Flow') || fileName.includes('CF')) {
+        docType = 'CF.pdf';
+      }
+
+      if (fileName.includes('2024') || fileName.includes('2025')) {
+        year = '2024-25';
+      } else if (fileName.includes('2023')) {
+        year = '2023-24';
+      }
+
+      if (docType && year) {
+        const targetDir = year === '2024-25' ? year2024Dir : year2023Dir;
+        const filePath = path.join(targetDir, docType);
+        fs.writeFileSync(filePath, fileBuffer);
+        filesProcessed++;
+      }
+    }
+
+    if (filesProcessed === 0) {
+      return res.status(400).json({ error: 'No valid financial documents found for processing' });
+    }
+
+    // Run BFSI-LOS pipeline
+    const bfsiLosPath = path.join(__dirname, '../../../BFSI-LOS');
+    const pythonScript = path.join(bfsiLosPath, 'run_pipeline.py');
+
+    const options = {
+      mode: 'text',
+      pythonPath: 'python3',
+      pythonOptions: ['-u'],
+      scriptPath: bfsiLosPath,
+      args: [tempDir]
+    };
+
+    console.log(`Running BFSI-LOS pipeline for lead ${leadId}...`);
+
+    PythonShell.run('run_pipeline.py', options, async (err, results) => {
+      if (err) {
+        console.error('BFSI-LOS pipeline error:', err);
+        return res.status(500).json({ error: 'Pipeline execution failed', details: err.message });
+      }
+
+      try {
+        // Read the generated analysis files
+        const extractionsPath = path.join(tempDir, 'Extractions');
+        const extractedValuesPath = path.join(extractionsPath, 'extracted_values.json');
+        const ratiosPath = path.join(extractionsPath, 'ratios.json');
+        const riskRatingPath = path.join(extractionsPath, 'risk_rating.json');
+        const summariesPath = path.join(extractionsPath, 'summaries.json');
+
+        let analysisResults = {};
+
+        // Read extracted values
+        if (fs.existsSync(extractedValuesPath)) {
+          analysisResults.extracted_values = JSON.parse(fs.readFileSync(extractedValuesPath, 'utf8'));
+        }
+
+        // Read ratios
+        if (fs.existsSync(ratiosPath)) {
+          analysisResults.ratios = JSON.parse(fs.readFileSync(ratiosPath, 'utf8'));
+        }
+
+        // Read risk rating
+        if (fs.existsSync(riskRatingPath)) {
+          analysisResults.risk_rating = JSON.parse(fs.readFileSync(riskRatingPath, 'utf8'));
+        }
+
+        // Read summaries
+        if (fs.existsSync(summariesPath)) {
+          analysisResults.summaries = JSON.parse(fs.readFileSync(summariesPath, 'utf8'));
+        }
+
+        // Update lead with analysis results
+        lead.analysis_results = analysisResults;
+        lead.analysis_status = 'completed';
+        lead.analysis_date = new Date().toISOString();
+        await lead.save();
+
+        // Clean up temporary files
+        fs.rmSync(tempDir, { recursive: true, force: true });
+
+        console.log(`BFSI-LOS pipeline completed for lead ${leadId}`);
+        res.json({
+          success: true,
+          message: 'Financial analysis completed successfully',
+          leadId: leadId,
+          analysisResults: analysisResults
+        });
+
+      } catch (readError) {
+        console.error('Error reading analysis results:', readError);
+        res.status(500).json({ error: 'Failed to read analysis results', details: readError.message });
+      }
+    });
+
+  } catch (error) {
+    console.error('Error in BFSI-LOS pipeline:', error);
+    res.status(500).json({ error: 'Internal server error', details: error.message });
+  }
+});
+
+module.exports = router;
