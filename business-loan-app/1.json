@@ -1,25 +1,29 @@
 {
   "_id": {
-    "$oid": "68b6bfd994a23c7a1e4b3997"
+    "$oid": "68bfefbde5eb8f3f5337e14b"
   },
-  "lead_id": "LOAN/2025/YPL/942",
-  "customer_name": "Vardhan Test Corp Ltd.",
+  "lead_id": "LEAD-TSQH4RDX",
+  "customer_name": "Infosys",
   "loan_type": "LC",
   "created_by": "CurrentUser",
-  "last_updated": "2025-09-02T09:58:49.805Z",
+  "last_updated": "2025-09-09T09:13:33.073Z",
   "status": "In progres",
-  "financial_summary_&_ratios": "Revenue and Profitability: Revenue grew steadily ₹124,014 crore (2023) → ₹128,933 crore (2024) → ₹136,592 crore (2025); PAT Margin remained strong at 18.76% (2023) → 21.12% (2024) → 18.72% (2025); EBITDA Margin improved slightly from 27.74% (2023) → 30.17% (2024) → 27.86% (2025). Operational efficiency: Accounts Receivable Days increased slightly from 61.14 (2023) → 71.2 (2024) → 70.58 (2025); Asset Turnover Ratio showed a slight decline from 1.22 (2023) → 1.12 (2024) → 1.09 (2025); Employee benefit expenses rose steadily ₹62,764 crore (2023) → ₹65,139 crore (2024) → ₹67,466 crore (2025). Leverage and liquidity: DSCR remained robust at 30.76 (2023) → 27.02 (2024) → 26.3 (2025); Debt/Equity improved from 0.06 (2023) → 0.05 (2024) → 0.04 (2025); Current Ratio remained healthy at 1.9 (2023) → 2.62 (2024) → 2.43 (2025).",
   "executive_summary": "The company demonstrated consistent revenue growth and maintained strong profitability metrics over 2023-2025. Operational efficiency showed minor challenges with increasing Accounts Receivable Days and declining Asset Turnover Ratio. The risk profile remains stable with a 'Low Risk' bucket across all three years, supported by strong DSCR and Debt/Equity ratios.",
-  "loan_purpose": "Not disclosed.",
+  "financial_summary_and_ratios": "Revenue and Profitability: Revenue grew steadily ₹124,014 crore (2023) → ₹128,933 crore (2024) → ₹136,592 crore (2025); PAT Margin remained strong at 18.76% (2023) → 21.12% (2024) → 18.72% (2025); EBITDA Margin improved slightly from 27.74% (2023) → 30.17% (2024) → 27.86% (2025). Operational efficiency: Accounts Receivable Days increased slightly from 61.14 (2023) → 71.2 (2024) → 70.58 (2025); Asset Turnover Ratio showed a slight decline from 1.22 (2023) → 1.12 (2024) → 1.09 (2025); Employee benefit expenses rose steadily ₹62,764 crore (2023) → ₹65,139 crore (2024) → ₹67,466 crore (2025). Leverage and liquidity: DSCR remained robust at 30.76 (2023) → 27.02 (2024) → 26.3 (2025); Debt/Equity improved from 0.06 (2023) → 0.05 (2024) → 0.04 (2025); Current Ratio remained healthy at 1.9 (2023) → 2.62 (2024) → 2.43 (2025).",
+  "loan_purpose": [
+    "Purchase of Machinery"
+  ],
   "swot_analysis": "Strengths: Strong DSCR of 30.76 (2023) → 27.02 (2024) → 26.3 (2025); Consistent PAT Margin above 18% across all years; Low Debt/Equity ratio improving from 0.06 (2023) to 0.04 (2025). Weaknesses: Increasing Accounts Receivable Days from 61.14 (2023) to 70.58 (2025); Declining Asset Turnover Ratio from 1.22 (2023) to 1.09 (2025). Opportunities: Revenue growth potential with steady increase ₹124,014 crore (2023) → ₹136,592 crore (2025); Improved liquidity with cash and cash equivalents rising ₹6,534 crore (2023) → ₹14,265 crore (2025). Threats: Rising employee benefit expenses ₹62,764 crore (2023) → ₹67,466 crore (2025); Slight decline in EBITDA Margin in 2025 to 27.86% from 30.17% in 2024.",
-  "security_offered": "Primary Security: Not disclosed. Collateral Security: Not disclosed. Personal Guarantees: Not disclosed.",
-  "recommendation": "Verdict: Approve. The company exhibits strong financial health with a consistent 'Low Risk' rating across 2023-2025. Key metrics such as DSCR (30.76 → 26.3), Debt/Equity (0.06 → 0.04), and PAT Margin (18.76% → 18.72%) remain robust. Current Ratio is healthy at 1.9 (2023) → 2.43 (2025), indicating strong liquidity. No material red flags were identified. Conditions: Maintain a minimum DSCR covenant of 1.2; Periodic monitoring of Accounts Receivable Days to address efficiency concerns; Ensure no significant deterioration in EBITDA Margin. The recommendation is supported by stable trends in profitability, liquidity, and leverage metrics, ensuring a low-risk lending environment.",
+  "security_offered": "Primary Security: . Collateral Security: . Personal Guarantees: ",
+  "recommendation": [
+    "Verdict: Approve. The company exhibits strong financial health with a consistent 'Low Risk' rating across 2023-2025. Key metrics such as DSCR (30.76 → 26.3), Debt/Equity (0.06 → 0.04), and PAT Margin (18.76% → 18.72%) remain robust. Current Ratio is healthy at 1.9 (2023) → 2.43 (2025), indicating strong liquidity. No material red flags were identified. Conditions: Maintain a minimum DSCR covenant of 1.2; Periodic monitoring of Accounts Receivable Days to address efficiency concerns; Ensure no significant deterioration in EBITDA Margin. The recommendation is supported by stable trends in profitability, liquidity, and leverage metrics, ensuring a low-risk lending environment."
+  ],
   "attachments": [],
   "createdAt": {
-    "$date": "2025-09-02T09:58:49.885Z"
+    "$date": "2025-09-09T09:13:33.147Z"
   },
   "updatedAt": {
-    "$date": "2025-09-02T09:58:49.885Z"
+    "$date": "2025-09-09T09:13:33.147Z"
   },
   "__v": 0
 }

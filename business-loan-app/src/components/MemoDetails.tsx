@@ -79,41 +79,58 @@ export default function MemoDetails() {
   };
 
   const renderTextWithSemicolons = (text: string) => {
-    const parts = text.split(/;|\.\s+/).map((p) => p.trim()).filter(Boolean);
-    return parts.map((part, idx) => (
-      <p key={idx} className="text-gray-700 leading-relaxed">
-        {part}
-      </p>
-    ));
+    const parts = text
+      .split(/;|\.\s+/)
+      .map((p) => p.trim())
+      .filter(Boolean);
+
+    return (
+      <ul className="list-disc pl-6 space-y-2 text-gray-700">
+        {parts.map((part, idx) => (
+          <li key={idx} className="leading-relaxed">
+            {part}
+          </li>
+        ))}
+      </ul>
+    );
   };
 
-  // Special render just for SWOT analysis
-const renderSwotWithNewLine = (text: string) => {
-  return text
-    .split(/;|\.\s+/) // break on semicolons or periods
-    .map((segment, idx) => {
-      const colonIndex = segment.indexOf(":");
-      if (colonIndex === -1) {
-        return (
-          <div key={idx}>
-            <p className="text-gray-700 leading-relaxed">{segment.trim()}</p>
-          </div>
-        );
-      }
 
-      const firstWord = segment.slice(0, colonIndex).trim().split(/\s+/)[0];
-      const restAfterWord = segment.slice(colonIndex + 1).trim();
+  // Special render just for SWOT analysis
+  const renderSwotWithNewLine = (text: string) => {
+    // Regex to split into sections by keywords
+    const sections = text.split(/(?=Strengths:|Weaknesses:|Opportunities:|Threats:)/);
+
+    return sections.map((section, idx) => {
+      if (!section.trim()) return null;
+
+      const [title, ...contentParts] = section.split(":");
+      const content = contentParts.join(":").trim();
+
+      // Split content by semicolons into points
+      const points = content
+        .split(";")
+        .map((p) => p.trim())
+        .filter(Boolean);
 
       return (
-        <div key={idx}>
-          {/* Bold word + colon */}
-          <p className="text-gray-700 font-bold">{firstWord}:</p>
-          {/* Value on next line (no margin) */}
-          <p className="text-gray-700 leading-relaxed">{restAfterWord}</p>
+        <div key={idx} className="mb-4">
+          {/* Section Title */}
+          <p className="text-gray-700 font-bold mb-2">{title}:</p>
+
+          {/* Bullet Points */}
+          <ul className="list-disc pl-6 space-y-2 text-gray-700">
+            {points.map((point, i) => (
+              <li key={i} className="leading-relaxed">
+                {point}
+              </li>
+            ))}
+          </ul>
         </div>
       );
     });
-};
+  };
+
 
 
 
@@ -159,15 +176,23 @@ const renderSwotWithNewLine = (text: string) => {
           </div>
           <div>
             <p className="text-sm text-gray-500">Total Score</p>
-            <p className="font-medium">
-              {memo.total_score
-                ? typeof memo.total_score === "object"
-                  ? Object.entries(memo.total_score as Record<string, unknown>)
-                    .map(([year, score]) => `${year}: ${score}`)
-                    .join(", ")
-                  : String(memo.total_score)
-                : "N/A"}
-            </p>
+            {memo.total_score ? (
+              typeof memo.total_score === "object" ? (
+                <ul className="list-disc pl-6 space-y-1 text-gray-700">
+                  {Object.entries(memo.total_score as Record<string, unknown>).map(
+                    ([year, score]) => (
+                      <li key={year} className="font-medium">
+                        {year}: {score}
+                      </li>
+                    )
+                  )}
+                </ul>
+              ) : (
+                <p className="font-medium">{String(memo.total_score)}</p>
+              )
+            ) : (
+              <p className="font-medium">N/A</p>
+            )}
           </div>
         </div>
       </div>
