@@ -109,32 +109,58 @@ const RiskDetail: React.FC = () => {
       </div>
 
       {/* Company Info */}
-      <div className="bg-white p-4 rounded-lg shadow-sm space-y-2">
-        <p><span className="font-medium">Customer:</span> {data.customer_name}</p>
-        <p><span className="font-medium">Lead ID:</span> {data.lead_id}</p>
-        <p className="font-medium">Total Score:</p>
-        <div className="flex gap-4">
-          {["2023", "2024", "2025"].map(year => (
-                            <span key={year}><strong>{year}</strong>: {data.total_score?.[year] ?? "—"} / 100</span>
-          ))}
+      <div className="bg-white p-4 rounded-lg shadow-sm flex justify-between items-start">
+        {/* Left side: Company details + scores */}
+        <div className="space-y-2">
+          <p><span className="font-medium">Customer:</span> {data.customer_name}</p>
+          <p><span className="font-medium">Lead ID:</span> {data.lead_id}</p>
+
+          <p className="font-medium">Total Score:</p>
+          <div className="flex gap-4">
+            {["2023", "2024", "2025"].map((year) => {
+              const score = data.total_score?.[year as keyof typeof data.total_score];
+              let style = "bg-gray-100 text-gray-600";
+
+              if (score !== null && score !== undefined) {
+                if (score > 80) {
+                  style = "bg-green-100 text-green-700";
+                } else if (score >= 50) {
+                  style = "bg-yellow-100 text-yellow-700";
+                } else {
+                  style = "bg-red-100 text-red-700";
+                }
+              }
+
+              return (
+                <span
+                  key={year}
+                  className={`px-2 py-1 rounded ${style}`}
+                >
+                  <strong>{year}</strong>: {score ?? "—"} / 100
+                </span>
+              );
+            })}
+          </div>
         </div>
-        <p className="font-medium">Risk Bucket:</p>
-        <div className="flex gap-4">
-          {["2023", "2024", "2025"].map(year => (
-            <span
-              key={year}
-              className={`px-2 py-1 rounded ${data.risk_bucket?.[year] === "Low Risk"
-                ? "bg-green-100 text-green-700"
-                : data.risk_bucket?.[year] === "Medium Risk"
-                  ? "bg-yellow-100 text-yellow-700"
-                  : "bg-red-100 text-red-700"
-                }`}
-            >
-              {year}: {data.risk_bucket?.[year] ?? "—"}
-            </span>
-          ))}
+
+        {/* Right side: Reference */}
+        <div className="text-base space-y-2">
+          <p className="font-semibold mb-2 text-lg">Reference:</p>
+          <div className="flex items-center gap-3">
+            <span className="w-4 h-4 rounded-full bg-green-500"></span>
+            <span><strong>Low Risk</strong> (Score &gt; 80)</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="w-4 h-4 rounded-full bg-yellow-400"></span>
+            <span><strong>Medium Risk</strong> (50–80)</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="w-4 h-4 rounded-full bg-red-500"></span>
+            <span><strong>High Risk</strong> (Score &lt; 50)</span>
+          </div>
         </div>
       </div>
+
 
       {/* Risk Breakdown */}
       <div className="bg-white p-4 rounded-lg shadow-sm">
@@ -192,7 +218,7 @@ const RiskDetail: React.FC = () => {
                     typeof (details as any)?.[`value_${year}`] === "string" &&
                     (details as any)[`value_${year}`].toString().includes("%")
                 );
-                
+
               return (
                 <tr key={ratio}>
                   <td className="px-4 py-2 font-medium">
@@ -229,26 +255,24 @@ const RiskDetail: React.FC = () => {
 
 
       {/* Red Flags */}
-<div className="bg-white p-4 rounded-lg shadow-sm">
-  <h3 className="text-xl font-semibold mb-2">Red Flags</h3>
-  {["2023", "2024", "2025"].map((year) => (
-    <div key={year} className="mb-4">
-      <p className="font-bold mb-2">{year}</p>
-      {data.red_flags?.[year]?.length === 0 ? (
-        <p className="text-gray-500">No red flags detected ✅</p>
-      ) : (
-        <ul className="list-disc list-inside">
-          {data.red_flags[year].map((flag: string, i: number) => {
-            // plain text for red flags
-            return <li key={i}>{flag}</li>;
-          })}
-        </ul>
-      )}
-    </div>
-  ))}
-</div>
-
-
+      <div className="bg-white p-4 rounded-lg shadow-sm">
+        <h3 className="text-xl font-semibold mb-2">Red Flags</h3>
+        {["2023", "2024", "2025"].map((year) => (
+          <div key={year} className="mb-4">
+            <p className="font-bold mb-2">{year}</p>
+            {data.red_flags?.[year]?.length === 0 ? (
+              <p className="text-gray-500">No red flags detected ✅</p>
+            ) : (
+              <ul className="list-disc list-inside">
+                {data.red_flags[year].map((flag: string, i: number) => {
+                  // plain text for red flags
+                  return <li key={i}>{flag}</li>;
+                })}
+              </ul>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

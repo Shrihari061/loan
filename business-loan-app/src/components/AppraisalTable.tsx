@@ -65,7 +65,7 @@ export default function AppraisalTable() {
         lead_id: customer.lead_id,
         customer_name: customer.customer_name,
         loan_type: customer.loan_type,
-        status: "In progres",
+        status: "In progress",
         created_by: "CurrentUser",
         last_updated: new Date().toISOString(),
       });

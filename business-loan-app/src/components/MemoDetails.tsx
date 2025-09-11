@@ -78,9 +78,28 @@ export default function MemoDetails() {
     );
   };
 
+  // ✅ shared helper
   const renderTextWithSemicolons = (text: string) => {
     const parts = text
-      .split(/;|\.\s+/)
+      .split(/;|\.\s+/) // split by ";" or ". "
+      .map((p) => p.trim())
+      .filter(Boolean);
+
+    return (
+      <ul className="list-disc pl-6 space-y-2 text-gray-700">
+        {parts.map((part, idx) => (
+          <li key={idx} className="leading-relaxed">
+            {part.endsWith(".") ? part : `${part}.`}
+          </li>
+        ))}
+      </ul>
+    );
+  };
+
+
+  const renderSecurityOffered = (text: string) => {
+    const parts = text
+      .split(",") // split by comma
       .map((p) => p.trim())
       .filter(Boolean);
 
@@ -107,11 +126,12 @@ export default function MemoDetails() {
       const [title, ...contentParts] = section.split(":");
       const content = contentParts.join(":").trim();
 
-      // Split content by semicolons into points
+      // Split content by semicolons OR newlines
       const points = content
-        .split(";")
+        .split(/;|\r?\n/)
         .map((p) => p.trim())
-        .filter(Boolean);
+        .filter(Boolean)
+        .map((p) => (p.endsWith(".") ? p : `${p}.`)); // ensure period
 
       return (
         <div key={idx} className="mb-4">
@@ -130,8 +150,6 @@ export default function MemoDetails() {
       );
     });
   };
-
-
 
 
   return (
@@ -180,10 +198,13 @@ export default function MemoDetails() {
               {memo.total_score
                 ? typeof memo.total_score === "object"
                   ? Object.entries(memo.total_score as Record<string, unknown>).map(
-                    ([year, score]) => (
+                    ([year, score], idx, arr) => (
                       <span key={year} className="mr-2">
                         <span className="font-medium">{year}</span>{" "}
-                        <span className="font-normal">({score});</span>{"  "}
+                        <span className="font-normal">
+                          ({score})
+                          {idx < arr.length - 1 ? "," : ""}
+                        </span>{" "}
                       </span>
                     )
                   )
@@ -243,7 +264,7 @@ export default function MemoDetails() {
           <div className="bg-white p-6 shadow rounded-xl">
             <h3 className="text-lg font-semibold mb-4">Security Offered</h3>
             <div className="text-gray-700">
-              {renderTextWithSemicolons(String(memo.security_offered))}
+              {renderSecurityOffered(String(memo.security_offered))}
             </div>
           </div>
         )}
