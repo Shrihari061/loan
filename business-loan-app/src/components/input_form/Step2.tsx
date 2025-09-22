@@ -16,7 +16,6 @@ export default function Step2({
   leadData: any;
   setLeadData: React.Dispatch<React.SetStateAction<any>>;
 }) {
-  
   const [uploadedFiles, setUploadedFiles] = useState<Record<string, Record<string, File[]>>>({});
   const [selectedDocument, setSelectedDocument] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,16 +35,12 @@ export default function Step2({
 
   const [filesAddedInSession, setFilesAddedInSession] = useState<File[]>([]);
 
-  // New state for BFSI-LOS integration
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisStatus, setAnalysisStatus] = useState<string>("");
-
-  // New state for BFSI-LOS integration
+  // BFSI-LOS integration states
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisStatus, setAnalysisStatus] = useState<string>("");
 
   const getAvailableYears = () => {
-    return years.filter(year => !selectedYears.includes(year));
+    return years.filter((year) => !selectedYears.includes(year));
   };
 
   const handleYearSelection = (year: string) => {
@@ -57,94 +52,120 @@ export default function Step2({
   };
 
   const removeYear = (yearToRemove: string) => {
-    const updated = selectedYears.filter(year => year !== yearToRemove);
-    setSelectedYears(updated);
-    
-    // Remove files for this year
-    const updatedFiles = { ...uploadedFiles };
-    Object.keys(updatedFiles).forEach(docType => {
-      if (updatedFiles[docType][yearToRemove]) {
-        delete updatedFiles[docType][yearToRemove];
-      }
+    const updatedYears = selectedYears.filter((year) => year !== yearToRemove).sort();
+    setSelectedYears(updatedYears);
+
+    setUploadedFiles((prev) => {
+      const updated = { ...prev };
+      Object.keys(updated).forEach((docLabel) => {
+        if (updated[docLabel][yearToRemove]) {
+          delete updated[docLabel][yearToRemove];
+        }
+      });
+      return updated;
     });
-    setUploadedFiles(updatedFiles);
-    
-    // Update current display year
 
     if (currentDisplayYear === yearToRemove) {
-      setCurrentDisplayYear(updated.length > 0 ? updated[0] : "");
+      if (updatedYears.length > 0) {
+        setCurrentDisplayYear(updatedYears[updatedYears.length - 1]);
+      } else {
+        setCurrentDisplayYear("");
+      }
     }
   };
 
-  const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files || []);
-    if (files.length === 0 || !selectedDocument || !selectedYear) return;
-
-    const newFiles = [...uploadedFiles[selectedDocument]?.[selectedYear] || [], ...files];
-    setUploadedFiles(prev => ({
-      ...prev,
-      [selectedDocument]: {
-        ...prev[selectedDocument],
-        [selectedYear]: newFiles
-      }
-    }));
-
-    setFilesAddedInSession(prev => [...prev, ...files]);
-  };
-
-  const removeFile = (docType: string, year: string, index: number) => {
-    const updatedFiles = { ...uploadedFiles };
-    updatedFiles[docType][year].splice(index, 1);
-    setUploadedFiles(updatedFiles);
-  };
-
-  const removeAllFiles = (docType: string, year: string) => {
-    const updatedFiles = { ...uploadedFiles };
-    updatedFiles[docType][year] = [];
-    setUploadedFiles(updatedFiles);
-  };
-
-  const handleCheckboxChange = (key: keyof typeof declarations) => {
-    setDeclarations(prev => ({
-      ...prev,
-      [key]: !prev[key]
-    }));
-  };
-
-  const canSubmit = Object.values(declarations).every(Boolean);
-
-  const handleCancel = () => {
-    setSelectedDocument(null);
-    setSelectedYear("");
-    setIsModalOpen(false);
+  const openModal = (docLabel: string, year: string) => {
+    setSelectedDocument(docLabel);
+    setSelectedYear(year);
+    setIsModalOpen(true);
+    setFilesAddedInSession([]);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
+    setSelectedDocument(null);
+    setSelectedYear("");
   };
 
-  // Updated handleSubmit function with BFSI-LOS integration
+  const handleCancel = () => {
+    if (selectedDocument && selectedYear && filesAddedInSession.length > 0) {
+      setUploadedFiles((prev) => {
+        const currentFiles = prev[selectedDocument]?.[selectedYear] || [];
+        const filesToKeep = currentFiles.filter((file) => !filesAddedInSession.includes(file));
+        return {
+          ...prev,
+          [selectedDocument]: {
+            ...(prev[selectedDocument] || {}),
+            [selectedYear]: filesToKeep,
+          },
+        };
+      });
+    }
+    setFilesAddedInSession([]);
+    closeModal();
+  };
+
+  const handleFileChange = (files: FileList | null) => {
+    if (!files || !selectedDocument || !selectedYear) return;
+
+    const newFiles = Array.from(files);
+    setUploadedFiles((prev) => ({
+      ...prev,
+      [selectedDocument]: {
+        ...(prev[selectedDocument] || {}),
+        [selectedYear]: prev[selectedDocument]?.[selectedYear]
+          ? [...prev[selectedDocument][selectedYear], ...newFiles]
+          : newFiles,
+      },
+    }));
+    setFilesAddedInSession((prev) => [...prev, ...newFiles]);
+  };
+
+  const removeFile = (docLabel: string, year: string, index: number) => {
+    setUploadedFiles((prev) => {
+      const updated = [...(prev[docLabel]?.[year] || [])];
+      updated.splice(index, 1);
+      return {
+        ...prev,
+        [docLabel]: {
+          ...(prev[docLabel] || {}),
+          [year]: updated,
+        },
+      };
+    });
+  };
+
+  const removeAllFiles = (docLabel: string, year: string) => {
+    setUploadedFiles((prev) => ({
+      ...prev,
+      [docLabel]: {
+        ...(prev[docLabel] || {}),
+        [year]: [],
+      },
+    }));
+  };
+
+  const handleCheckboxChange = (field: keyof typeof declarations) => {
+    setDeclarations((prev) => ({
+      ...prev,
+      [field]: !prev[field],
+    }));
+  };
+
   const handleSubmit = async () => {
     if (!leadData) return;
-
-    console.log("Lead Data at start of handleSubmit:", leadData);
 
     const finalLeadData = {
       ...leadData,
       financialDocuments: Object.entries(uploadedFiles).flatMap(([label, yearsObj]) =>
         Object.entries(yearsObj).flatMap(([yr, files]) =>
-          files.map(file => ({ label, year: yr, file }))
+          files.map((file) => ({ label, year: yr, file }))
         )
       ),
       reviewDeclarations: declarations,
     };
 
     console.log("Final Lead Data ready for upload:", finalLeadData);
-    console.log("Required fields check:", {
-      business_name: finalLeadData.business_name,
-      loan_type: finalLeadData.loan_type, 
-      loan_amount: finalLeadData.loan_amount
-    });
     setLeadData(finalLeadData);
 
     try {
@@ -170,57 +191,60 @@ export default function Step2({
         formData.append("signature", finalLeadData.signature, finalLeadData.signature.name);
       }
 
-      // Step 1: Submit the lead application
+      // Step 1: Submit the lead
       const response = await axios.post("http://localhost:5000/leads", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
       console.log("Lead uploaded successfully:", response.data);
-      
-      // Step 2: Trigger BFSI-LOS financial analysis
+
+      // Step 2: Trigger BFSI-LOS pipeline
       setIsAnalyzing(true);
       setAnalysisStatus("Starting financial analysis...");
-      
+
       try {
-        console.log("Starting BFSI-LOS financial analysis...");
-        const analysisResponse = await axios.post(`http://localhost:5000/leads/${response.data._id}/analyze`);
-        
+        const analysisResponse = await axios.post(
+          `http://localhost:5000/leads/${response.data._id}/analyze`
+        );
+
         console.log("BFSI-LOS analysis completed:", analysisResponse.data);
         setAnalysisStatus("Financial analysis completed successfully!");
-        
-        // Fetch analysis results from existing collections
+
+        // Fetch results
         try {
           const [riskResponse, summaryResponse] = await Promise.all([
             axios.get(`http://localhost:5000/risk?lead_id=${response.data._id}`),
-            axios.get(`http://localhost:5000/summary?lead_id=${response.data._id}`)
+            axios.get(`http://localhost:5000/summary?lead_id=${response.data._id}`),
           ]);
-          
+
           const riskData = riskResponse.data[0];
           const summaryData = summaryResponse.data[0];
-          
-          const riskRating = riskData?.risk_bucket?.['2025'] || 'N/A';
-          const executiveSummary = summaryData?.executive_summary || 'Analysis completed';
-          
-          setAnalysisStatus("Financial analysis completed successfully!");
-          
-          // Show success message with analysis results
-          alert(`Application submitted successfully!\n\nFinancial Analysis Results:\n- Risk Rating: ${riskRating}\n- Executive Summary: ${executiveSummary.substring(0, 100)}...\n- Analysis Status: Completed`);
+
+          const riskRating = riskData?.risk_bucket?.["2025"] || "N/A";
+          const executiveSummary = summaryData?.executive_summary || "Analysis completed";
+
+          alert(
+            `Application submitted successfully!\n\nFinancial Analysis Results:\n- Risk Rating: ${riskRating}\n- Executive Summary: ${executiveSummary.substring(
+              0,
+              100
+            )}...\n- Analysis Status: Completed`
+          );
         } catch (fetchError) {
           console.error("Error fetching analysis results:", fetchError);
-          setAnalysisStatus("Financial analysis completed successfully!");
-          alert("Application submitted successfully!\n\nFinancial analysis completed. Results are being processed.");
+          alert(
+            "Application submitted successfully!\n\nFinancial analysis completed. Results are being processed."
+          );
         }
-        
       } catch (analysisError) {
         console.error("BFSI-LOS analysis failed:", analysisError);
         setAnalysisStatus("Financial analysis failed");
-        
-        // Show warning but don't fail the entire submission
-        alert("Application submitted successfully, but financial analysis failed. Please contact administrator for manual review.");
+
+        alert(
+          "Application submitted successfully, but financial analysis failed. Please contact administrator."
+        );
       } finally {
         setIsAnalyzing(false);
       }
-
     } catch (error) {
       console.error("Error submitting lead:", error);
       alert("Failed to submit application. Check console for details.");
@@ -229,164 +253,251 @@ export default function Step2({
     }
   };
 
-  return (
-    <div className="max-w-4xl mx-auto p-6 bg-white">
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">Financial Documents</h2>
-        <p className="text-gray-600">Upload your audited financial statements for the required years</p>
-      </div>
+  const allAuditorsVerified =
+    selectedYears.length > 0 &&
+    selectedYears.every((year) =>
+      documentTypes.every((doc) =>
+        doc.audited ? auditorVerified[`${doc.label}_${year}`] === true : true
+      )
+    );
+  const allDeclarationsChecked = Object.values(declarations).every(Boolean);
+  const canSubmit = allAuditorsVerified && allDeclarationsChecked && !isAnalyzing;
 
-      {/* Year Selection */}
-      <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Select Financial Years
+  return (
+    <div className="p-8 w-full">
+      <h2 className="text-2xl font-semibold mb-8 text-gray-800">
+        Step 2: Upload Financial Documents
+      </h2>
+
+      {/* Year selection */}
+      <div className="mb-8">
+        <label className="block text-lg font-medium text-gray-700 mb-4">
+          Select Financial Year
         </label>
-        <div className="flex gap-2 mb-4">
+        <div className="flex items-center gap-4">
           <select
             value=""
             onChange={(e) => handleYearSelection(e.target.value)}
-            className="border border-gray-300 px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
           >
-            <option value="">Add Year</option>
-            {getAvailableYears().map(year => (
-              <option key={year} value={year}>{year}</option>
+            <option value="">Select Financial Year</option>
+            {getAvailableYears().map((yr) => (
+              <option key={yr} value={yr}>
+                {yr}
+              </option>
             ))}
           </select>
+          {getAvailableYears().length === 0 && (
+            <span className="text-sm text-gray-500">All years have been selected</span>
+          )}
         </div>
-        
-        {selectedYears.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            {selectedYears.map(year => (
-              <div key={year} className="flex items-center bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
-                <span>{year}</span>
+      </div>
+
+      {/* Selected Years */}
+      {selectedYears.length > 0 && (
+        <div className="mb-8">
+          <h3 className="text-lg font-medium text-gray-700 mb-4">Selected Years</h3>
+          <div className="flex flex-wrap gap-3">
+            {selectedYears.sort().map((year) => (
+              <div
+                key={year}
+                className="flex items-center bg-blue-100 text-blue-800 px-4 py-2 rounded-full"
+              >
+                <span className="mr-2">{year}</span>
                 <button
                   onClick={() => removeYear(year)}
-                  className="ml-2 text-blue-600 hover:text-blue-800"
+                  className="text-blue-600 hover:text-blue-800 font-bold"
                 >
                   ×
                 </button>
               </div>
             ))}
           </div>
-        )}
-      </div>
-
-      {/* Document Upload Sections */}
-      {selectedYears.map(year => (
-        <div key={year} className="mb-8 border border-gray-200 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">Financial Year {year}</h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {documentTypes.map((docType) => (
-              <div key={docType.label} className="border border-gray-200 rounded-lg p-4">
-                <div className="flex items-center mb-3">
-                  <span className="text-2xl mr-2">{docType.icon}</span>
-                  <div>
-                    <h4 className="font-medium text-gray-800">{docType.label}</h4>
-                    {docType.audited && (
-                      <span className="text-xs text-green-600 bg-green-100 px-2 py-1 rounded">
-                        Audited Required
-                      </span>
-                    )}
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <button
-                    onClick={() => {
-                      setSelectedDocument(docType.label);
-                      setSelectedYear(year);
-                      setIsModalOpen(true);
-                    }}
-                    className="w-full bg-blue-50 text-blue-600 border border-blue-200 px-3 py-2 rounded-lg hover:bg-blue-100 transition-colors text-sm"
-                  >
-                    {uploadedFiles[docType.label]?.[year]?.length > 0 
-                      ? `View Files (${uploadedFiles[docType.label][year].length})`
-                      : "Upload Files"
-                    }
-                  </button>
-                  
-                  {uploadedFiles[docType.label]?.[year]?.length > 0 && (
-                    <div className="text-xs text-gray-500">
-                      {uploadedFiles[docType.label][year].map((file, idx) => (
-                        <div key={idx} className="truncate" title={file.name}>
-                          {file.name}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
-      ))}
+      )}
 
-      {/* File Upload Modal */}
-      {isModalOpen && selectedDocument && selectedYear && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
-            <h3 className="text-lg font-semibold mb-4">
-              Upload {selectedDocument} for {selectedYear}
-            </h3>
-
-            <div className="mb-4">
-              <input
-                type="file"
-                multiple
-                accept=".pdf,.jpg,.jpeg,.png"
-                onChange={handleFileUpload}
-                className="w-full border border-gray-300 px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-
-            {/* Uploaded Files List */}
-            {uploadedFiles[selectedDocument]?.[selectedYear]?.length > 0 && (
+      {/* Document upload cards */}
+      {selectedYears.length > 0 && (
+        <div className="space-y-10">
+          {selectedYears.sort().map((year) => (
+            <div key={year}>
               <div className="mb-6">
-                <h4 className="text-sm font-medium text-gray-700 mb-3">Uploaded Files for {selectedYear}</h4>
-                <div className="space-y-2">
-                  {uploadedFiles[selectedDocument][selectedYear].map((file, index) => (
-                    <div key={index} className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded">
-                      <div className="flex items-center">
-                        <span className="text-sm text-gray-600 mr-2">📄</span>
-                        <span className="text-sm text-gray-800">{file.name}</span>
+                <h3 className="text-xl font-semibold text-gray-800">
+                  Upload Documents for Financial Year {year}
+                </h3>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                {documentTypes.map((doc, idx) => (
+                  <div
+                    key={idx}
+                    className="bg-white rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-300 flex flex-col"
+                  >
+                    <div className="p-6 flex-1 flex flex-col">
+                      <div className="flex items-start mb-4">
+                        <span className="text-3xl mr-3 flex-shrink-0">{doc.icon}</span>
+                        <div className="min-h-[3rem]">
+                          <h3 className="text-lg font-semibold text-gray-800 leading-tight">
+                            {doc.label}
+                          </h3>
+                          {doc.audited && (
+                            <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full inline-block mt-1">
+                              Audited Required
+                            </span>
+                          )}
+                        </div>
                       </div>
-                      <button
-                        onClick={() => removeFile(selectedDocument, selectedYear, index)}
-                        className="text-red-500 hover:text-red-700 text-sm"
-                      >
-                        Remove
-                      </button>
+
+                      <div className="mt-auto">
+                        <div className="mb-4 min-h-[3.5rem]">
+                          {uploadedFiles[doc.label]?.[year]?.length > 0 ? (
+                            <div className="text-sm text-gray-600">
+                              <span className="font-medium">{year}:</span>
+                              <ul className="ml-4 list-disc text-xs text-gray-500">
+                                {uploadedFiles[doc.label][year].map((file, i) => (
+                                  <li key={i}>{file.name}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          ) : (
+                            <div className="text-sm text-gray-500">No files uploaded</div>
+                          )}
+                        </div>
+
+                        {doc.audited && (
+                          <div className="mb-4">
+                            <label className="flex items-center">
+                              <input
+                                type="checkbox"
+                                checked={auditorVerified[`${doc.label}_${year}`] || false}
+                                onChange={(e) =>
+                                  setAuditorVerified((prev) => ({
+                                    ...prev,
+                                    [`${doc.label}_${year}`]: e.target.checked,
+                                  }))
+                                }
+                                className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                              />
+                              <span className="text-sm text-gray-700">Auditor Verified</span>
+                            </label>
+                          </div>
+                        )}
+
+                        <button
+                          onClick={() => openModal(doc.label, year)}
+                          className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium"
+                        >
+                          {uploadedFiles[doc.label]?.[year]?.length > 0
+                            ? "Manage Files"
+                            : "Upload Files"}
+                        </button>
+                      </div>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* File upload modal */}
+      {isModalOpen && selectedDocument && selectedYear && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-semibold text-gray-800">
+                  Upload {selectedDocument} for {selectedYear}
+                </h3>
                 <button
-                  onClick={() => removeAllFiles(selectedDocument, selectedYear)}
-                  className="text-red-600 text-sm mt-2 hover:underline"
+                  onClick={closeModal}
+                  className="text-gray-400 hover:text-gray-600 text-2xl font-bold"
                 >
-                  Remove All Files
+                  ×
                 </button>
               </div>
-            )}
+            </div>
 
-            <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
-              <button
-                onClick={handleCancel}
-                className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={closeModal}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Done
-              </button>
+            <div className="p-6">
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Select Files
+                </label>
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
+                  <input
+                    type="file"
+                    multiple
+                    className="hidden"
+                    id={`file-upload-${selectedDocument}-${selectedYear}`}
+                    onChange={(e) => handleFileChange(e.target.files)}
+                  />
+                  <label
+                    htmlFor={`file-upload-${selectedDocument}-${selectedYear}`}
+                    className="cursor-pointer"
+                  >
+                    <div className="text-4xl mb-2">📁</div>
+                    <p className="text-gray-600 mb-1">Click to upload or drag and drop</p>
+                    <p className="text-sm text-gray-500">
+                      PDF, DOC, DOCX, XLS, XLSX (Max 10MB each)
+                    </p>
+                  </label>
+                </div>
+              </div>
+
+              {uploadedFiles[selectedDocument]?.[selectedYear]?.length > 0 && (
+                <div className="mb-6">
+                  <h4 className="text-sm font-medium text-gray-700 mb-3">
+                    Uploaded Files for {selectedYear}
+                  </h4>
+                  <div className="space-y-2">
+                    {uploadedFiles[selectedDocument][selectedYear].map((file, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded"
+                      >
+                        <div className="flex items-center">
+                          <span className="text-sm text-gray-600 mr-2">📄</span>
+                          <span className="text-sm text-gray-800">{file.name}</span>
+                        </div>
+                        <button
+                          onClick={() => removeFile(selectedDocument, selectedYear, index)}
+                          className="text-red-500 hover:text-red-700 text-sm"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                  <button
+                    onClick={() => removeAllFiles(selectedDocument, selectedYear)}
+                    className="text-red-600 text-sm mt-2 hover:underline"
+                  >
+                    Remove All Files
+                  </button>
+                </div>
+              )}
+
+              <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+                <button
+                  onClick={handleCancel}
+                  className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={closeModal}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Done
+                </button>
+              </div>
             </div>
           </div>
         </div>
       )}
 
+      {/* Review & Declarations */}
       <div className="mt-12 border-t pt-8">
         <h3 className="text-xl font-semibold text-gray-800 mb-6">
           Review & Declarations
@@ -400,9 +511,7 @@ export default function Step2({
               checked={declarations.allDocumentsComplete}
               onChange={() => handleCheckboxChange("allDocumentsComplete")}
             />
-            <span className="text-gray-700">
-              All documents are complete and accurate
-            </span>
+            <span className="text-gray-700">All documents are complete and accurate</span>
           </label>
 
           <label className="flex items-start gap-3">
@@ -448,29 +557,54 @@ export default function Step2({
               checked={declarations.cmaMatches}
               onChange={() => handleCheckboxChange("cmaMatches")}
             />
-            <span className="text-gray-700">
-              CMA data matches the uploaded documents
-            </span>
+            <span className="text-gray-700">CMA data matches the uploaded documents</span>
           </label>
         </div>
 
-        {/* Analysis Status Display */}
-        {isAnalyzing && (
-          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <div className="flex items-center">
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-3"></div>
-              <span className="text-blue-800 font-medium">{analysisStatus}</span>
-            </div>
-          </div>
-        )}
+        <div className="flex items-center justify-between mt-8">
+          <button
+            onClick={handleSubmit}
+            disabled={!canSubmit || isAnalyzing}
+            className={`px-6 py-3 rounded-lg text-white font-medium transition-colors flex items-center justify-center ${canSubmit && !isAnalyzing
+                ? "bg-blue-600 hover:bg-blue-700"
+                : "bg-gray-400 cursor-not-allowed"
+              }`}
+          >
+            {isAnalyzing && (
+              <svg
+                className="animate-spin h-5 w-5 mr-2 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                ></path>
+              </svg>
+            )}
+            {isAnalyzing ? "Analyzing..." : "Submit Application"}
+          </button>
 
-        <button
-          onClick={handleSubmit}
-          disabled={!canSubmit || isAnalyzing}
-          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isAnalyzing ? "Processing..." : "Submit Application"}
-        </button>
+          {!allAuditorsVerified && !isAnalyzing && (
+            <span className="text-sm text-red-600">
+              All Auditor Verified checkboxes must be ticked
+            </span>
+          )}
+        </div>
+
+        {analysisStatus && (
+          <div className="mt-4 text-sm text-blue-600">{analysisStatus}</div>
+        )}
       </div>
     </div>
   );

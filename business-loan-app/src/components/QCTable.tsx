@@ -10,7 +10,7 @@ interface DocumentStatus {
 interface QCEntry {
   _id: string;
   customer_id: string;
-  customer_name: string;
+  customer_name: string; // we’ll map business_name into this
   lead_id: string;
   status: "In progress" | "Approved" | "Declined";
   documents?: DocumentStatus[];
@@ -24,10 +24,18 @@ const QCTable: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:5000/cq/")
+    fetch("http://localhost:5000/leads/") // switched from /cq to /leads
       .then((res) => res.json())
-      .then((data) => setData(data))
-      .catch((err) => console.error("Failed to fetch QC data:", err));
+      .then((leads) =>
+        // map business_name into customer_name
+        setData(
+          leads.map((lead: any) => ({
+            ...lead,
+            customer_name: lead.business_name,
+          }))
+        )
+      )
+      .catch((err) => console.error("Failed to fetch leads data:", err));
   }, []);
 
   const toggleMenu = (id: string, e: React.MouseEvent<HTMLButtonElement>) => {
@@ -47,7 +55,7 @@ const QCTable: React.FC = () => {
     } else if (action === "Revert") {
       console.log("Reverting QC entry:", id);
       try {
-        const res = await fetch(`http://localhost:5000/cq/${id}/revert`, {
+        const res = await fetch(`http://localhost:5000/leads/${id}/revert`, { // updated to /leads
           method: "PUT",
           headers: { "Content-Type": "application/json" },
         });

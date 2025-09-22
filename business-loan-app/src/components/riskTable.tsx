@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { FigtreeContainer, FigtreeTableContainer, SortableHeader, FigtreeTableCell, FigtreeTable, NonSortableHeader } from './ReusableComponents';
+import { 
+  FigtreeContainer, 
+  FigtreeTableContainer, 
+  SortableHeader, 
+  FigtreeTableCell, 
+  FigtreeTable, 
+  NonSortableHeader 
+} from './ReusableComponents';
 
 interface RiskEntry {
   _id: string;
@@ -25,15 +31,15 @@ interface RiskEntry {
   };
   updatedAt?: string;
 
-  // 🔹 keep extra fields but don’t render them in the table
+  // keep extra fields but don’t render them in the table
   weights?: any;
   financial_strength?: any;
   management_quality?: any;
   industry_risk?: any;
 }
 
-interface QCRecord {
-  customer_name: string;
+interface LeadRecord {
+  business_name: string;
   lead_id: string;
   status: string;
 }
@@ -51,26 +57,26 @@ const RiskTable: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [riskRes, qcRes] = await Promise.all([
+        const [riskRes, leadsRes] = await Promise.all([
           axios.get("http://localhost:5000/risk/"),
-          axios.get("http://localhost:5000/cq/")
+          axios.get("http://localhost:5000/leads/")
         ]);
 
-        const qcData: QCRecord[] = qcRes.data;
+        const leadsData: LeadRecord[] = leadsRes.data;
 
-        // Filter risk entries by Approved QC status
+        // Filter risk entries by Approved leads
         const approvedRiskData = (Array.isArray(riskRes.data) ? riskRes.data : []).filter(entry =>
-          qcData.some(
-            qc =>
-              qc.customer_name === entry.customer_name &&
-              qc.lead_id === entry.lead_id &&
-              qc.status === "Approved"
+          leadsData.some(
+            lead =>
+              lead.business_name === entry.customer_name &&
+              lead.lead_id === entry.lead_id &&
+              lead.status === "Approved"
           )
         );
 
         setRiskData(approvedRiskData);
       } catch (err) {
-        console.error("Error fetching risk or QC data:", err);
+        console.error("Error fetching risk or leads data:", err);
         setRiskData([]);
       } finally {
         setLoading(false);
@@ -90,17 +96,6 @@ const RiskTable: React.FC = () => {
         return { backgroundColor: '#fee2e2', color: '#991b1b', border: '1px solid #fca5a5' };
       default:
         return { backgroundColor: '#f3f4f6', color: '#374151', border: '1px solid #d1d5db' };
-    }
-  };
-
-  const toggleMenu = (id: string, e: React.MouseEvent<HTMLButtonElement>) => {
-    if (openMenuId === id) {
-      setOpenMenuId(null);
-      setMenuPosition(null);
-    } else {
-      const rect = e.currentTarget.getBoundingClientRect();
-      setMenuPosition({ top: rect.bottom + window.scrollY, left: rect.left + window.scrollX });
-      setOpenMenuId(id);
     }
   };
 
@@ -148,7 +143,6 @@ const RiskTable: React.FC = () => {
     <FigtreeContainer style={{ padding: '20px' }}>
       <h1 style={{ fontSize: '24px', fontWeight: '600', color: '#111827', marginBottom: '24px' }}>Risk Assessment</h1>
 
-      {/* Table */}
       <FigtreeTableContainer>
         <FigtreeTable style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>

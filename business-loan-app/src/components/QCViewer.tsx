@@ -1,3 +1,4 @@
+// QCViewer.tsx (full updated file)
 import React, { useEffect, useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -52,8 +53,6 @@ const QCViewer: React.FC = () => {
   const navigate = useNavigate();
   const [data, setData] = useState<QCEntry | null>(null);
   const [textValue, setTextValue] = useState<string>('');
-  const [isEditing, setIsEditing] = useState(false);
-
   const [selectedCollection, setSelectedCollection] = useState<string>('');
   const [selectedYear, setSelectedYear] = useState<string>('2025');
   const [financialData, setFinancialData] = useState<FinancialData | null>(null);
@@ -62,8 +61,12 @@ const QCViewer: React.FC = () => {
   const collections = ['Balance Sheet Summary', 'Profit & Loss Summary', 'Cash Flow Summary'];
   const years = ['2023', '2024', '2025'];
 
-  const financialDataDependencies = useMemo(() => [selectedCollection, id, data, selectedYear], [selectedCollection, id, data, selectedYear]);
+  const financialDataDependencies = useMemo(
+    () => [selectedCollection, id, data, selectedYear],
+    [selectedCollection, id, data, selectedYear]
+  );
 
+  // 🔹 Convert extracted data to text and back
   const extractedDataToText = (obj?: ExtractedData) => {
     if (!obj) return '';
     return Object.entries(obj)
@@ -89,42 +92,34 @@ const QCViewer: React.FC = () => {
     return out;
   };
 
-  const generateDummyValue = (itemName: string, documentType: string, year: number): number => {
-    const baseValue = 50000;
-    const yearMultiplier = 1 + (year - 2022) * 0.15;
-    
-    let itemMultiplier = 1;
-    if (documentType === 'balance_sheet') {
-      if (itemName.includes('Assets')) itemMultiplier = 2.5;
-      else if (itemName.includes('Equity')) itemMultiplier = 1.8;
-      else if (itemName.includes('Debt')) itemMultiplier = 0.8;
-      else if (itemName.includes('Liabilities')) itemMultiplier = 1.2;
-      else if (itemName.includes('Receivables')) itemMultiplier = 0.6;
-      else if (itemName.includes('Payables')) itemMultiplier = 0.4;
-    } else if (documentType === 'profit_loss') {
-      if (itemName.includes('Revenue') || itemName.includes('Sales')) itemMultiplier = 3.0;
-      else if (itemName.includes('Profit')) itemMultiplier = 1.5;
-      else if (itemName.includes('Expense')) itemMultiplier = 0.7;
-      else if (itemName.includes('Depreciation')) itemMultiplier = 0.3;
-    } else if (documentType === 'cash_flow') {
-      if (itemName.includes('Principal')) itemMultiplier = 0.2;
-    }
-    
-    return Math.round(baseValue * itemMultiplier * yearMultiplier);
-  };
-
-  // Fetch CQ entry
+  // 🔹 Fetch Lead entry
   useEffect(() => {
     if (!id) return;
-    fetch(`http://localhost:5000/cq/${id}`)
+    fetch(`http://localhost:5000/leads/${id}`)
       .then((res) => {
         if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
         return res.json();
       })
-      .then((entry: QCEntry) => {
-        setData(entry);
-        if (entry.documents?.length > 0) {
-          setTextValue(extractedDataToText(entry.documents[0].extracted_data));
+      .then((lead: any) => {
+        const qcEntry: QCEntry = {
+          _id: lead._id,
+          customer_name: lead.business_name,
+          lead_id: lead.lead_id,
+          status: lead.status || 'In Progress',
+          documents: lead.financialDocuments
+            ? lead.financialDocuments.map((doc: any) => ({
+              _id: doc._id || Math.random().toString(),
+              filename: doc.fileName,
+              upload_date: lead.created_date,
+              status: 'Pending',
+              notes: '',
+              extracted_data: {}
+            }))
+            : []
+        };
+        setData(qcEntry);
+        if (qcEntry.documents?.length > 0) {
+          setTextValue(extractedDataToText(qcEntry.documents[0].extracted_data));
         } else {
           setTextValue('');
         }
@@ -135,62 +130,58 @@ const QCViewer: React.FC = () => {
       });
   }, [id]);
 
-  // Fetch selected collection
+  // 🔹 Fetch selected collection
   useEffect(() => {
     if (!selectedCollection || !id || !data || !selectedYear) return;
-    
+
     fetch(`http://localhost:5000/analysis/`)
       .then((res) => res.json())
       .then((analysisEntries) => {
-        const matchingEntry = analysisEntries.find((entry: AnalysisEntry) => entry.lead_id === data.lead_id);
+        const matchingEntry = analysisEntries.find(
+          (entry: AnalysisEntry) => entry.lead_id === data.lead_id
+        );
         if (!matchingEntry) {
           setTextValue('No financial analysis data found for this lead.');
           return;
         }
-        return fetch(`http://localhost:5000/analysis/${matchingEntry._id}?year=${selectedYear}`);
+        return fetch(
+          `http://localhost:5000/analysis/${matchingEntry._id}?year=${selectedYear}`
+        );
       })
       .then((res) => res?.json())
       .then((data) => {
         if (!data) return;
-        
-        const dataWithDummyValues = {
+
+        const dataWithFY: FinancialData = {
           ...data,
           balance_sheet: (data.balance_sheet || []).map((item: FinancialItem) => ({
             ...item,
-            FY2023: item.FY2023 ?? generateDummyValue(item.item, 'balance_sheet', 2023),
+            FY2023: item.FY2023 ?? item['value_2023'] ?? null,
             FY2024: item.FY2024 ?? item['value_2024'] ?? null,
             FY2025: item.FY2025 ?? item['value_2025'] ?? null
           })),
           profit_loss: (data.profit_loss || []).map((item: FinancialItem) => ({
             ...item,
-            FY2023: item.FY2023 ?? generateDummyValue(item.item, 'profit_loss', 2023),
+            FY2023: item.FY2023 ?? item['value_2023'] ?? null,
             FY2024: item.FY2024 ?? item['value_2024'] ?? null,
             FY2025: item.FY2025 ?? item['value_2025'] ?? null
           })),
           cash_flow: (data.cash_flow || []).map((item: FinancialItem) => ({
             ...item,
-            FY2023: item.FY2023 ?? generateDummyValue(item.item, 'cash_flow', 2023),
+            FY2023: item.FY2023 ?? item['value_2023'] ?? null,
             FY2024: item.FY2024 ?? item['value_2024'] ?? null,
             FY2025: item.FY2025 ?? item['value_2025'] ?? null
           }))
         };
-        setFinancialData(dataWithDummyValues);
-        
-        let selectedData: FinancialItem[] = [];
-        switch (selectedCollection) {
-          case 'Balance Sheet Summary':
-            selectedData = dataWithDummyValues.balance_sheet || [];
-            break;
-          case 'Profit & Loss Summary':
-            selectedData = dataWithDummyValues.profit_loss || [];
-            break;
-          case 'Cash Flow Summary':
-            selectedData = dataWithDummyValues.cash_flow || [];
-            break;
-          default:
-            selectedData = [];
-        }
-        
+        setFinancialData(dataWithFY);
+
+        const selectedData =
+          selectedCollection === 'Balance Sheet Summary'
+            ? dataWithFY.balance_sheet
+            : selectedCollection === 'Profit & Loss Summary'
+              ? dataWithFY.profit_loss
+              : dataWithFY.cash_flow;
+
         if (selectedData.length > 0) {
           setTextValue(JSON.stringify(selectedData, null, 2));
         } else {
@@ -203,96 +194,729 @@ const QCViewer: React.FC = () => {
       });
   }, financialDataDependencies);
 
-  const handleSave = async () => {
-    if (!data) return;
-    try {
-    const parsed = textToExtractedData(textValue);
-    const newData = { ...data };
-    if (newData.documents.length > 0) {
-      newData.documents[0].extracted_data = parsed;
+  // ---------------------------
+  // Helper: flexible finder for balance-sheet labels
+  // ---------------------------
+  const normalize = (s: string) =>
+    s
+      .toString()
+      .toLowerCase()
+      .replace(/\s+/g, ' ')
+      .replace(/[\u200B-\u200D\uFEFF]/g, '') // zero-width
+      .replace(/[^\w\s]/g, '') // remove punctuation
+      .trim();
+
+  const findRowFlexible = (items: FinancialItem[], candidates: string | string[]): FinancialItem | null => {
+    if (!items || items.length === 0) return null;
+    const list = Array.isArray(candidates) ? candidates : [candidates];
+
+    // exact first
+    for (const c of list) {
+      const exact = items.find((d) => d.item === c);
+      if (exact) return exact;
     }
 
-      // 🔹 Persist to backend
-      const res = await fetch(`http://localhost:5000/cq/${data._id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newData),
-      });
-
-      if (res.ok) {
-        const updated = await res.json();
-        setData(updated);
-        alert('Extracted data saved successfully!');
-      } else {
-        alert('Failed to save extracted data.');
-      }
-    } catch (err) {
-      console.error('Error saving extracted data:', err);
-      alert('Error saving extracted data.');
-    } finally {
-    setIsEditing(false);
+    // normalized matches
+    const normalizedData = items.map(d => ({ d, n: normalize(d.item) }));
+    for (const c of list) {
+      const n = normalize(c);
+      // exact normalized
+      const exactNorm = normalizedData.find(x => x.n === n);
+      if (exactNorm) return exactNorm.d;
+      // contains
+      const contains = normalizedData.find(x => x.n.includes(n));
+      if (contains) return contains.d;
+      // tokens match: all tokens in candidate exist in item
+      const tokens = n.split(' ').filter(Boolean);
+      const tokenMatch = normalizedData.find(x => tokens.every(t => x.n.includes(t)));
+      if (tokenMatch) return tokenMatch.d;
     }
+
+    return null;
   };
 
+  // ---------------------------
+  // Balance Sheet renderer (single year) with robust matching and editable placeholders
+  // ---------------------------
+  const renderBSTable = (bsData: FinancialItem[]) => {
+    const year = selectedYear;
+    const items = bsData || [];
 
-  const handleSaveFinancialData = async () => {
-    if (!financialData || !data) return;
-    try {
-      const analysisResponse = await fetch(`http://localhost:5000/analysis/`);
-      const analysisEntries = await analysisResponse.json();
-      const matchingEntry = analysisEntries.find((entry: AnalysisEntry) => entry.lead_id === data.lead_id);
-      if (!matchingEntry) {
-        alert('No matching analysis entry found to save changes.');
-        return;
-      }
+    const renderRow = (
+      label: string,
+      opts?: { bold?: boolean; candidates?: string[] }
+    ) => {
+      const { bold = false, candidates } = opts || {};
+      const row = findRowFlexible(items, candidates ?? label);
+      const displayLabel = label;
+      const value = row ? (row[`FY${year}`] ?? '') : '';
 
-      // 🔹 Transform FY fields into backend format
-      const transformItems = (items: FinancialItem[]) =>
-        items.map(({ _id, item, FY2023, FY2024, FY2025, ...rest }) => ({
-          _id,
-          item,
-          value_2023: FY2023 ?? null,
-          value_2024: FY2024 ?? null,
-          value_2025: FY2025 ?? null,
-          ...rest,
-        }));
+      return (
+        <tr key={displayLabel} className="hover:bg-gray-50">
+          <td
+            className={`px-4 py-2 text-sm border-b text-left ${bold ? 'font-bold text-gray-900' : 'text-gray-900'
+              }`}
+          >
+            {displayLabel}
+          </td>
+          <td className="px-4 py-2 text-sm border-b text-right w-48">
+            <input
+              type="text"
+              value={value}
+              onChange={(e) => {
+                const newVal = e.target.value;
+                if (!financialData) return;
+                const newFD = { ...financialData };
 
-      const payload = {
-        balance_sheet: transformItems(financialData.balance_sheet),
-        profit_loss: transformItems(financialData.profit_loss),
-        cash_flow: transformItems(financialData.cash_flow),
-      };
+                const targetArr = [...(newFD.balance_sheet || [])];
+                const foundIndex = targetArr.findIndex(
+                  (t) => normalize(t.item) === normalize(row?.item ?? displayLabel)
+                );
 
-      const response = await fetch(
-        `http://localhost:5000/analysis/${matchingEntry._id}?year=${selectedYear}`,
-        {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        }
+                if (foundIndex !== -1) {
+                  targetArr[foundIndex] = {
+                    ...targetArr[foundIndex],
+                    [`FY${year}`]: newVal,
+                  };
+                } else {
+                  const newEntry: FinancialItem = {
+                    _id: `generated-${Date.now()}-${Math.random()
+                      .toString(36)
+                      .slice(2, 7)}`,
+                    item: row?.item ?? displayLabel,
+                    [`FY${year}`]: newVal,
+                  };
+                  targetArr.push(newEntry);
+                }
+
+                newFD.balance_sheet = targetArr;
+                setFinancialData(newFD);
+                setIsFinancialDataEdited(true);
+              }}
+              className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-right"
+              placeholder="-"
+            />
+          </td>
+        </tr>
       );
+    };
 
-      if (response.ok) {
-        alert('Financial data saved successfully!');
-        setIsFinancialDataEdited(false);
-      } else {
-        alert('Failed to save financial data.');
-      }
-    } catch (error) {
-      console.error('Error saving financial data:', error);
-      alert('Error saving financial data.');
-    }
+    // heading renderer
+    const renderHeading = (label: string, red = false) => (
+      <tr key={`h-${label}`} className={red ? 'bg-red-50' : 'bg-gray-50'}>
+        <td colSpan={2} className="px-4 py-2 text-sm font-semibold text-gray-900">
+          {label}
+        </td>
+      </tr>
+    );
+
+    return (
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="flex items-center justify-between px-5 py-4 bg-gray-50 border-b border-gray-200">
+          <h3 className="text-base font-semibold text-gray-900">
+            Balance Sheet Summary{' '}
+            <span className="text-sm font-normal text-gray-500">
+              (all amounts in ₹ crore)
+            </span>
+          </h3>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase border-b">
+                  Particulars
+                </th>
+                <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase border-b">
+                  {year}
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {/* ASSETS */}
+              {renderHeading('Assets', true)}
+              {renderHeading('Non-current assets')}
+              {renderRow('Property, plant and equipment')}
+              {renderRow('Right-of-use assets')}
+              {renderRow('Capital work-in-progress')}
+              {renderRow('Goodwill')}
+
+              {renderHeading('Financial assets')}
+              {renderRow('Financial assets - Investments (Non-current)')}
+              {renderRow('Financial assets - Loans (Non-current)')}
+              {renderRow('Other financial assets (Non-current)')}
+              {renderRow('Deferred tax assets (net)')}
+              {renderRow('Income tax assets (net) (Non-current)')}
+              {renderRow('Other non-current assets')}
+              {renderRow('Total non-current assets', { bold: true })}
+
+              {renderHeading('Current assets')}
+              {renderHeading('Financial assets')}
+              {renderRow('Financial assets - Investments (Current)')}
+              {renderRow('Trade receivables')}
+              {renderRow('Cash and cash equivalents')}
+              {renderRow('Financial assets - Loans (Current)')}
+              {renderRow('Other financial assets (Current)')}
+              {renderRow('Income tax assets (net) (Current)')}
+              {renderRow('Other current assets')}
+              {renderRow('Total current assets', { bold: true })}
+              {renderRow('Total assets', { bold: true })}
+
+              {/* EQUITY & LIABILITIES */}
+              {renderHeading('Equity and Liabilities', true)}
+              {renderHeading('Equity')}
+              {renderRow('Equity share capital')}
+              {renderRow('Other equity')}
+              {renderRow('Total equity', { bold: true })}
+
+              {renderHeading('Liabilities')}
+              {renderHeading('Non-current liabilities')}
+              {renderHeading('Financial liabilities')}
+              {renderRow('Financial liabilities - Lease liabilities (Non-current)')}
+              {renderRow('Other financial liabilities (Non-current)')}
+              {renderRow('Deferred tax liabilities (net)')}
+              {renderRow('Other non-current liabilities')}
+              {renderRow('Total non-current liabilities', { bold: true })}
+
+              {renderHeading('Current liabilities')}
+              {renderHeading('Financial liabilities')}
+              {renderRow('Financial liabilities - Lease liabilities (Current)')}
+
+              {renderRow(
+                'Trade payables - Total outstanding dues of micro enterprises and small enterprises',
+                { candidates: ['Trade payables - Total outstanding dues of micro enterprises and small enterprises'] }
+              )}
+
+              {renderRow(
+                'Trade payables - Total outstanding dues of creditors other than micro enterprises and small enterprises',
+                { candidates: ['Trade payables - Total outstanding dues of creditors other than micro enterprises and small enterprises'] }
+              )}
+
+              {renderRow('Other financial liabilities (Current)')}
+              {renderRow('Other current liabilities')}
+              {renderRow('Provisions (Current)', { candidates: ['Provisions (Current)', 'Provisions'] })}
+              {renderRow('Income tax liabilities (net)')}
+              {renderRow('Total current liabilities', { bold: true })}
+              {renderRow('Total equity and liabilities', { bold: true })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  };
+  ;
+
+  const renderPLTable = (plData: FinancialItem[]) => {
+    const year = selectedYear;
+    const items = plData || [];
+
+    const renderRow = (
+      label: string,
+      opts?: { bold?: boolean; candidates?: string[]; red?: boolean }
+    ) => {
+      const { bold = false, candidates, red = false } = opts || {};
+      const row = findRowFlexible(items, candidates ?? label);
+      const displayLabel = label;
+      const value = row ? (row[`FY${year}`] ?? '') : '';
+
+      return (
+        <tr
+          key={displayLabel}
+          className={`hover:bg-gray-50 ${red ? 'bg-red-50' : ''}`}
+        >
+          <td
+            className={`px-4 py-2 text-sm border-b text-left ${bold ? 'font-bold text-gray-900' : 'text-gray-900'
+              }`}
+          >
+            {displayLabel}
+          </td>
+          <td className="px-4 py-2 text-sm border-b text-right w-48">
+            <input
+              type="text"
+              value={value}
+              onChange={(e) => {
+                const newVal = e.target.value;
+                if (!financialData) return;
+                const newFD = { ...financialData };
+
+                const targetArr = [...(newFD.profit_loss || [])];
+                const foundIndex = targetArr.findIndex(
+                  (t) => normalize(t.item) === normalize(row?.item ?? displayLabel)
+                );
+
+                if (foundIndex !== -1) {
+                  targetArr[foundIndex] = {
+                    ...targetArr[foundIndex],
+                    [`FY${year}`]: newVal,
+                  };
+                } else {
+                  const newEntry: FinancialItem = {
+                    _id: `generated-${Date.now()}-${Math.random()
+                      .toString(36)
+                      .slice(2, 7)}`,
+                    item: row?.item ?? displayLabel,
+                    [`FY${year}`]: newVal,
+                  };
+                  targetArr.push(newEntry);
+                }
+
+                newFD.profit_loss = targetArr;
+                setFinancialData(newFD);
+                setIsFinancialDataEdited(true);
+              }}
+              className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-right"
+              placeholder="-"
+            />
+          </td>
+        </tr>
+      );
+    };
+
+    const renderHeading = (label: string, red = false) => (
+      <tr key={`h-${label}`} className={red ? 'bg-red-50' : 'bg-gray-50'}>
+        <td colSpan={2} className="px-4 py-2 text-sm font-semibold text-gray-900">
+          {label}
+        </td>
+      </tr>
+    );
+
+    return (
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="flex items-center justify-between px-5 py-4 bg-gray-50 border-b border-gray-200">
+          <h3 className="text-base font-semibold text-gray-900">
+            Profit & Loss Summary{' '}
+            <span className="text-sm font-normal text-gray-500">
+              (all amounts in ₹ crore, except per share data)
+            </span>
+          </h3>
+        </div>
+
+        {/* First table */}
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase border-b">
+                  Particulars
+                </th>
+                <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase border-b">
+                  {year}
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {renderRow('Revenue from operations')}
+              {renderRow('Other income, net')}
+              {renderRow('Total income', { bold: true })}
+
+              {renderHeading('Expenses')}
+              {renderRow('Employee benefit expenses')}
+              {renderRow('Cost of technical sub-contractors')}
+              {renderRow('Travel expenses')}
+              {renderRow('Cost of software packages and others')}
+              {renderRow('Communication expenses')}
+              {renderRow('Consultancy and professional charges')}
+              {renderRow('Depreciation and amortization expenses')}
+              {renderRow('Finance cost')}
+              {renderRow('Other expenses')}
+              {renderRow('Total expenses', { bold: true })}
+
+              {renderRow('Profit before tax', { bold: true, red: true })}
+
+              {renderHeading('Tax expense:')}
+              {renderRow('Current tax')}
+              {renderRow('Deferred tax')}
+              {renderRow('Profit for the year', { bold: true, red: true })}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Space between tables */}
+        <div className="my-6 bg-white"></div>
+
+        {/* Second table: Profit and Loss (Contd.) */}
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase border-b">
+                  Particulars
+                </th>
+                <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase border-b">
+                  {year}
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {renderHeading('Profit and Loss (Contd.)')}
+              {renderHeading('Other comprehensive income', true)}
+              {renderHeading(
+                'Items that will not be reclassified subsequently to profit or loss'
+              )}
+              {renderRow(
+                'Remeasurement of the net defined benefit liability / asset, net'
+              )}
+              {renderRow(
+                'Equity instruments through other comprehensive income, net'
+              )}
+
+              {renderHeading(
+                'Items that will be reclassified subsequently to profit or loss'
+              )}
+              {renderRow(
+                'Fair value changes on derivatives designated as cash flow hedge, net'
+              )}
+              {renderRow('Fair value changes on investments, net')}
+
+              {renderRow('Total other comprehensive income / (loss), net of tax', {
+                bold: true,
+                red: true,
+              })}
+
+              {renderRow('Total comprehensive income for the year', {
+                bold: true,
+                red: true,
+              })}
+
+              {renderHeading('Earnings per equity share', true)}
+              {renderRow('Basic (in ₹ per share)')}
+              {renderRow('Diluted (in ₹ per share)')}
+
+              {renderHeading(
+                'Weighted average equity shares used in computing earnings per equity share'
+              )}
+              {renderRow('Basic (in shares)')}
+              {renderRow('Diluted (in shares)')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
   };
 
 
-  // 🔹 Approve/Decline
+  const renderCFTable = (cfData: FinancialItem[]) => {
+    const year = selectedYear;
+
+    // Build combined array: take cash_flow, inject Profit for the year & Finance cost from profit_loss
+    let items = cfData ? [...cfData] : [];
+    if (financialData) {
+      const profitRow = findRowFlexible(financialData.profit_loss, [
+        'Profit for the year',
+        'Profit after tax'
+      ]);
+      const financeRow = findRowFlexible(financialData.profit_loss, [
+        'Finance cost',
+        'Finance costs'
+      ]);
+
+      // Inject Profit for the year at the top if missing
+      if (profitRow && !items.some(d => normalize(d.item) === normalize(profitRow.item))) {
+        items = [profitRow, ...items];
+      }
+
+      // Inject Finance cost after Impairment if missing
+      if (financeRow && !items.some(d => normalize(d.item) === normalize(financeRow.item))) {
+        const idx = items.findIndex(
+          d => d.item && normalize(d.item).includes('impairment loss recognized')
+        );
+        if (idx !== -1) {
+          items.splice(idx + 1, 0, financeRow);
+        } else {
+          items.push(financeRow);
+        }
+      }
+    }
+
+    const renderRow = (
+      label: string,
+      opts?: { bold?: boolean; candidates?: string[]; red?: boolean }
+    ) => {
+      const { bold = false, candidates, red = false } = opts || {};
+      const row = findRowFlexible(items, candidates ?? label);
+      const value = row ? (row[`FY${year}`] ?? '') : '';
+      return (
+        <tr key={label} className={`hover:bg-gray-50 ${red ? 'bg-red-50' : ''}`}>
+          <td
+            className={`px-4 py-2 text-sm border-b text-left ${bold ? 'font-bold text-gray-900' : 'text-gray-900'
+              }`}
+          >
+            {label}
+          </td>
+          <td className="px-4 py-2 text-sm border-b text-right w-48">
+            <input
+              type="text"
+              value={value}
+              onChange={e => {
+                if (!financialData) return;
+                const newFD = { ...financialData };
+                const arr = [...newFD.cash_flow];
+                const idx = arr.findIndex(
+                  t => normalize(t.item) === normalize(row?.item ?? label)
+                );
+                if (idx !== -1) {
+                  arr[idx] = { ...arr[idx], [`FY${year}`]: e.target.value };
+                } else {
+                  arr.push({
+                    _id: `gen-${Date.now()}`,
+                    item: row?.item ?? label,
+                    [`FY${year}`]: e.target.value
+                  });
+                }
+                newFD.cash_flow = arr;
+                setFinancialData(newFD);
+                setIsFinancialDataEdited(true);
+              }}
+              className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-right"
+              placeholder="-"
+            />
+          </td>
+        </tr>
+      );
+    };
+
+    const renderHeading = (label: string, red = false) => (
+      <tr key={`h-${label}`} className={red ? 'bg-red-50' : 'bg-gray-50'}>
+        <td colSpan={2} className="px-4 py-2 text-sm font-semibold text-gray-900">
+          {label}
+        </td>
+      </tr>
+    );
+
+    return (
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="flex items-center justify-between px-5 py-4 bg-gray-50 border-b border-gray-200">
+          <h3 className="text-base font-semibold text-gray-900">
+            Cash Flow Summary{' '}
+            <span className="text-sm font-normal text-gray-500">(in ₹ crore)</span>
+          </h3>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase border-b">
+                  Particulars
+                </th>
+                <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase border-b">
+                  {year}
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {renderHeading('Cash flow from operating activities:', true)}
+              {renderRow('Profit for the year', {
+                candidates: ['Profit for the year', 'Profit after tax']
+              })}
+              {renderHeading(
+                'Adjustments to reconcile net profit to net cash provided by operating activities:'
+              )}
+              {renderRow('Depreciation and Amortization')}
+              {renderRow('Income tax expense')}
+              {renderRow(
+                'Impairment loss recognized / (reversed) under expected credit loss model'
+              )}
+              {renderRow('Finance cost', {
+                candidates: ['Finance cost', 'Finance costs']
+              })}
+              {renderRow('Interest and dividend income')}
+              {renderRow('Stock compensation expense')}
+              {renderRow('Provision for post-sale client support')}
+              {renderRow(
+                'Exchange differences on translation of assets and liabilities, net'
+              )}
+              {renderRow('Interest receivable on income tax refund')}
+              {renderRow('Other adjustments')}
+              {renderHeading('Changes in assets and liabilities')}
+              {renderRow('Trade receivables and unbilled revenue')}
+              {renderRow('Loans, other financial assets and other assets')}
+              {renderRow('Trade payables')}
+              {renderRow('Other financial liabilities, other liabilities and provisions')}
+              {renderRow('Cash generated from operations')}
+              {renderRow('Income taxes paid')}
+              {renderRow('Net cash generated by operating activities', { bold: true })}
+
+              {renderHeading('Cash flow from investing activities:', true)}
+              {renderRow('Expenditure on property, plant and equipment')}
+              {renderRow('Deposits placed with corporation')}
+              {renderRow('Redemption of deposits placed with corporation')}
+              {renderRow('Interest and dividend received')}
+              {renderRow('Dividend received from subsidiary')}
+              {renderRow('Loan given to subsidiaries')}
+              {renderRow('Loan repaid by subsidiaries')}
+              {renderRow('Investment in subsidiaries')}
+              {renderRow('Payment towards acquisition of entities')}
+              {renderRow(
+                'Receipt / (payment) towards business transfer for entities under common control'
+              )}
+              {renderRow('Receipt / (payment) from entities under liquidation')}
+              {renderRow('Other receipts')}
+
+              {renderHeading('Payments to acquire investments')}
+              {renderRow('Payments to acquire investments: Liquid mutual fund units')}
+              {renderRow('Payments to acquire investments: Commercial papers')}
+              {renderRow('Payments to acquire investments: Certificates of deposit')}
+              {renderRow('Payments to acquire investments: Non-convertible debentures')}
+              {renderRow('Payments to acquire investments: Other investments')}
+
+              {renderHeading('Proceeds on sale of investments')}
+              {renderRow(
+                'Proceeds on sale of investments: Tax-free bonds and government bonds'
+              )}
+              {renderRow('Proceeds on sale of investments: Liquid mutual fund units')}
+              {renderRow('Proceeds on sale of investments: Non-convertible debentures')}
+              {renderRow('Proceeds on sale of investments: Certificates of deposit')}
+              {renderRow('Proceeds on sale of investments: Commercial papers')}
+              {renderRow('Proceeds on sale of investments: Government securities')}
+              {renderRow('Proceeds on sale of investments: Other investments')}
+
+              {renderRow('Net cash used in investing activities', { bold: true })}
+
+              {renderHeading('Cash flow from financing activities:', true)}
+              {renderRow('Payment of lease liabilities')}
+              {renderRow('Shares issued on exercise of employee stock options')}
+              {renderRow('Other payments')}
+              {renderRow('Payment of dividends')}
+              {renderRow('Net cash used in financing activities', { bold: true })}
+
+              {renderRow('Net increase / (decrease) in cash and cash equivalents', {
+                bold: true,
+                red: true
+              })}
+              {renderRow('Effect of exchange differences on translation of foreign currency cash and cash equivalents')}
+              {renderRow('Cash and cash equivalents at the beginning of the year')}
+              {renderRow('Cash and cash equivalents at the end of the year', {
+                bold: true,
+                red: true
+              })}
+
+              {renderHeading('Supplementary information:')}
+              {renderRow('Restricted cash balance')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  };
+
+
+
+  // ---------------------------
+  // Generic flat table renderer (used for P&L and Cash Flow)
+  // (kept from previous implementation, including cash-flow injections)
+  // ---------------------------
+  const findRowInDataset = (dataset: FinancialItem[], itemName: string): FinancialItem | null => {
+    if (!dataset) return null;
+    return dataset.find(d => d.item === itemName) || null;
+  };
+
+  const renderFlatTable = (data: FinancialItem[], arrayType: keyof FinancialData) => {
+    const yearArray = selectedYear ? [selectedYear] : [];
+    let displayData = [...data];
+
+    // Inject rows into Cash Flow (borrowed from profit_loss when missing)
+    if (arrayType === "cash_flow" && financialData) {
+      const profitRow = findRowInDataset(financialData.profit_loss, "Profit for the year");
+      const financeCostRow = findRowInDataset(financialData.profit_loss, "Finance cost");
+
+      // Profit for the year at the top
+      if (profitRow && !displayData.some(d => d.item === "Profit for the year")) {
+        displayData = [profitRow, ...displayData];
+      }
+
+      // Finance cost after Impairment loss
+      if (financeCostRow && !displayData.some(d => d.item === "Finance cost")) {
+        const idx = displayData.findIndex(d =>
+          d.item && typeof d.item === 'string' && d.item.includes("Impairment loss recognized")
+        );
+        if (idx !== -1) {
+          displayData.splice(idx + 1, 0, financeCostRow);
+        }
+      }
+    }
+
+    return (
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
+                Item
+              </th>
+              {yearArray.map((year) => (
+                <th
+                  key={year}
+                  className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider border-b"
+                >
+                  {year}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {displayData.map((row, index) => (
+              <tr key={row._id || index} className="hover:bg-gray-50">
+                <td className="px-4 py-3 text-sm font-medium text-gray-900 border-b text-left">
+                  {row.item}
+                </td>
+                {yearArray.map((year) => (
+                  <td key={year} className="px-4 py-3 text-sm border-b text-right">
+                    <input
+                      type="text"
+                      value={row[`FY${year}`] ?? ''}
+                      onChange={(e) => {
+                        if (!financialData) return;
+                        const newFD = { ...financialData };
+                        const targetArr = [...newFD[arrayType]];
+                        const numValue = parseFloat(e.target.value);
+                        const idx = targetArr.findIndex((d) => d.item === row.item);
+                        if (idx !== -1) {
+                          targetArr[idx][`FY${year}`] = isNaN(numValue)
+                            ? e.target.value
+                            : numValue;
+                          newFD[arrayType] = targetArr;
+                          setFinancialData(newFD);
+                          setIsFinancialDataEdited(true);
+                        } else if (arrayType === "cash_flow") {
+                          // if row came from profit_loss, push into cash_flow for persistence
+                          newFD.cash_flow = [
+                            ...newFD.cash_flow,
+                            { ...row, [`FY${year}`]: isNaN(numValue) ? e.target.value : numValue }
+                          ];
+                          setFinancialData(newFD);
+                          setIsFinancialDataEdited(true);
+                        }
+                      }}
+                      className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-right"
+                      placeholder="-"
+                    />
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
+
+  // ---------------------------
+  // Approve / Decline handlers (unchanged)
+  // ---------------------------
   const handleApprove = async () => {
     if (!data) return;
     try {
-      const res = await fetch(`http://localhost:5000/cq/${data._id}/approve`, { method: 'PUT' });
+      const res = await fetch(`http://localhost:5000/leads/${data._id}/approve`, {
+        method: 'PUT'
+      });
       if (res.ok) {
         const updated = await res.json();
-        setData(updated.record);
+        setData({
+          ...data,
+          status: updated.record.status,
+          customer_name: updated.record.business_name
+        });
         alert('Customer approved successfully!');
       } else {
         alert('Failed to approve.');
@@ -306,10 +930,16 @@ const QCViewer: React.FC = () => {
   const handleDecline = async () => {
     if (!data) return;
     try {
-      const res = await fetch(`http://localhost:5000/cq/${data._id}/reject`, { method: 'PUT' });
+      const res = await fetch(`http://localhost:5000/leads/${data._id}/reject`, {
+        method: 'PUT'
+      });
       if (res.ok) {
         const updated = await res.json();
-        setData(updated.record);
+        setData({
+          ...data,
+          status: updated.record.status,
+          customer_name: updated.record.business_name
+        });
         alert('Customer rejected successfully!');
       } else {
         alert('Failed to reject.');
@@ -320,607 +950,46 @@ const QCViewer: React.FC = () => {
     }
   };
 
-  // 🔹 Utility for editing cells
-  const renderEditableRow = (row: FinancialItem, index: number, yearArray: string[], arrayType: keyof FinancialData) => {
-    return (
-      <tr key={row._id || index} className="hover:bg-gray-50">
-        <td className="px-4 py-3 text-sm font-medium text-gray-900 border-b text-left">
-          {row.item}
-        </td>
-        {yearArray.map((year) => (
-          <td key={year} className="px-4 py-3 text-sm border-b text-right">
-            <input
-              type="text"
-              value={row[`FY${year}`] ?? ''}
-              onChange={(e) => {
-                if (!financialData) return;
-                const newFD = { ...financialData };
-                const targetArr = [...newFD[arrayType]];
-                const numValue = parseFloat(e.target.value);
-                targetArr[index][`FY${year}`] = isNaN(numValue) ? e.target.value : numValue;
-                newFD[arrayType] = targetArr;
-                setFinancialData(newFD);
-                setIsFinancialDataEdited(true);
-              }}
-              className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-right"
-              style={{
-                color: (() => {
-                  const val = row[`FY${year}`];
-                  if (val === null || val === undefined) return '#111827';
-                  if (typeof val === 'string') {
-                    if (val.startsWith('(') && val.endsWith(')')) return '#ef4444';
-                    const numVal = Number(val);
-                    if (!isNaN(numVal)) return numVal < 0 ? '#ef4444' : '#111827';
-                    return '#111827';
-                  }
-                  const numVal = Number(val);
-                  return isNaN(numVal) ? '#111827' : numVal < 0 ? '#ef4444' : '#111827';
-                })()
-              }}
-              placeholder="-"
-            />
-          </td>
-        ))}
-      </tr>
-    );
-  };
+  const handleSave = async () => {
+    if (!financialData || !data) return;
 
-  // 🔹 Specialized renderers
-  const renderBSTable = (data: FinancialItem[]) => {
-    const sections = [
-      {
-        heading: "Assets",
-        children: [
-          {
-            heading: "Non-current assets", children: [
-              "Property, plant and equipment",
-              "Right-of-use assets",
-              "Capital work-in-progress",
-              "Goodwill",
-              {
-                heading: "Financial assets", children: [
-                  "Financial assets - Investments (Non-current)",
-                  "Financial assets - Loans (Non-current)",
-                  "Other financial assets (Non-current)"
-                ]
-              },
-              "Deferred tax assets (net)",
-              "Income tax assets (net) (Non-current)",
-              "Other non-current assets",
-              "Total non-current assets"
-            ]
-          },
-          {
-            heading: "Current assets", children: [
-              {
-                heading: "Financial assets", children: [
-                  "Financial assets - Investments (Current)",
-                  "Trade receivables",
-                  "Cash and cash equivalents",
-                  "Financial assets - Loans (Current)",
-                  "Other financial assets (Current)"
-                ]
-              },
-              "Income tax assets (net) (Current)",
-              "Other current assets",
-              "Total current assets"
-            ]
-          },
-          "Total assets"
-        ]
-      },
-      {
-        heading: "Equity and liabilities",
-        children: [
-          {
-            heading: "Equity", children: [
-              "Equity share capital",
-              "Other equity",
-              "Total equity"
-            ]
-          },
-          {
-            heading: "Liabilities", children: [
-              {
-                heading: "Non-current liabilities", children: [
-                  {
-                    heading: "Financial liabilities", children: [
-                      "Financial liabilities - Lease liabilities (Non-current)",
-                      "Other financial liabilities (Non-current)"
-                    ]
-                  },
-                  "Deferred tax liabilities (net)",
-                  "Other non-current liabilities",
-                  "Total non-current liabilities"
-                ]
-              },
-              {
-                heading: "Current liabilities", children: [
-                  {
-                    heading: "Financial liabilities", children: [
-                      "Financial liabilities - Lease liabilities (Current)",
-                      {
-                        heading: "Trade payables", children: [
-                          "Financial liabilities - Trade payables - Total outstanding dues of micro enterprises and small enterprises",
-                          "Financial liabilities - Trade payables - Total outstanding dues of creditors other than micro enterprises and small enterprises"
-                        ]
-                      },
-                      "Other financial liabilities (Current)"
-                    ]
-                  },
-                  "Other current liabilities",
-                  "Provisions (Current)",
-                  "Income tax liabilities (net) (Current)",
-                  "Total current liabilities"
-                ]
-              }
-            ]
-          },
-          "Total equity and liabilities"
-        ]
+    try {
+      const year = selectedYear;
+
+      // 👇 Pick the current collection
+      const targetArr =
+        selectedCollection === 'Balance Sheet Summary'
+          ? financialData.balance_sheet
+          : selectedCollection === 'Profit & Loss Summary'
+            ? financialData.profit_loss
+            : financialData.cash_flow;
+
+      // Loop through rows of the current table
+      for (const row of targetArr) {
+        const value = row[`FY${year}`];
+
+        // Skip empty or untouched rows
+        if (value === undefined || value === null || value === '') continue;
+
+        await fetch('http://localhost:5000/cq/update', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            customer_name: data.customer_name,
+            lead_id: data.lead_id,
+            item: row.item,
+            year,
+            value
+          })
+        });
       }
-    ];
-    
-    return (
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="flex items-center justify-between px-5 py-4 bg-gray-50 border-b border-gray-200">
-          <h3 className="text-base font-semibold text-gray-900">
-            Balance Sheet Summary{" "}
-            <span className="text-sm font-normal text-gray-500">
-              (all amounts in Crores of Rs.)
-            </span>
-          </h3>
-        </div>
-        <div className="overflow-auto">
-          {renderStructuredTable(data, sections, "balance_sheet")}
-        </div>
-      </div>
-    );
-  };
 
-
-
-  const renderPLTable = (data: FinancialItem[]) => {
-    const firstCardSections = [
-      "Revenue from operations",
-      "Other income, net",
-      "Total income",
-      {
-        heading: "Expenses",
-        children: [
-          "Employee benefit expenses",
-          "Cost of technical sub-contractors",
-          "Travel expenses",
-          "Cost of software packages and others",
-          "Communication expenses",
-          "Consultancy and professional charges",
-          "Depreciation and amortization expenses",
-          "Finance cost",
-          "Other expenses",
-          "Total expenses",
-        ],
-      },
-      "Profit before tax",
-      {
-        heading: "Tax expense",
-        children: ["Current tax", "Deferred tax"],
-      },
-      "Profit for the year",
-    ];
-
-    const secondCardSections = [
-      {
-        heading: "Other comprehensive income",
-        children: [
-          {
-            heading: "Items that will not be reclassified subsequently to profit or loss",
-            children: [
-              "Remeasurement of the net defined benefit liability / asset, net",
-              "Equity instruments through other comprehensive income, net",
-            ],
-          },
-          {
-            heading: "Items that will be reclassified subsequently to profit or loss",
-            children: [
-              "Fair value changes on derivatives designated as cash flow hedge, net",
-              "Fair value changes on investments, net (OCI)",
-            ],
-          },
-        ],
-      },
-      {
-        heading: "Total other comprehensive income / (loss), net of tax",
-        children: []
-      },
-      { 
-        heading: "Total comprehensive income for the year",
-        children: []
-      },
-      {
-        heading: "Earnings per equity share",
-        children: [
-          {
-            heading: "Equity shares of par value ₹5/- each",
-            children: [
-              "Basic earnings per share (in ₹ per share)",
-              "Diluted earnings per share (in ₹ per share)",
-            ],
-          },
-          {
-            heading: "Weighted average equity shares used in computing earnings per share",
-            children: [
-              "Weighted average equity shares used in computing basic earnings per share (in shares)",
-              "Weighted average equity shares used in computing diluted earnings per share (in shares)",
-            ],
-          },
-        ],
-      },
-    ];
-
-    return (
-      <div className="space-y-6">
-        {/* First Card */}
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <div className="flex items-center justify-between px-5 py-4 bg-gray-50 border-b border-gray-200">
-            <h3 className="text-base font-semibold text-gray-900">
-              Profit & Loss Summary{" "}
-              <span className="text-sm font-normal text-gray-500">
-                (all amounts in Crores of Rs.)
-              </span>
-            </h3>
-          </div>
-          <div className="overflow-auto">
-            {renderStructuredTable(data, firstCardSections, 'profit_loss')}
-          </div>
-        </div>
-
-        {/* Second Card */}
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <div className="flex items-center justify-between px-5 py-4 bg-gray-50 border-b border-gray-200">
-            <h3 className="text-base font-semibold text-gray-900">
-              Profit & Loss Summary (contd.){" "}
-              <span className="text-sm font-normal text-gray-500">
-                (all amounts in Crores of Rs.)
-              </span>
-            </h3>
-          </div>
-          <div className="overflow-auto">
-            {renderStructuredTable(data, secondCardSections, 'profit_loss')}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-
-  const renderCFTable = (data: FinancialItem[]) => {
-    const sections = [
-      {
-        heading: "Cash Flow from Operating Activities",
-        children: [
-          "Profit for the year",
-          {
-            heading: "Adjustments to reconcile net profit to net cash provided by operating activities:",
-            children: [
-              "Depreciation and Amortization",
-              "Income tax expense",
-              "Impairment loss recognized / (reversed) under expected credit loss model",
-              "Finance cost",
-              "Interest and dividend income",
-              "Stock compensation expense",
-              "Provision for post-sale client support",
-              "Exchange differences on translation of assets and liabilities, net",
-              "Interest receivable on income tax refund",
-              "Other adjustments",
-            ],
-          },
-          {
-            heading: "Changes in assets and liabilities",
-            children: [
-              "Trade receivables and unbilled revenue",
-              "Loans, other financial assets and other assets",
-              "Trade payables",
-              "Other financial liabilities, other liabilities and provisions",
-            ],
-          },
-          "Cash generated from operations",
-          "Income taxes paid",
-          "Net cash generated by operating activities",
-        ],
-      },
-      {
-        heading: "Cash Flow from Investing Activities",
-        children: [
-          "Expenditure on property, plant and equipment",
-          "Deposits placed with corporation",
-          "Redemption of deposits placed with corporation",
-          "Interest and dividend received",
-          "Dividend received from subsidiary",
-          "Loan given to subsidiaries",
-          "Loan repaid by subsidiaries",
-          "Investment in subsidiaries",
-          "Payment towards acquisition of entities",
-          "Receipt / (payment) towards business transfer for entities under common control",
-          "Receipt / (payment) from entities under liquidation",
-          "Other receipts",
-          {
-            heading: "Payments to acquire investments",
-            children: [
-              "Payments to acquire investments - Liquid mutual fund units",
-              "Payments to acquire investments - Commercial papers",
-              "Payments to acquire investments - Certificates of deposit",
-              "Payments to acquire investments - Non-convertible debentures",
-              "Payments to acquire investments - Other investments",
-            ],
-          },
-          {
-            heading: "Proceeds on sale of investments",
-            children: [
-              "Proceeds on sale of investments - Tax-free bonds and government bonds",
-              "Proceeds on sale of investments - Liquid mutual fund units",
-              "Proceeds on sale of investments - Non-convertible debentures",
-              "Proceeds on sale of investments - Certificates of deposit",
-              "Proceeds on sale of investments - Commercial papers",
-              "Proceeds on sale of investments - Government securities",
-              "Proceeds on sale of investments - Other investments",
-            ],
-          },
-          "Net cash used in investing activities",
-        ],
-      },
-      {
-        heading: "Cash Flow from Financing Activities",
-        children: [
-          "Payment of lease liabilities",
-          "Shares issued on exercise of employee stock options",
-          "Other payments",
-          "Payment of dividends",
-          "Net cash used in financing activities",
-          "Net increase / (decrease) in cash and cash equivalents",
-          "Effect of exchange differences on translation of foreign currency cash and cash equivalents",
-          "Cash and cash equivalents at the beginning of the year",
-          "Cash and cash equivalents at the end of the year",
-        ],
-      },
-      {
-        heading: "Supplementary information",
-        children: ["Restricted cash balance"],
-      },
-    ];
-    console.log('Cash Flow data:', data);
-    console.log('Cash Flow sections:', sections);
-    
-    return (
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="flex items-center justify-between px-5 py-4 bg-gray-50 border-b border-gray-200">
-          <h3 className="text-base font-semibold text-gray-900">
-            Cash Flow Summary{" "}
-            <span className="text-sm font-normal text-gray-500">
-              (all amounts in Crores of Rs.)
-            </span>
-          </h3>
-        </div>
-        <div className="overflow-auto">
-          {renderStructuredTable(data, sections, 'cash_flow')}
-        </div>
-      </div>
-    );
-  };
-
-
-  // 🔹 Reusable structured table renderer
-  const renderStructuredTable = (
-    data: FinancialItem[],
-    sections: (string | { heading: string; children: any[] })[],
-    arrayType: keyof FinancialData
-  ) => {
-    const yearArray = selectedYear ? [selectedYear] : [];
-
-    const renderRows = (items: (string | { heading: string; children: any[] })[]) => {
-      return items.map((item, idx) => {
-        if (typeof item === "string") {
-          const row = data.find((d) => d.item === item);
-          if (!row) {
-            console.log('Item not found in data:', item, 'Available items:', data.map(d => d.item));
-            return null;
-          }
-          
-          // Check for specific P&L items that should be blue and bold
-          const isBlueTotal = row.item === "Total income" || row.item === "Total expenses";
-          // Check for specific Cash Flow items that should be blue and bold
-          const isBlueCashFlow = row.item === "Cash generated from operations";
-          // Check for items that should be bold but not blue
-          const isBold = isBlueTotal || isBlueCashFlow || (
-            /(total|net)/i.test(row.item) &&
-            !/Cash and cash equivalents at the beginning of the year/i.test(row.item) &&
-            !isBlueTotal &&
-            !isBlueCashFlow
-          );
-
-          // Check for items that should be red (main profit lines and cash flow summary items)
-          const isRedItem = row.item === "Profit before tax" || 
-                           row.item === "Profit for the year" ||
-                           row.item === "Net increase / (decrease) in cash and cash equivalents" ||
-                           row.item === "Cash and cash equivalents at the end of the year";
-          
-          // Check if this item should be indented (children of sections)
-          const isIndented = (
-            // P&L items
-            (arrayType === 'profit_loss' && (
-              row.item === "Employee benefit expenses" ||
-              row.item === "Cost of technical sub-contractors" ||
-              row.item === "Travel expenses" ||
-              row.item === "Cost of software packages and others" ||
-              row.item === "Communication expenses" ||
-              row.item === "Consultancy and professional charges" ||
-              row.item === "Depreciation and amortization expenses" ||
-              row.item === "Finance cost" ||
-              row.item === "Other expenses" ||
-              row.item === "Current tax" ||
-              row.item === "Deferred tax"
-            )) ||
-            // Cash Flow items
-            (arrayType === 'cash_flow' && (
-              row.item === "Depreciation and Amortization" ||
-              row.item === "Income tax expense" ||
-              row.item === "Impairment loss recognized / (reversed) under expected credit loss model" ||
-              row.item === "Finance cost" ||
-              row.item === "Interest and dividend income" ||
-              row.item === "Stock compensation expense" ||
-              row.item === "Provision for post-sale client support" ||
-              row.item === "Exchange differences on translation of assets and liabilities, net" ||
-              row.item === "Interest receivable on income tax refund" ||
-              row.item === "Other adjustments" ||
-              row.item === "Trade receivables and unbilled revenue" ||
-              row.item === "Loans, other financial assets and other assets" ||
-              row.item === "Trade payables" ||
-              row.item === "Other financial liabilities, other liabilities and provisions" ||
-              row.item === "Payments to acquire investments - Liquid mutual fund units" ||
-              row.item === "Payments to acquire investments - Commercial papers" ||
-              row.item === "Payments to acquire investments - Certificates of deposit" ||
-              row.item === "Payments to acquire investments - Non-convertible debentures" ||
-              row.item === "Payments to acquire investments - Other investments" ||
-              row.item === "Proceeds on sale of investments - Tax-free bonds and government bonds" ||
-              row.item === "Proceeds on sale of investments - Liquid mutual fund units" ||
-              row.item === "Proceeds on sale of investments - Non-convertible debentures" ||
-              row.item === "Proceeds on sale of investments - Certificates of deposit" ||
-              row.item === "Proceeds on sale of investments - Commercial papers" ||
-              row.item === "Proceeds on sale of investments - Government securities" ||
-              row.item === "Proceeds on sale of investments - Other investments" ||
-              row.item === "Restricted cash balance"
-            ))
-          );
-
-          return (
-            <tr key={row._id || idx} className={`hover:bg-gray-50 ${isBlueTotal || isBlueCashFlow ? "bg-blue-50" : isRedItem ? "bg-red-50" : ""}`}>
-              <td
-                className={`px-4 py-3 text-sm border-b ${
-                  isBlueTotal || isBlueCashFlow ? "font-semibold text-blue-900" : 
-                  isRedItem ? "font-semibold text-red-900" :
-                  isBold ? "font-semibold text-gray-900" : 
-                  "font-medium text-gray-900"
-                } text-left`}
-                style={{ paddingLeft: isIndented ? '2rem' : '1rem' }}
-              >
-                {row.item}
-              </td>
-              {yearArray.map((year) => (
-                <td key={year} className="px-4 py-3 text-sm border-b text-right">
-                  <input
-                    type="text"
-                    value={row[`FY${year}`] ?? ""}
-                    onChange={(e) => {
-      if (!financialData) return;
-                      const newFD = { ...financialData };
-                      const targetArr = [...newFD[arrayType]];
-                      const numValue = parseFloat(e.target.value);
-                      const idx = targetArr.findIndex((d) => d.item === row.item);
-                      if (idx !== -1) {
-                        targetArr[idx][`FY${year}`] = isNaN(numValue)
-                          ? e.target.value
-                          : numValue;
-                        newFD[arrayType] = targetArr;
-                        setFinancialData(newFD);
-        setIsFinancialDataEdited(true);
-      }
-                    }}
-                    className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-right"
-                    style={{
-                      color: (() => {
-                        const val = row[`FY${year}`];
-                        if (val === null || val === undefined) return "#111827";
-                        if (typeof val === "string") {
-                          if (val.startsWith("(") && val.endsWith(")"))
-                            return "#ef4444";
-                          const numVal = Number(val);
-                          if (!isNaN(numVal)) return numVal < 0 ? "#ef4444" : "#111827";
-                          return "#111827";
-                        }
-                        const numVal = Number(val);
-                        return isNaN(numVal)
-                          ? "#111827"
-                          : numVal < 0
-                            ? "#ef4444"
-                            : "#111827";
-                      })(),
-                    }}
-                    placeholder="-"
-                  />
-                </td>
-              ))}
-            </tr>
-          );
-        }
-
-        // 🔹 Nested heading
-        const isRedHeading = [
-          "Assets",
-          "Equity and liabilities",
-          "Cash Flow from Operating Activities",
-          "Cash Flow from Investing Activities", 
-          "Cash Flow from Financing Activities",
-          "Other comprehensive income",
-          "Total other comprehensive income / (loss), net of tax",
-          "Total comprehensive income for the year",
-          "Earnings per equity share"
-        ].includes(item.heading);
-        
-        const isBlueHeading = [
-          "Expenses",
-          "Tax expense",
-          "Items that will not be reclassified subsequently to profit or loss",
-          "Items that will not be reclassified subsequently to profit or loss",
-          "Equity shares of par value ₹5/- each",
-          "Weighted average equity shares used in computing earnings per share",
-          "Adjustments to reconcile net profit to net cash provided by operating activities:",
-          "Changes in assets and liabilities",
-          "Cash generated from operations"
-        ].includes(item.heading);
-        
-        return (
-          <React.Fragment key={item.heading}>
-            <tr className={isRedHeading ? "bg-red-50" : isBlueHeading ? "bg-blue-50" : "bg-gray-50"}>
-              <td
-                colSpan={yearArray.length + 1}
-                className={`px-4 py-2 text-sm font-semibold text-left ${
-                  isRedHeading ? "text-red-900" : isBlueHeading ? "text-blue-900" : "text-gray-900"
-                }`}
-              >
-                {item.heading}
-              </td>
-            </tr>
-            {renderRows(item.children)}
-          </React.Fragment>
-        );
-      });
-    };
-
-    return (
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                {/* <span className="text-xs font-normal text-gray-400 normal-case">
-                  (all amounts in Crores of Rs.)
-                </span> */}
-              </th>
-              {yearArray.map((year) => (
-                <th
-                  key={year}
-                  className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider border-b"
-                >
-                  {year}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {renderRows(sections)}
-          </tbody>
-        </table>
-      </div>
-    );
+      alert('Changes saved successfully ✅');
+      setIsFinancialDataEdited(false);
+    } catch (err) {
+      console.error('Save failed:', err);
+      alert('Failed to save changes ❌');
+    }
   };
 
 
@@ -969,52 +1038,28 @@ const QCViewer: React.FC = () => {
       <div>
         {selectedCollection ? (
           <div className="mt-4">
-            {financialData &&
-              (selectedCollection === 'Balance Sheet Summary'
-                ? renderBSTable(financialData.balance_sheet || [])
-                : selectedCollection === 'Profit & Loss Summary'
-                  ? renderPLTable(financialData.profit_loss || [])
-                  : selectedCollection === 'Cash Flow Summary'
-                    ? renderCFTable(financialData.cash_flow || [])
-                    : null)}
+            {financialData && (selectedCollection === 'Balance Sheet Summary'
+              ? renderBSTable(financialData.balance_sheet || [])
+              : selectedCollection === 'Profit & Loss Summary'
+                ? renderPLTable(financialData.profit_loss || [])
+                : selectedCollection === 'Cash Flow Summary'
+                  ? renderCFTable(financialData.cash_flow || [])
+                  : null
+            )}
+
             <div className="mt-4 flex gap-2">
               <button
-                onClick={async () => {
-                  if (!financialData || !data) return;
-                  try {
-                    const analysisResponse = await fetch(`http://localhost:5000/analysis/`);
-                    const analysisEntries = await analysisResponse.json();
-                    const matchingEntry = analysisEntries.find((entry: AnalysisEntry) => entry.lead_id === data.lead_id);
-                    if (!matchingEntry) {
-                      alert('No matching analysis entry found to save changes.');
-                      return;
-                    }
-                    const response = await fetch(`http://localhost:5000/analysis/${matchingEntry._id}?year=${selectedYear}`, {
-                      method: 'PUT',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify(financialData),
-                    });
-                    if (response.ok) {
-                      alert('Financial data saved successfully!');
-                      setIsFinancialDataEdited(false); // 🔹 reset state
-                    } else {
-                      alert('Failed to save financial data.');
-                    }
-                  } catch (error) {
-                    console.error('Error saving financial data:', error);
-                    alert('Error saving financial data.');
-                  }
-                }}
+                onClick={handleSave}
                 className={`px-4 py-2 rounded transition-colors ${isFinancialDataEdited
-                    ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                    ? 'bg-blue-600 text-white hover:bg-blue-700'
                     : 'bg-gray-400 text-white cursor-not-allowed'
-                }`}
+                  }`}
                 disabled={!isFinancialDataEdited}
               >
                 {isFinancialDataEdited ? 'Save Changes' : 'No Changes to Save'}
               </button>
-            </div>
 
+            </div>
           </div>
         ) : (
           <div className="text-gray-500 text-center py-8">

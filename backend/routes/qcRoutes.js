@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const CQ = require("../models/Cq");
+const ExtractedValues = require('../models/ExtractedValues'); // your schema file
 
 // 🔹 Get ALL QC entries (minimal info for listing)
 router.get('/', async (req, res) => {
@@ -73,6 +74,40 @@ router.put('/:id/revert', async (req, res) => {
     res.json({ message: 'Customer status reverted to In Progress', record: updated });
   } catch (err) {
     res.status(500).json({ error: 'Failed to revert status' });
+  }
+});
+
+// ✅ Update financial field for a specific customer/lead/year
+router.put('/update', async (req, res) => {
+  try {
+    const { customer_name, lead_id, item, year, value } = req.body;
+
+    if (!customer_name || !lead_id || !item || !year) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    // Convert to the correct field name, e.g. FY2025 → value_2025
+    const yearKey = `value_${year}`;
+
+    // Dynamic path into the data Map
+    const fieldPath = `data.${item}.${yearKey}`;
+
+    const result = await ExtractedValues.updateOne(
+      { customer_name, lead_id },
+      { $set: { [fieldPath]: value } }
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ error: 'No matching document found' });
+    }
+
+    res.json({
+      success: true,
+      updated: { customer_name, lead_id, item, year, value }
+    });
+  } catch (err) {
+    console.error('Update error:', err);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 

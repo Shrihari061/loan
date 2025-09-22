@@ -11,11 +11,10 @@ type CompanyData = {
   debt_to_equity: number | string;
   dscr: number | string;
   year_range: string;
-  // ratio_health: string;
 };
 
-type QCRecord = {
-  customer_name: string;
+type LeadRecord = {
+  business_name: string;
   lead_id: string;
   status: string;
 };
@@ -53,29 +52,27 @@ type RatioDoc = {
 
 const CompanyTable: React.FC = () => {
   const [data, setData] = useState<CompanyData[]>([]);
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
-  const [menuPosition, setMenuPosition] = useState<{ top: number; left: number } | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [companyRes, qcRes, ratiosRes] = await Promise.all([
+        const [companyRes, leadsRes, ratiosRes] = await Promise.all([
           axios.get('http://localhost:5000/analysis/'),
-          axios.get('http://localhost:5000/cq/'),
+          axios.get('http://localhost:5000/leads/'),
           axios.get('http://localhost:5000/analysis/ratios')
         ]);
 
-        const qcData: QCRecord[] = qcRes.data;
+        const leadsData: LeadRecord[] = leadsRes.data;
         const ratiosData: RatioDoc[] = ratiosRes.data;
 
         const approvedData = companyRes.data
           .filter((company: CompanyData) =>
-            qcData.some(
-              (qc) =>
-                qc.customer_name === company.company_name &&
-                qc.lead_id === company.lead_id &&
-                qc.status === 'Approved'
+            leadsData.some(
+              (lead) =>
+                lead.business_name === company.company_name &&
+                lead.lead_id === company.lead_id &&
+                lead.status === 'Approved'
             )
           )
           .map((company: CompanyData) => {
@@ -85,13 +82,18 @@ const CompanyTable: React.FC = () => {
                 r.lead_id === company.lead_id
             );
 
-            let debtToEquity = 'N/A';
-            let dscr = 'N/A';
+            let debtToEquity: number | string = 'N/A';
+            let dscr: number | string = 'N/A';
             let ratioHealth = 'N/A';
 
             if (ratioDoc) {
-              const debtEquityRatio = ratioDoc.ratios.find((r) => r.name === 'Debt/Equity');
               const dscrRatio = ratioDoc.ratios.find((r) => r.name === 'DSCR');
+              // Try robust matching for Debt/Equity naming variations
+              const debtEquityRatio =
+                ratioDoc.ratios.find((r) => r.name === 'Debt/Equity') ||
+                ratioDoc.ratios.find((r) => r.name?.toLowerCase?.() === 'debt to equity') ||
+                ratioDoc.ratios.find((r) => r.name?.toLowerCase?.() === 'debt equity') ||
+                ratioDoc.ratios.find((r) => r.name?.toLowerCase?.().includes('debt') && r.name?.toLowerCase?.().includes('equity'));
 
               // ✅ Always use latest year (2025) for values
               debtToEquity = debtEquityRatio?.value_2025 ?? 'N/A';
@@ -129,8 +131,6 @@ const CompanyTable: React.FC = () => {
     } else {
       console.log(`${action} for ${company.company_name}`);
     }
-    setOpenMenuId(null);
-    setMenuPosition(null);
   };
 
   const formatNumber = (value: number | string) => {
@@ -139,8 +139,6 @@ const CompanyTable: React.FC = () => {
     if (isNaN(num)) return value;
     return num.toLocaleString('en-IN');
   };
-
-  const isBracketed = (val: any) => typeof val === 'string' && /^\(.*\)$/.test(val);
 
   return (
     <FigtreeContainer style={{ padding: '20px' }}>
@@ -176,7 +174,6 @@ const CompanyTable: React.FC = () => {
                 <FigtreeTableCell>{company.debt_to_equity}</FigtreeTableCell>
                 <FigtreeTableCell>{company.dscr}</FigtreeTableCell>
                 <FigtreeTableCell>2025</FigtreeTableCell>
-                {/* <FigtreeTableCell>{company.ratio_health}</FigtreeTableCell> */}
                 <FigtreeTableCell>
                   <button
                     onClick={() => handleAction('View Data', company)}

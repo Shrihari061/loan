@@ -32,6 +32,7 @@ pids
 # Temporary folders
 tmp/
 temp/
+temp_uploads
 
 # Python
 __pycache__/

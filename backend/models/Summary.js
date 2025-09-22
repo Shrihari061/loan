@@ -4,30 +4,13 @@ const SummarySchema = new mongoose.Schema({
   customer_name: { type: String, required: false }, // some records may not have it
   lead_id: { type: String, required: false },
 
-  financial_summary: { type: String, required: false },
+  // 🔑 all fields are plain strings now, same as 2.json
+  "financial_summary_&_ratios": { type: String, required: false },
   executive_summary: { type: String, required: false },
-
-  financial_summary_and_ratios: {
-    "Revenue and Profitability": { type: String },
-    "Operational Efficiency": { type: String },
-    "Leverage and Liquidity": { type: String }
-  },
-
-  loan_purpose: [{ type: String }],   // ✅ dynamic array of strings
-  swot_analysis: {
-    Strengths: [{ type: String }],
-    Weaknesses: [{ type: String }],
-    Opportunities: [{ type: String }],
-    Threats: [{ type: String }]
-  },
-
-  security_offered: {
-    primary_security: [{ type: String }],
-    collateral_security: [{ type: String }],
-    personal_guarantees: [{ type: String }]
-  },
-
-  recommendation: [{ type: String }]  // ✅ dynamic array of strings
+  loan_purpose: { type: String, required: false },
+  swot_analysis: { type: String, required: false },
+  security_offered: { type: String, required: false },
+  recommendation: { type: String, required: false }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Summary', SummarySchema);

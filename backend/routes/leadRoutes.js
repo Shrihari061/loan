@@ -61,7 +61,7 @@ router.post(
 
       // -------------------- Ensure proper structured fields --------------------
       if (leadData.address && typeof leadData.address === 'string') {
-        try { leadData.address = JSON.parse(leadData.address); } catch {}
+        try { leadData.address = JSON.parse(leadData.address); } catch { }
       }
       if (leadData.directors && typeof leadData.directors === 'string') {
         try { leadData.directors = JSON.parse(leadData.directors); } catch { leadData.directors = []; }
@@ -112,7 +112,7 @@ router.put('/:id', upload.none(), async (req, res) => {
     if (updateData.address && typeof updateData.address === 'string') {
       try {
         updateData.address = JSON.parse(updateData.address);
-      } catch {}
+      } catch { }
     }
 
     if (updateData.directors && typeof updateData.directors === 'string') {
@@ -152,11 +152,64 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+// 🔹 Revert a CQ record (set status = "In Progress")
+router.put('/:id/revert', async (req, res) => {
+  try {
+    const updated = await Lead.findByIdAndUpdate(
+      req.params.id,
+      { status: 'In Progress' },
+      { new: true }
+    );
+
+    if (!updated) return res.status(404).json({ error: 'Customer not found' });
+
+    res.json({ message: 'Customer status reverted to In Progress', record: updated });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to revert status' });
+  }
+});
+
+
+// 🔹 Approve a CQ record (set status = "approved")
+router.put('/:id/approve', async (req, res) => {
+  try {
+    const updated = await Lead.findByIdAndUpdate(
+      req.params.id,
+      { status: 'Approved' },
+      { new: true }
+    );
+
+    if (!updated) return res.status(404).json({ error: 'Customer not found' });
+
+    res.json({ message: 'Customer approved successfully', record: updated });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update status' });
+  }
+});
+
+// 🔹 Reject a CQ record (set status = "rejected")
+router.put('/:id/reject', async (req, res) => {
+  try {
+    const updated = await Lead.findByIdAndUpdate(
+      req.params.id,
+      { status: 'Rejected' },
+      { new: true }
+    );
+
+    if (!updated) return res.status(404).json({ error: 'Customer not found' });
+
+    res.json({ message: 'Customer rejected successfully', record: updated });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update status' });
+  }
+});
+
+
 // -------------------- TRIGGER BFSI-LOS PIPELINE --------------------
 router.post('/:id/analyze', async (req, res) => {
   try {
-    const leadId = req.params.id;
-    const lead = await Lead.findById(leadId);
+    const recordId = req.params.id; // Mongo _id of the record
+    const lead = await Lead.findById(recordId);
 
     if (!lead) {
       return res.status(404).json({ error: 'Lead not found' });
@@ -166,8 +219,12 @@ router.post('/:id/analyze', async (req, res) => {
       return res.status(400).json({ error: 'No financial documents found for analysis' });
     }
 
+    // 👉 use actual business lead_id stored in the document
+    const actualLeadId = lead.lead_id;
+    const customerName = lead.business_name || 'Unknown Company';
+
     // Create temporary directory for BFSI-LOS processing
-    const tempDir = path.join(__dirname, '../temp_uploads', leadId);
+    const tempDir = path.join(__dirname, '../temp_uploads', recordId);
     const standaloneDir = path.join(tempDir, 'Standalone');
     const year2024Dir = path.join(standaloneDir, '2024-25');
     const year2023Dir = path.join(standaloneDir, '2023-24');
@@ -206,7 +263,7 @@ router.post('/:id/analyze', async (req, res) => {
         const targetDir = year === '2024-25' ? year2024Dir : year2023Dir;
         const filePath = path.join(targetDir, docType);
         const fileKey = `${year}-${docType}`;
-        
+
         // Check if we already processed this year-docType combination
         if (!processedFiles.has(fileKey)) {
           // For 2024-25, prioritize files with '2025' in name, then '2024'
@@ -250,13 +307,13 @@ router.post('/:id/analyze', async (req, res) => {
 
     const options = {
       mode: 'text',
-      pythonPath: 'python3',
+      pythonPath: 'python',
       pythonOptions: ['-u'],
       scriptPath: bfsiLosPath,
       args: [tempDir]
     };
 
-    console.log(`🚀 Starting BFSI-LOS pipeline for lead ${leadId}...`);
+    console.log(`🚀 Starting BFSI-LOS pipeline for lead ${recordId}...`);
     console.log(`📁 Files saved to: ${tempDir}`);
     console.log(`📊 Processing ${filesProcessed} financial documents...`);
 
@@ -268,7 +325,7 @@ router.post('/:id/analyze', async (req, res) => {
         console.error('⏰ BFSI-LOS pipeline timeout after 20 minutes');
         try {
           // Update lead status to failed
-          Lead.findByIdAndUpdate(leadId, { 
+          Lead.findByIdAndUpdate(recordId, {
             analysis_status: 'failed',
             analysis_date: new Date().toISOString()
           }).catch(err => console.error('Failed to update lead status on timeout:', err));
@@ -283,11 +340,11 @@ router.post('/:id/analyze', async (req, res) => {
 
     // Create a new PythonShell with real-time output logging
     const { PythonShell } = require('python-shell');
-    
+
     // Configure Python shell with real-time output
     const pythonShell = new PythonShell('run_pipeline.py', {
       mode: 'text',
-      pythonPath: 'python3',
+      pythonPath: 'python',
       pythonOptions: ['-u'],
       scriptPath: bfsiLosPath,
       args: [tempDir]
@@ -304,14 +361,14 @@ router.post('/:id/analyze', async (req, res) => {
         console.log('Pipeline completed after timeout was fired, ignoring results');
         return;
       }
-      
+
       clearTimeout(timeout);
-      
+
       if (err) {
         console.error('❌ BFSI-LOS pipeline error:', err);
         try {
           // Update lead status to failed
-          await Lead.findByIdAndUpdate(leadId, { 
+          await Lead.findByIdAndUpdate(recordId, {
             analysis_status: 'failed',
             analysis_date: new Date().toISOString()
           });
@@ -332,13 +389,10 @@ router.post('/:id/analyze', async (req, res) => {
         const riskRatingPath = path.join(extractionsPath, 'risk_rating.json');
         const summariesPath = path.join(extractionsPath, 'summaries.json');
 
-        // Save to existing MongoDB collections
-        const customerName = lead.business_name || 'Unknown Company';
-
         // 1. Save Extracted Values
         if (fs.existsSync(extractedValuesPath)) {
           const extractedData = JSON.parse(fs.readFileSync(extractedValuesPath, 'utf8'));
-          
+
           // Convert to the format expected by ExtractedValues model
           const dataMap = new Map();
           Object.entries(extractedData).forEach(([key, value]) => {
@@ -353,7 +407,7 @@ router.post('/:id/analyze', async (req, res) => {
 
           const extractedValuesDoc = new ExtractedValues({
             customer_name: customerName,
-            lead_id: leadId,
+            lead_id: actualLeadId, // ✅ use actual business lead_id
             data: dataMap
           });
           await extractedValuesDoc.save();
@@ -363,10 +417,10 @@ router.post('/:id/analyze', async (req, res) => {
         // 2. Save Ratios
         if (fs.existsSync(ratiosPath)) {
           const ratiosData = JSON.parse(fs.readFileSync(ratiosPath, 'utf8'));
-          
+
           const ratiosDoc = new Ratios({
             customer_name: customerName,
-            lead_id: leadId,
+            lead_id: actualLeadId, // ✅
             ...ratiosData
           });
           await ratiosDoc.save();
@@ -376,10 +430,10 @@ router.post('/:id/analyze', async (req, res) => {
         // 3. Save Risk Rating
         if (fs.existsSync(riskRatingPath)) {
           const riskData = JSON.parse(fs.readFileSync(riskRatingPath, 'utf8'));
-          
+
           const riskDoc = new Risk({
             customer_name: customerName,
-            lead_id: leadId,
+            lead_id: actualLeadId, // ✅
             weights: riskData.weights,
             financial_strength: riskData.financial_strength,
             management_quality: riskData.management_quality,
@@ -395,37 +449,23 @@ router.post('/:id/analyze', async (req, res) => {
         // 4. Save Summary
         if (fs.existsSync(summariesPath)) {
           const summaryData = JSON.parse(fs.readFileSync(summariesPath, 'utf8'));
-          
+
           // Parse the summary data to match the model structure
           const summaryDoc = new Summary({
             customer_name: customerName,
-            lead_id: leadId,
-            financial_summary: summaryData['financial_summary_&_ratios'],
-            executive_summary: summaryData.executive_summary,
-            financial_summary_and_ratios: summaryData['financial_summary_&_ratios'] ? {
-              "Revenue and Profitability": summaryData['financial_summary_&_ratios'].split('Revenue and Profitability:')[1]?.split('Operational efficiency:')[0]?.trim() || '',
-              "Operational Efficiency": summaryData['financial_summary_&_ratios'].split('Operational efficiency:')[1]?.split('Leverage and liquidity:')[0]?.trim() || '',
-              "Leverage and Liquidity": summaryData['financial_summary_&_ratios'].split('Leverage and liquidity:')[1]?.trim() || ''
-            } : {},
-            loan_purpose: summaryData.loan_purpose ? [summaryData.loan_purpose] : [],
-            swot_analysis: summaryData.swot_analysis ? {
-              Strengths: summaryData.swot_analysis.split('Strengths:')[1]?.split('Weaknesses:')[0]?.split(';').map(s => s.trim()).filter(s => s) || [],
-              Weaknesses: summaryData.swot_analysis.split('Weaknesses:')[1]?.split('Opportunities:')[0]?.split(';').map(s => s.trim()).filter(s => s) || [],
-              Opportunities: summaryData.swot_analysis.split('Opportunities:')[1]?.split('Threats:')[0]?.split(';').map(s => s.trim()).filter(s => s) || [],
-              Threats: summaryData.swot_analysis.split('Threats:')[1]?.split(';').map(s => s.trim()).filter(s => s) || []
-            } : {},
-            security_offered: summaryData.security_offered ? {
-              primary_security: summaryData.security_offered.split('Primary Security:')[1]?.split('Collateral Security:')[0]?.split(';').map(s => s.trim()).filter(s => s) || [],
-              collateral_security: summaryData.security_offered.split('Collateral Security:')[1]?.split('Personal Guarantees:')[0]?.split(';').map(s => s.trim()).filter(s => s) || [],
-              personal_guarantees: summaryData.security_offered.split('Personal Guarantees:')[1]?.split(';').map(s => s.trim()).filter(s => s) || []
-            } : {},
-            recommendation: summaryData.recommendation ? [summaryData.recommendation] : []
+            lead_id: actualLeadId, // ✅
+            "financial_summary_&_ratios": summaryData["financial_summary_&_ratios"] || "",
+            executive_summary: summaryData.executive_summary || "",
+            loan_purpose: summaryData.loan_purpose || "Purchase of Machinery",
+            swot_analysis: summaryData.swot_analysis || "Not disclosed",
+            security_offered: summaryData.security_offered || "Not disclosed",
+            recommendation: summaryData.recommendation || "Not disclosed"
           });
           await summaryDoc.save();
           console.log('Summary saved to MongoDB');
         }
 
-        // Update lead with analysis status
+        // Update lead with analysis status (still by recordId = Mongo _id)
         lead.analysis_status = 'completed';
         lead.analysis_date = new Date().toISOString();
         await lead.save();
@@ -433,11 +473,12 @@ router.post('/:id/analyze', async (req, res) => {
         // Clean up temporary files
         fs.rmSync(tempDir, { recursive: true, force: true });
 
-        console.log(`BFSI-LOS pipeline completed for lead ${leadId}`);
+        console.log(`BFSI-LOS pipeline completed for lead ${recordId}`);
         res.json({
           success: true,
           message: 'Financial analysis completed successfully',
-          leadId: leadId,
+          recordId: recordId,       // Mongo _id
+          leadId: actualLeadId,     // actual business lead_id
           customerName: customerName
         });
 
@@ -452,5 +493,6 @@ router.post('/:id/analyze', async (req, res) => {
     res.status(500).json({ error: 'Internal server error', details: error.message });
   }
 });
+
 
 module.exports = router;

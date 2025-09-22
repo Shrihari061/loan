@@ -1,12 +1,16 @@
 const mongoose = require('mongoose');
 
 // Schema for yearly values of each financial item
-const YearlyValueSchema = new mongoose.Schema({
-  value_2025: { type: mongoose.Schema.Types.Mixed, default: null }, // can be number or string ("null")
-  value_2024: { type: mongoose.Schema.Types.Mixed, default: null },
-  source: { type: String, default: null }, // bs, pl, cf
-  unit: { type: String, default: null },   // e.g., ₹ crore, ₹ per share
-}, { _id: false });
+const YearlyValueSchema = new mongoose.Schema(
+  {
+    value_2025: { type: mongoose.Schema.Types.Mixed, default: null }, // can be number or string
+    value_2024: { type: mongoose.Schema.Types.Mixed, default: null },
+    value_2023: { type: mongoose.Schema.Types.Mixed, default: null },
+    source: { type: String, default: null }, // bs, pl, cf
+    unit: { type: String, default: null },   // e.g., ₹ crore, ₹ per share, in shares
+  },
+  { _id: false }
+);
 
 // Main schema
 const ExtractedValuesSchema = new mongoose.Schema(

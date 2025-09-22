@@ -6,7 +6,7 @@ import { FigtreeContainer, FigtreeTableContainer, SortableHeader, FigtreeTableCe
 
 export default function AppraisalTable() {
   const [memos, setMemos] = useState<any[]>([]);
-  const [customers, setCustomers] = useState<any[]>([]);
+  const [leads, setLeads] = useState<any[]>([]); // ✅ changed from customers → leads
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [menuPosition, setMenuPosition] = useState<{ x: number; y: number } | null>(null);
   const [showModal, setShowModal] = useState(false);
@@ -30,9 +30,9 @@ export default function AppraisalTable() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/cq/")
-      .then((res) => setCustomers(res.data))
-      .catch((err) => console.error("Error fetching cqs:", err));
+      .get("http://localhost:5000/leads/") // ✅ fetch leads instead of cq
+      .then((res) => setLeads(res.data))
+      .catch((err) => console.error("Error fetching leads:", err));
   }, []);
 
   const toggleMenu = (id: string, e: React.MouseEvent) => {
@@ -59,13 +59,13 @@ export default function AppraisalTable() {
     setLoading(true);
 
     try {
-      const customer = customers.find((c) => c._id === selectedCustomerId);
+      const lead = leads.find((l) => l._id === selectedCustomerId);
 
       await axios.post("http://localhost:5000/memos/create", {
-        lead_id: customer.lead_id,
-        customer_name: customer.customer_name,
-        loan_type: customer.loan_type,
-        status: "In progres",
+        lead_id: lead.lead_id,
+        customer_name: lead.business_name, // ✅ business_name instead of customer_name
+        loan_type: lead.loan_type,
+        status: "In progress",
         created_by: "CurrentUser",
         last_updated: new Date().toISOString(),
       });
@@ -202,11 +202,11 @@ export default function AppraisalTable() {
               onChange={(e) => setSelectedCustomerId(e.target.value)}
             >
               <option value="">-- Select Customer --</option>
-              {customers
-                .filter((c) => c.status === "Approved")
-                .map((c) => (
-                  <option key={c._id} value={c._id}>
-                    {c.customer_name} – {c.lead_id} – {c.loan_type}
+              {leads
+                .filter((l) => l.status === "Approved")
+                .map((l) => (
+                  <option key={l._id} value={l._id}>
+                    {l.business_name} – {l.lead_id} – {l.loan_type}
                   </option>
                 ))}
             </select>

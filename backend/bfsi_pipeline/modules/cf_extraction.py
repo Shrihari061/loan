@@ -142,13 +142,11 @@ def run_extraction_cf(txt_folder: str) -> str:
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(base_json, f, ensure_ascii=False, indent=2)
 
-
     return out_path
 
 def push_to_Mongo(out_path: str):
-    
     # ---- Mongo insert  ----
-
+    """
     # Load base_json from extracted_values.json for Mongo saving
     if os.path.isfile(out_path):
         with open(out_path, "r", encoding="utf-8") as f:
@@ -174,3 +172,4 @@ def push_to_Mongo(out_path: str):
         print(f"✅ Final extraction saved to {out_path} and pushed to Mongo. _id={result.inserted_id}")
     elif file_name == "non_common_values.json":
         print(f"✅ Non-Common values saved to {out_path} and pushed to Mongo. _id={result.inserted_id}")
+    """

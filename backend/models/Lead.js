@@ -70,8 +70,8 @@ const LeadSchema = new mongoose.Schema({
   last_updated: { type: String, required: true },
   status: {
     type: String,
-    enum: ['Draft', 'Submitted', 'Under Review', 'Approved', 'Rejected'],
-    default: 'Draft'
+    enum: ['In Progress', 'Submitted', 'Under Review', 'Approved', 'Rejected'],
+    default: 'In Progress'
   },
   created_date: { type: Date, default: Date.now },
   notes: String,

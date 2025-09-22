@@ -111,6 +111,7 @@ def compute_risk(
         json.dump(out, f, indent=2, ensure_ascii=False)
     print(f" Risk rating saved to {out_path}")
 
+    """
     # Mongo insert
     mongo_client = MongoClient(
         "mongodb+srv://shriharir:shriharir@cluster0.orh9uhk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
@@ -121,5 +122,6 @@ def compute_risk(
     doc = out if isinstance(out, dict) else {"data": out}
     result = col.insert_one(doc)
     print(f" Risk rating saved to MongoDB 'LOMAS.risk' with _id={result.inserted_id}")
+    """
 
     return out

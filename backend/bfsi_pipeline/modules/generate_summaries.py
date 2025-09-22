@@ -91,7 +91,8 @@ def generate_summaries(
         json.dump(content, f, ensure_ascii=False, indent=2)
     print(f"Summaries saved to {summaries_path}")
 
-     # --- MongoDB output (replaces file write) ---
+    """
+    # --- MongoDB output (replaces file write) ---
     mongo_client = MongoClient(
         "mongodb+srv://shriharir:shriharir@cluster0.orh9uhk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
     )
@@ -105,9 +106,10 @@ def generate_summaries(
         "swot_analysis": content.get("swot_analysis"),
         "security_offered": content.get("security_offered"),
         "recommendation": content.get("recommendation"),
-
     }
 
     result = col.insert_one(doc)
     print(f" Summaries saved to MongoDB 'LOMAS.summaries' with _id={result.inserted_id}")
+    """
+
     return content

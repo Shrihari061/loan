@@ -8,24 +8,34 @@ const mongoose = require('mongoose');
 // Utility: safe division
 const safeDivide = (a, b) => (b && b !== 0 ? a / b : null);
 
+// Utility: handle Map or plain Object for `doc.data`
+const createDataAccessor = (data) => {
+  const isMap = data && typeof data.get === 'function' && typeof data.entries === 'function';
+  return {
+    isMap,
+    get: (key) => (isMap ? data.get(key) : data ? data[key] : undefined),
+    entries: () => (isMap ? data.entries() : Object.entries(data || {}))
+  };
+};
+
 // 🔹 Get ALL analysis data
 router.get('/', async (req, res) => {
   try {
     const docs = await ExtractedValues.find();
 
     const result = docs.map(doc => {
-      const data = doc._doc; // access the actual fields
+      const accessor = createDataAccessor(doc.data || {});
 
-      const totalAssets = data["Total assets"]?.value_2025 || 0;
-      const totalNonCurrentLiab = data["Total non-current liabilities"]?.value_2025 || 0;
-      const totalCurrentLiab = data["Total current liabilities"]?.value_2025 || 0;
+      const totalAssets = accessor.get("Total assets")?.value_2025 || 0;
+      const totalNonCurrentLiab = accessor.get("Total non-current liabilities")?.value_2025 || 0;
+      const totalCurrentLiab = accessor.get("Total current liabilities")?.value_2025 || 0;
 
       const netWorth = totalAssets - (totalNonCurrentLiab + totalCurrentLiab);
 
       return {
         _id: doc._id,
-        company_name: data.customer_name || 'N/A',
-        lead_id: data.lead_id || 'N/A',
+        company_name: doc.customer_name || 'N/A',
+        lead_id: doc.lead_id || 'N/A',
         last_updated: doc.updatedAt
           ? new Date(doc.updatedAt).toISOString().split('T')[0]
           : 'N/A',
@@ -51,8 +61,8 @@ router.get('/debug/all', async (req, res) => {
         _id: doc._id,
         customer_name: doc.customer_name,
         lead_id: doc.lead_id,
-        hasData: !!doc._doc,
-        fields: Object.keys(doc._doc || {}).filter(key => !['_id', 'customer_name', 'lead_id', '__v', 'createdAt', 'updatedAt'].includes(key))
+        hasData: !!doc.data,
+        fields: doc.data ? Array.from(doc.data.keys()) : []
       }))
     });
   } catch (err) {
@@ -69,11 +79,12 @@ router.get('/debug/:id', async (req, res) => {
       return res.status(404).json({ message: 'Document not found' });
     }
     
-    const data = doc._doc;
+    const data = doc.data || {};
+    const accessor = createDataAccessor(data);
     const sampleFields = {};
     
     // Get sample fields with their year values
-    Object.entries(data).forEach(([key, value]) => {
+    for (const [key, value] of accessor.entries()) {
       if (value && typeof value === 'object' && value.source) {
         sampleFields[key] = {
           source: value.source,
@@ -83,7 +94,7 @@ router.get('/debug/:id', async (req, res) => {
           value_2025: value.value_2025
         };
       }
-    });
+    }
     
     res.json({
       _id: doc._id,
@@ -96,8 +107,6 @@ router.get('/debug/:id', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
-
-
 
 
 // 🔹 Get all ratios
@@ -139,13 +148,10 @@ router.get('/ratios', async (req, res) => {
 });
 
 
-
 router.get('/:id', async (req, res) => {
   try {
-    // First try to find by ID directly
     let doc = await ExtractedValues.findById(req.params.id);
     
-    // If not found by ID, try to find by customer_name and lead_id
     if (!doc) {
       const baseDoc = await ExtractedValues.findById(req.params.id, {
         customer_name: 1,
@@ -160,42 +166,38 @@ router.get('/:id', async (req, res) => {
       if (!doc) return res.status(404).json({ message: 'Matching company not found' });
     }
 
-    const data = doc._doc; // Access the actual fields
+    const data = doc.data || {};
+    const accessor = createDataAccessor(data);
 
     // ---------------- Tables ----------------
     const balance_sheet = [];
     const profit_loss = [];
     const cash_flow = [];
 
-    const traverse = (obj, parentKey = '') => {
-      Object.entries(obj).forEach(([key, value]) => {
-        if (value && typeof value === 'object' && value.source) {
-          // Collect values for all years (2023-2025)
-          const itemObj = {
-            _id: `${doc._id}-${parentKey}${key}`,
-            item: key,
-            FY2023: value.value_2023 ?? null,
-            FY2024: value.value_2024 ?? null,
-            FY2025: value.value_2025 ?? null,
-            unit: value.unit || '₹ crore'
-          };
+    for (const [key, value] of accessor.entries()) {
+      if (value && typeof value === 'object' && value.source) {
+        const itemObj = {
+          _id: `${doc._id}-${key}`,
+          item: key,
+          FY2023: value.value_2023 ?? null,
+          FY2024: value.value_2024 ?? null,
+          FY2025: value.value_2025 ?? null,
+          unit: value.unit || '₹ crore'
+        };
 
-          if (value.source === 'bs') balance_sheet.push(itemObj);
-          else if (value.source === 'pl') profit_loss.push(itemObj);
-          else if (value.source === 'cf') cash_flow.push(itemObj);
-        }
-      });
-    };
-
-    traverse(data);
+        if (value.source === 'bs') balance_sheet.push(itemObj);
+        else if (value.source === 'pl') profit_loss.push(itemObj);
+        else if (value.source === 'cf') cash_flow.push(itemObj);
+      }
+    }
 
     // ---------------- Compute Net Worth for all years ----------------
     const netWorth = {};
     ["2023", "2024", "2025"].forEach(year => {
       const yearKey = `value_${year}`;
-      const totalAssets = data["Total assets"]?.[yearKey] || 0;
-      const totalNonCurrentLiab = data["Total non-current liabilities"]?.[yearKey] || 0;
-      const totalCurrentLiab = data["Total current liabilities"]?.[yearKey] || 0;
+      const totalAssets = accessor.get("Total assets")?.[yearKey] || 0;
+      const totalNonCurrentLiab = accessor.get("Total non-current liabilities")?.[yearKey] || 0;
+      const totalCurrentLiab = accessor.get("Total current liabilities")?.[yearKey] || 0;
       netWorth[`FY${year}`] = totalAssets - (totalNonCurrentLiab + totalCurrentLiab);
     });
 
@@ -222,7 +224,6 @@ router.get('/:id', async (req, res) => {
          ratioDoc.financial_strength.subtotal >= 2 ? 'Moderate' : 'Poor') : 'N/A';
     }
 
-    // ---------------- Response ----------------
     res.json({
       _id: doc._id,
       company_name: doc.customer_name || 'N/A',
@@ -244,7 +245,6 @@ router.get('/:id', async (req, res) => {
 });
 
 
-
 // 🔹 Get Ratios by customer_name & lead_id
 router.get('/:id/ratios', async (req, res) => {
   try {
@@ -263,7 +263,6 @@ router.get('/:id/ratios', async (req, res) => {
       return res.json([]);
     }
 
-    // Convert ratioDoc to array format for frontend
     const ratiosArray = Object.entries(ratioDoc._doc)
       .filter(([key]) => !['_id', 'customer_name', 'lead_id', '__v', 'createdAt', 'updatedAt'].includes(key))
       .map(([key, val]) => ({
@@ -290,47 +289,38 @@ router.put('/:id', async (req, res) => {
   try {
     const { balance_sheet, profit_loss, cash_flow } = req.body;
 
-    // Find the document to update
     const doc = await ExtractedValues.findById(req.params.id);
     if (!doc) {
       return res.status(404).json({ message: 'Analysis not found' });
     }
 
-    // Create update object
     const updateData = {};
 
-    // Helper function to update field values
     const updateField = (item, source) => {
-      if (item.item && doc[item.item]) {
-        updateData[item.item] = {
-          ...doc[item.item],
-          // FY2022: item.FY2022,
-          FY2023: item.FY2023,
-          FY2024: item.FY2024,
-          FY2025: item.FY2025,
-          value_latest: item.FY2025 || item.FY2024 || item.FY2023,
-          source: source
+      if (item.item && doc.data.has(item.item)) {
+        const existing = doc.data.get(item.item) || {};
+        updateData[`data.${item.item}`] = {
+          ...existing,
+          value_2023: item.FY2023,
+          value_2024: item.FY2024,
+          value_2025: item.FY2025,
+          source: source,
+          unit: existing.unit || '₹ crore'
         };
       }
     };
 
-    // Update balance sheet data
     if (balance_sheet) {
       balance_sheet.forEach(item => updateField(item, 'bs'));
     }
-
-    // Update profit & loss data
     if (profit_loss) {
       profit_loss.forEach(item => updateField(item, 'pl'));
     }
-
-    // Update cash flow data
     if (cash_flow) {
       cash_flow.forEach(item => updateField(item, 'cf'));
     }
 
-    // Apply the updates
-    await ExtractedValues.findByIdAndUpdate(req.params.id, updateData, { new: true });
+    await ExtractedValues.findByIdAndUpdate(req.params.id, { $set: updateData }, { new: true });
 
     res.json({ message: 'Analysis data updated successfully' });
   } catch (err) {

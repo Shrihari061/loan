@@ -8,6 +8,10 @@
     4. Grades loan risk using weighted logic.
     5. Generates executive summary using LLM model.
 """
+import sys
+import io
+
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 import argparse
 import os
@@ -15,8 +19,8 @@ from pathlib import Path
 
 from modules.txt_extractor import process_company_pdfs
 from modules.bs_pl_extractions import run_extraction_bs_pl
-from modules.cf_extraction import run_extraction_cf, push_to_Mongo
-from modules.manual_ratio import compute_ratios,push_ratio_to_Mongo
+from modules.cf_extraction import run_extraction_cf  # , push_to_Mongo
+from modules.manual_ratio import compute_ratios  # , push_ratio_to_Mongo
 from modules.risk_grader import compute_risk
 from modules.generate_summaries import generate_summaries  
 
@@ -43,29 +47,29 @@ def run_pipeline(data_folder: str):
             print(f"    → Extracting Balance Sheet & P&L data...")
             run_extraction_bs_pl(str(folder))
             print(f"    → Extracting Cash Flow data...")
-            out_path = run_extraction_cf(str(folder))
+            run_extraction_cf(str(folder))
             print(f"  ✅ {year} data extraction completed")
         else:
             print(f"  ⚠️  Missing folder: {folder}")
 
-    print("\n💾 STEP 3: Saving extracted values to database...")
+    print("\n💾 STEP 3: Extracted values generated (saved to JSON)...")
     out_path_extracted_values = Path(data_folder) / "Extractions" / "extracted_values.json"
     out_path_non_common_values = Path(data_folder) / "Extractions" / "non_common_values.json"
 
-    push_to_Mongo(str(out_path_extracted_values))
-    print("  ✅ Main extracted values saved")
+    # push_to_Mongo(str(out_path_extracted_values))
+    print(f"  ✅ Main extracted values JSON ready: {out_path_extracted_values}")
     
     # Only push non_common_values if it exists
     if out_path_non_common_values.exists():
-        push_to_Mongo(str(out_path_non_common_values))
-        print("  ✅ Non-common values saved")
+        # push_to_Mongo(str(out_path_non_common_values))
+        print(f"  ✅ Non-common values JSON ready: {out_path_non_common_values}")
     else:
         print(f"  ℹ️  Non-common values file not generated, skipping...")
 
     print("\n📈 STEP 4: Computing financial ratios...")
     ratio_path = compute_ratios(out_path_extracted_values)
-    push_ratio_to_Mongo(ratio_path)
-    print("  ✅ Financial ratios calculated and saved")
+    # push_ratio_to_Mongo(ratio_path)
+    print(f"  ✅ Financial ratios JSON ready: {ratio_path}")
 
     print("\n⚖️  STEP 5: Computing risk assessment...")
     compute_risk(out_path_extracted_values, ratio_path)
