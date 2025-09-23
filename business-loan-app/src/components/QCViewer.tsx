@@ -2,6 +2,10 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
+import { ChevronsUpDown, Check } from 'lucide-react';
+import { cn } from '../lib/utils';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from './ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 
 type ExtractedData = Record<string, string>;
 
@@ -58,6 +62,8 @@ const QCViewer: React.FC = () => {
   const [selectedYear, setSelectedYear] = useState<string>('2025');
   const [financialData, setFinancialData] = useState<FinancialData | null>(null);
   const [isFinancialDataEdited, setIsFinancialDataEdited] = useState(false);
+  const [openCollection, setOpenCollection] = useState(false);
+  const [openYear, setOpenYear] = useState(false);
 
   const collections = ['Balance Sheet Summary', 'Profit & Loss Summary', 'Cash Flow Summary'];
   const years = ['2023', '2024', '2025'];
@@ -251,6 +257,7 @@ const QCViewer: React.FC = () => {
       const row = findRowFlexible(items, candidates ?? label);
       const displayLabel = label;
       const value = row ? (row[`FY${year}`] ?? '') : '';
+      const isParenNegative = typeof value === 'string' && /\(.*\)/.test(value.trim());
 
       return (
         <tr key={displayLabel} className="hover:bg-gray-50">
@@ -294,7 +301,7 @@ const QCViewer: React.FC = () => {
                 setFinancialData(newFD);
                 setIsFinancialDataEdited(true);
               }}
-              className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-right"
+              className={`w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-right ${isParenNegative ? 'text-red-600' : ''}`}
               placeholder="-"
             />
           </td>
@@ -303,8 +310,8 @@ const QCViewer: React.FC = () => {
     };
 
     // heading renderer
-    const renderHeading = (label: string, red = false) => (
-      <tr key={`h-${label}`} className={red ? 'bg-red-50' : 'bg-gray-50'}>
+    const renderHeading = (label: string, red = false, keySuffix?: string) => (
+      <tr key={`h-${label}-${keySuffix ?? ''}`} className={red ? 'bg-red-50' : 'bg-gray-50'}>
         <td colSpan={2} className="px-4 py-2 text-sm font-semibold text-gray-900">
           {label}
         </td>
@@ -336,14 +343,14 @@ const QCViewer: React.FC = () => {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {/* ASSETS */}
-              {renderHeading('Assets', true)}
-              {renderHeading('Non-current assets')}
+              {renderHeading('Assets', true, 'assets')}
+              {renderHeading('Non-current assets', false, 'noncurrent')}
               {renderRow('Property, plant and equipment')}
               {renderRow('Right-of-use assets')}
               {renderRow('Capital work-in-progress')}
               {renderRow('Goodwill')}
 
-              {renderHeading('Financial assets')}
+              {renderHeading('Financial assets', false, 'nc-financial-assets')}
               {renderRow('Financial assets - Investments (Non-current)')}
               {renderRow('Financial assets - Loans (Non-current)')}
               {renderRow('Other financial assets (Non-current)')}
@@ -352,8 +359,8 @@ const QCViewer: React.FC = () => {
               {renderRow('Other non-current assets')}
               {renderRow('Total non-current assets', { bold: true })}
 
-              {renderHeading('Current assets')}
-              {renderHeading('Financial assets')}
+              {renderHeading('Current assets', false, 'current-assets')}
+              {renderHeading('Financial assets', false, 'c-financial-assets')}
               {renderRow('Financial assets - Investments (Current)')}
               {renderRow('Trade receivables')}
               {renderRow('Cash and cash equivalents')}
@@ -365,23 +372,23 @@ const QCViewer: React.FC = () => {
               {renderRow('Total assets', { bold: true })}
 
               {/* EQUITY & LIABILITIES */}
-              {renderHeading('Equity and Liabilities', true)}
-              {renderHeading('Equity')}
+              {renderHeading('Equity and Liabilities', true, 'eq-liab')}
+              {renderHeading('Equity', false, 'equity')}
               {renderRow('Equity share capital')}
               {renderRow('Other equity')}
               {renderRow('Total equity', { bold: true })}
 
-              {renderHeading('Liabilities')}
-              {renderHeading('Non-current liabilities')}
-              {renderHeading('Financial liabilities')}
+              {renderHeading('Liabilities', false, 'liabilities')}
+              {renderHeading('Non-current liabilities', false, 'noncurrent-liabilities')}
+              {renderHeading('Financial liabilities', false, 'nc-financial-liabilities')}
               {renderRow('Financial liabilities - Lease liabilities (Non-current)')}
               {renderRow('Other financial liabilities (Non-current)')}
               {renderRow('Deferred tax liabilities (net)')}
               {renderRow('Other non-current liabilities')}
               {renderRow('Total non-current liabilities', { bold: true })}
 
-              {renderHeading('Current liabilities')}
-              {renderHeading('Financial liabilities')}
+              {renderHeading('Current liabilities', false, 'current-liabilities')}
+              {renderHeading('Financial liabilities', false, 'c-financial-liabilities')}
               {renderRow('Financial liabilities - Lease liabilities (Current)')}
 
               {renderRow(
@@ -581,6 +588,7 @@ const QCViewer: React.FC = () => {
               })}
 
               {renderHeading('Earnings per equity share', true)}
+              {renderHeading('Equity shares of par value ₹5/- each')}
               {renderRow('Basic (in ₹ per share)')}
               {renderRow('Diluted (in ₹ per share)')}
 
@@ -1015,24 +1023,92 @@ const QCViewer: React.FC = () => {
       <div className="flex gap-4 items-center">
         <div>
           <label className="block mb-2 font-medium">Select the type of financial document:</label>
-          <select
-            className="border p-2 rounded w-full max-w-md"
-            value={selectedCollection}
-            onChange={(e) => setSelectedCollection(e.target.value)}
-          >
-            <option value="" disabled>Choose the document</option>
-            {collections.map((col) => <option key={col} value={col}>{col}</option>)}
-          </select>
+          <Popover open={openCollection} onOpenChange={setOpenCollection}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                role="combobox"
+                aria-expanded={openCollection}
+                className="w-[280px] justify-between"
+              >
+                {selectedCollection || 'Choose the document'}
+                <ChevronsUpDown className="opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[280px] p-0">
+              <Command>
+                <CommandInput placeholder="Search document..." className="h-9" />
+                <CommandList>
+                  <CommandEmpty>No document found.</CommandEmpty>
+                  <CommandGroup>
+                    {collections.map((col) => (
+                      <CommandItem
+                        key={col}
+                        value={col}
+                        onSelect={(currentValue) => {
+                          setSelectedCollection(currentValue);
+                          setOpenCollection(false);
+                        }}
+                      >
+                        {col}
+                        <Check
+                          className={cn(
+                            'ml-auto',
+                            selectedCollection === col ? 'opacity-100' : 'opacity-0'
+                          )}
+                        />
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
         </div>
+
         <div>
           <label className="block mb-2 font-medium">Select a year:</label>
-          <select
-            className="border p-2 rounded w-full max-w-md"
-            value={selectedYear}
-            onChange={(e) => setSelectedYear(e.target.value)}
-          >
-            {years.map((yr) => <option key={yr} value={yr}>{yr}</option>)}
-          </select>
+          <Popover open={openYear} onOpenChange={setOpenYear}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                role="combobox"
+                aria-expanded={openYear}
+                className="w-[180px] justify-between"
+              >
+                {selectedYear || 'Select year'}
+                <ChevronsUpDown className="opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[180px] p-0">
+              <Command>
+                <CommandInput placeholder="Search year..." className="h-9" />
+                <CommandList>
+                  <CommandEmpty>No year found.</CommandEmpty>
+                  <CommandGroup>
+                    {years.map((yr) => (
+                      <CommandItem
+                        key={yr}
+                        value={yr}
+                        onSelect={(currentValue) => {
+                          setSelectedYear(currentValue);
+                          setOpenYear(false);
+                        }}
+                      >
+                        {yr}
+                        <Check
+                          className={cn(
+                            'ml-auto',
+                            selectedYear === yr ? 'opacity-100' : 'opacity-0'
+                          )}
+                        />
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
 
