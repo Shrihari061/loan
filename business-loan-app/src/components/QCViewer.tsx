@@ -1,6 +1,7 @@
 // QCViewer.tsx (full updated file)
 import React, { useEffect, useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Button } from './ui/button';
 
 type ExtractedData = Record<string, string>;
 
@@ -997,12 +998,12 @@ const QCViewer: React.FC = () => {
 
   return (
     <div className="p-6 space-y-6">
-      <button
+      <Button
         onClick={() => navigate('/qc')}
-        className="bg-gray-200 text-gray-800 px-3 py-1.5 rounded-md text-sm font-medium hover:bg-gray-300 transition-colors"
+        // className="bg-gray-200 text-gray-800 px-3 py-1.5 rounded-md text-sm font-medium hover:bg-gray-300 transition-colors"
       >
         ← Back to QC Table
-      </button>
+      </Button>
 
       <div className="border-b pb-4">
         <h2 className="text-xl font-semibold mb-2">Customer Details</h2>
