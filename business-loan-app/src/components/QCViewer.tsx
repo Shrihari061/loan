@@ -1013,11 +1013,39 @@ const QCViewer: React.FC = () => {
         ← Back to QC Table
       </Button>
 
-      <div className="border-b pb-4">
-        <h2 className="text-xl font-semibold mb-2">Customer Details</h2>
-        <p><strong>Customer Name:</strong> {data.customer_name ?? '-'}</p>
-        <p><strong>Lead ID:</strong> {data.lead_id ?? '-'}</p>
-        <p><strong>Status:</strong> {data.status ?? 'Pending'}</p>
+      <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-5">
+        <div className="flex items-start justify-between">
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900">Customer Details</h2>
+            <div className="mt-1 text-sm text-gray-500">Overview of the selected lead</div>
+          </div>
+          <span
+            className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium
+              ${
+                (data.status || 'Pending') === 'Approved'
+                  ? 'bg-green-50 text-green-700 border border-green-200'
+                  : (data.status || 'Pending') === 'Rejected'
+                  ? 'bg-red-50 text-red-700 border border-red-200'
+                  : (data.status || 'Pending') === 'In Progress'
+                  ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                  : 'bg-gray-50 text-gray-700 border border-gray-200'
+              }
+            `}
+          >
+            {data.status ?? 'Pending'}
+          </span>
+        </div>
+
+        <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="rounded-md bg-gray-50 p-3 border border-gray-100">
+            <div className="text-xs uppercase tracking-wide text-gray-500">Customer Name</div>
+            <div className="mt-1 text-sm font-medium text-gray-900">{data.customer_name ?? '-'}</div>
+          </div>
+          <div className="rounded-md bg-gray-50 p-3 border border-gray-100">
+            <div className="text-xs uppercase tracking-wide text-gray-500">Lead ID</div>
+            <div className="mt-1 text-sm font-medium text-gray-900">{data.lead_id ?? '-'}</div>
+          </div>
+        </div>
       </div>
 
       <div className="flex gap-4 items-center">
@@ -1147,20 +1175,29 @@ const QCViewer: React.FC = () => {
 
       {selectedCollection && (
         <div className="mt-8 flex justify-end space-x-4">
-          <button
-            onClick={handleDecline}
-            className="text-white px-4 py-2 rounded hover:opacity-90"
-            style={{ backgroundColor: '#00306E' }}
-          >
-            Decline
-          </button>
-          <button
-            onClick={handleApprove}
-            className="text-white px-4 py-2 rounded hover:opacity-90"
-            style={{ backgroundColor: '#0266F4' }}
-          >
-            Approve
-          </button>
+          {(() => {
+            const isFinalized = (data.status === 'Approved' || data.status === 'Rejected');
+            return (
+              <>
+                <button
+                  onClick={handleDecline}
+                  disabled={isFinalized}
+                  className={`text-white px-4 py-2 rounded ${isFinalized ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'}`}
+                  style={{ backgroundColor: '#00306E' }}
+                >
+                  Decline
+                </button>
+                <button
+                  onClick={handleApprove}
+                  disabled={isFinalized}
+                  className={`text-white px-4 py-2 rounded ${isFinalized ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'}`}
+                  style={{ backgroundColor: '#0266F4' }}
+                >
+                  Approve
+                </button>
+              </>
+            );
+          })()}
         </div>
       )}
     </div>
