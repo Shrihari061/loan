@@ -5,23 +5,22 @@ import CompanyRatioAnalysis from './CompanyRatioAnalysis';
 interface FinancialItem {
   _id: string;
   item: string;
-  FY2023: number | null;
-  FY2024: number | null;
-  FY2025: number | null;
+  FY2023: number | string | null;
+  FY2024: number | string | null;
+  FY2025: number | string | null;
+  unit?: string;
 }
 
 interface CompanyData {
   _id: string;
   company_name: string;
   lead_id: string;
-  // API now returns net_worth as an object keyed by FY years
   net_worth: {
     FY2023?: number | string | null;
     FY2024?: number | string | null;
     FY2025?: number | string | null;
     [k: string]: number | string | null | undefined;
   };
-  // Ratios are grouped under a single object
   ratios?: {
     dscr?: number | string;
     debt_to_equity?: number | string;
@@ -35,22 +34,17 @@ interface CompanyData {
 
 const CompanyDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate(); // ✅ added navigate
+  const navigate = useNavigate();
   const [company, setCompany] = useState<CompanyData | null>(null);
   const [activeTab, setActiveTab] = useState<'source' | 'ratio'>('source');
   const [selectedDocument, setSelectedDocument] = useState<'balance_sheet' | 'profit_loss' | 'cash_flow'>('balance_sheet');
 
-
-  // Financial document types
   const financialDocuments = [
     { key: 'balance_sheet', name: 'Balance Sheet Data', icon: '📊' },
     { key: 'profit_loss', name: 'P&L Data', icon: '📈' },
     { key: 'cash_flow', name: 'Cash Flow Data', icon: '💰' }
   ];
 
-  // No merge helper needed anymore; backend now returns FY2023/24/25 together
-
-  // Fetch company details (backend now returns all FYs combined in one response)
   useEffect(() => {
     const fetchCompany = async () => {
       try {
@@ -68,7 +62,7 @@ const CompanyDetails: React.FC = () => {
     if (value === null || value === undefined) return 'N/A';
     if (typeof value === 'string') return value;
     const numValue = Number(value);
-    if (isNaN(numValue)) return value;
+    if (isNaN(numValue)) return String(value);
     return numValue.toLocaleString('en-IN');
   };
 
@@ -77,7 +71,7 @@ const CompanyDetails: React.FC = () => {
 
     if (typeof value === 'string') {
       if (value.startsWith('(') && value.endsWith(')')) {
-        return '#ef4444'; // Red for negative values in parentheses
+        return '#ef4444';
       }
       const numValue = Number(value);
       if (!isNaN(numValue)) {
@@ -91,7 +85,41 @@ const CompanyDetails: React.FC = () => {
     return numValue < 0 ? '#ef4444' : '#111827';
   };
 
+  const normalize = (s?: string | null) => {
+    if (s === null || s === undefined) return '';
+    return s.toString().trim().replace(/\s+/g, ' ').replace(/\u00A0/g, ' ').toLowerCase();
+  };
 
+  const buildNormalizedMap = (data: FinancialItem[] | undefined) => {
+    const map = new Map<string, FinancialItem>();
+    if (!data) return map;
+    for (const row of data) {
+      map.set(normalize(row.item), row);
+    }
+    return map;
+  };
+
+  const getRowFromData = (data: FinancialItem[] | undefined, normMap: Map<string, FinancialItem>, itemName: string): FinancialItem | undefined => {
+    if (!data) return undefined;
+    const key = normalize(itemName);
+    if (normMap.has(key)) return normMap.get(key);
+
+    for (const row of data) {
+      const rnorm = normalize(row.item);
+      if (rnorm.includes(key) || key.includes(rnorm)) {
+        return row;
+      }
+    }
+
+    const simpl = key.replace(/[-()\/,]/g, '').replace(/\s+/g, ' ');
+    for (const row of data) {
+      const rnorm = normalize(row.item).replace(/[-()\/,]/g, '').replace(/\s+/g, ' ');
+      if (rnorm.includes(simpl) || simpl.includes(rnorm)) {
+        return row;
+      }
+    }
+    return undefined;
+  };
 
   const getRiskColor = (health: string | undefined) => {
     if (!health) return '#6b7280';
@@ -114,7 +142,6 @@ const CompanyDetails: React.FC = () => {
         boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
         overflow: 'hidden'
       }}>
-        {/* Table Header */}
         <div style={{
           display: 'flex',
           alignItems: 'center',
@@ -128,7 +155,6 @@ const CompanyDetails: React.FC = () => {
           </h3>
         </div>
 
-        {/* Table Content */}
         <div style={{ overflow: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
@@ -168,183 +194,62 @@ const CompanyDetails: React.FC = () => {
   };
 
   const renderPLTable = (data: FinancialItem[]) => {
-  if (!data || data.length === 0) return null;
+    const normMap = buildNormalizedMap(data);
 
-  const renderedPLItems = new Set<string>();
+    const firstTableRows: (string | { label: string; row?: FinancialItem })[] = [
+      { label: 'Revenue from operations', row: getRowFromData(data, normMap, 'Revenue from operations') },
+      { label: 'Other income, net', row: getRowFromData(data, normMap, 'Other income, net') },
+      { label: 'Total income', row: getRowFromData(data, normMap, 'Total income') },
 
-  const renderRow = (row: FinancialItem, index: number, isTotal = false, isIndented = false) => {
-    const isBlueTotal = row.item === "Total income" || row.item === "Total expenses";
-    const isRedTotal = isTotal && !isBlueTotal;
-    renderedPLItems.add(row.item);
+      'Expenses',
+      { label: 'Employee benefit expenses', row: getRowFromData(data, normMap, 'Employee benefit expenses') },
+      { label: 'Cost of technical sub-contractors', row: getRowFromData(data, normMap, 'Cost of technical sub-contractors') },
+      { label: 'Travel expenses', row: getRowFromData(data, normMap, 'Travel expenses') },
+      { label: 'Cost of software packages and others', row: getRowFromData(data, normMap, 'Cost of software packages and others') },
+      { label: 'Communication expenses', row: getRowFromData(data, normMap, 'Communication expenses') },
+      { label: 'Consultancy and professional charges', row: getRowFromData(data, normMap, 'Consultancy and professional charges') },
+      { label: 'Depreciation and amortization expenses', row: getRowFromData(data, normMap, 'Depreciation and amortization expenses') },
+      { label: 'Finance cost', row: getRowFromData(data, normMap, 'Finance cost') },
+      { label: 'Other expenses', row: getRowFromData(data, normMap, 'Other expenses') },
+      { label: 'Total expenses', row: getRowFromData(data, normMap, 'Total expenses') },
 
-    return (
-      <tr
-        key={row._id || `${row.item}-${index}`}
-        className={`${isRedTotal ? "bg-red-50 font-semibold" : isBlueTotal ? "bg-blue-50 font-semibold" : index % 2 === 0 ? "bg-white" : "bg-gray-50"}`}
-      >
-        <td
-          className={`py-3 text-sm border-b border-gray-100 ${isRedTotal ? "text-red-900" : isBlueTotal ? "text-blue-900" : "text-gray-900"}`}
-          style={{ paddingLeft: isIndented ? '2rem' : '1rem' }}
-        >
-          {row.item}
-        </td>
-        <td className={`px-4 py-3 text-sm text-right border-b border-gray-100 ${isRedTotal ? "text-red-900" : isBlueTotal ? "text-blue-900" : "text-gray-900"}`} style={!isRedTotal && !isBlueTotal ? { color: getValueColor(row.FY2023) } : {}}>
-          {formatValue(row.FY2023)}
-        </td>
-        <td className={`px-4 py-3 text-sm text-right border-b border-gray-100 ${isRedTotal ? "text-red-900" : isBlueTotal ? "text-blue-900" : "text-gray-900"}`} style={!isRedTotal && !isBlueTotal ? { color: getValueColor(row.FY2024) } : {}}>
-          {formatValue(row.FY2024)}
-        </td>
-        <td className={`px-4 py-3 text-sm text-right border-b border-gray-100 ${isRedTotal ? "text-red-900" : isBlueTotal ? "text-blue-900" : "text-gray-900"}`} style={!isRedTotal && !isBlueTotal ? { color: getValueColor(row.FY2025) } : {}}>
-          {formatValue(row.FY2025)}
-        </td>
-      </tr>
-    );
-  };
+      { label: 'Profit before tax', row: getRowFromData(data, normMap, 'Profit before tax') },
 
-  const renderHeading = (label: string) => {
-    const isRedHeading = [
-      "Other comprehensive income",
-      "Total other comprehensive income / (loss), net of tax",
-      "Total comprehensive income for the year",
-      "Earnings per equity share",
-      "Cash Flow from Operating Activities",
-      "Cash Flow from Investing Activities",
-      "Cash Flow from Financing Activities"
-    ].includes(label);
+      'Tax expense',
+      { label: 'Current tax', row: getRowFromData(data, normMap, 'Tax expense - Current tax') },
+      { label: 'Deferred tax', row: getRowFromData(data, normMap, 'Tax expense - Deferred tax') },
 
-    return (
-      <tr key={label} className={`${isRedHeading ? "bg-red-50" : "bg-blue-50"} font-semibold`}>
-        <td colSpan={4} className={`px-4 py-3 text-sm ${isRedHeading ? "text-red-900" : "text-blue-900"} border-b border-gray-100`}>
-          {label}
-        </td>
-      </tr>
-    );
-  };
+      { label: 'Profit for the year', row: getRowFromData(data, normMap, 'Profit for the year') },
+    ];
 
-  const renderSection = (section: any, level = 0) => {
-    if (typeof section === "string") {
-      const row = data.find((r) => r.item === section);
-      return row ? renderRow(row, 0, ["Profit before tax", "Profit for the year"].includes(row.item), level > 0) : null;
-    }
+    const secondTableRows: (string | { label: string; row?: FinancialItem })[] = [
+      'Other comprehensive income',
+      'Items that will not be reclassified subsequently to profit or loss',
+      { label: 'Remeasurement of the net defined benefit liability / asset, net', row: getRowFromData(data, normMap, 'Remeasurement of the net defined benefit liability / asset, net') },
+      { label: 'Equity instruments through other comprehensive income, net', row: getRowFromData(data, normMap, 'Equity instruments through other comprehensive income, net') },
+      'Items that will be reclassified subsequently to profit or loss',
+      { label: 'Fair value changes on derivatives designated as cash flow hedge, net', row: getRowFromData(data, normMap, 'Fair value changes on derivatives designated as cash flow hedge, net') },
+      { label: 'Fair value changes on investments, net', row: getRowFromData(data, normMap, 'Fair value changes on investments, net') },
+      { label: 'Total other comprehensive income / (loss), net of tax', row: getRowFromData(data, normMap, 'Total other comprehensive income / (loss), net of tax') },
 
-    const { heading, children } = section;
-    return (
-      <React.Fragment key={heading}>
-        {heading && renderHeading(heading)}
-        {children && children.map((child: any) => renderSection(child, level + 1))}
-      </React.Fragment>
-    );
-  };
+      { label: 'Total comprehensive income for the year', row: getRowFromData(data, normMap, 'Total comprehensive income for the year') },
 
-  const renderCard = (title: string, sections: any[]) => (
-    <div className="bg-white rounded-lg shadow overflow-hidden mt-6 first:mt-0">
-      {/* Table Header */}
-      <div className="flex items-center justify-between px-5 py-4 bg-gray-50 border-b border-gray-200">
-        <h3 className="text-base font-semibold text-gray-900">
-          {title}{" "}
-          <span className="text-sm font-normal text-gray-500">
-            (all amounts in Crores of Rs.)
-          </span>
-        </h3>
-      </div>
-      {/* Table */}
-      <div className="overflow-auto">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="bg-gray-50">
-              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">Item</th>
-              <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">FY2023</th>
-              <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">FY2024</th>
-              <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">FY2025</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sections.map((section) => renderSection(section))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
+      'Earnings per equity share',
+      'Equity shares of par value ₹5/- each',
+      { label: 'Basic (in ₹ per share)', row: getRowFromData(data, normMap, 'Earnings per equity share - Basic (in ₹ per share)') },
+      { label: 'Diluted (in ₹ per share)', row: getRowFromData(data, normMap, 'Earnings per equity share - Diluted (in ₹ per share)') },
 
-  const firstCardSections = [
-    "Revenue from operations",
-    "Other income, net",
-    "Total income",
-    {
-      heading: "Expenses",
-      children: [
-        "Employee benefit expenses",
-        "Cost of technical sub-contractors",
-        "Travel expenses",
-        "Cost of software packages and others",
-        "Communication expenses",
-        "Consultancy and professional charges",
-        "Depreciation and amortization expenses",
-        "Finance cost",
-        "Other expenses",
-        "Total expenses",
-      ],
-    },
-    "Profit before tax",
-    {
-      heading: "Tax expense",
-      children: ["Tax expense - Current tax", "Tax expense - Deferred tax"],
-    },
-    "Profit for the year",
-  ];
+      'Weighted average equity shares used in computing earnings per equity share',
+      { label: 'Basic (in shares)', row: getRowFromData(data, normMap, 'Weighted average equity shares used in computing earnings per equity share - Basic (in shares)') },
+      { label: 'Diluted (in shares)', row: getRowFromData(data, normMap, 'Weighted average equity shares used in computing earnings per equity share - Diluted (in shares)') },
+    ];
 
-  const secondCardSections = [
-    {
-      heading: "Other comprehensive income",
-      children: [
-        {
-          heading: "Items that will not be reclassified subsequently to profit or loss",
-          children: [
-            "Other comprehensive income - Items that will not be reclassified subsequently to profit or loss - Remeasurement of the net defined benefit liability / asset, net",
-            "Other comprehensive income - Items that will not be reclassified subsequently to profit or loss - Equity instruments through other comprehensive income, net",
-          ],
-        },
-        {
-          heading: "Items that will be reclassified subsequently to profit or loss",
-          children: [
-            "Other comprehensive income - Items that will be reclassified subsequently to profit or loss - Fair value changes on derivatives designated as cash flow hedge, net",
-            "Other comprehensive income - Items that will be reclassified subsequently to profit or loss - Fair value changes on investments, net",
-          ],
-        },
-      ],
-    },
-    "Total other comprehensive income / (loss), net of tax",
-    "Total comprehensive income for the year",
-    {
-      heading: "Earnings per equity share",
-      children: [
-        {
-          heading: "Equity shares of par value ₹5/- each",
-          children: [
-            "Earnings per equity share - Basic (in ₹ per share)",
-            "Earnings per equity share - Diluted (in ₹ per share)",
-          ],
-        },
-        {
-          heading: "Weighted average equity shares used in computing earnings per equity share",
-          children: [
-            "Weighted average equity shares used in computing earnings per equity share - Basic (in shares)",
-            "Weighted average equity shares used in computing earnings per equity share - Diluted (in shares)",
-          ],
-        },
-      ],
-    },
-  ];
-
-  return (
-    <>
-      {renderCard("Profit & Loss Summary", firstCardSections)}
-      {renderCard("Profit & Loss Summary (contd.)", secondCardSections)}
-      {data.filter((r) => !renderedPLItems.has(r.item)).length > 0 && (
-        <div className="bg-white rounded-lg shadow overflow-hidden mt-6">
+    const renderTable = (rows: (string | { label: string; row?: FinancialItem })[], title: string) => {
+      return (
+        <div className="bg-white rounded-lg shadow overflow-hidden">
           <div className="flex items-center justify-between px-5 py-4 bg-gray-50 border-b border-gray-200">
             <h3 className="text-base font-semibold text-gray-900">
-              Profit & Loss Summary (Additional items){" "}
+              {title}{" "}
               <span className="text-sm font-normal text-gray-500">(all amounts in Crores of Rs.)</span>
             </h3>
           </div>
@@ -359,23 +264,74 @@ const CompanyDetails: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {data.filter((r) => !renderedPLItems.has(r.item)).map((row) =>
-                  renderRow(row, 0, false, true)
-                )}
+                {(() => {
+                  let currentSection: string | null = null;
+                  const indentingSections = new Set<string>([
+                    'Expenses',
+                    'Tax expense',
+                    'Other comprehensive income',
+                    'Items that will not be reclassified subsequently to profit or loss',
+                    'Items that will be reclassified subsequently to profit or loss',
+                    'Earnings per equity share',
+                    'Equity shares of par value ₹5/- each',
+                    'Weighted average equity shares used in computing earnings per equity share'
+                  ]);
+
+                  return rows.map((entry, idx) => {
+                    if (typeof entry === 'string') {
+                      currentSection = entry;
+                      return (
+                        <tr key={idx} className="bg-blue-50 font-semibold">
+                          <td colSpan={4} className="px-4 py-3 text-sm text-blue-900 border-b border-gray-100">
+                            {entry}
+                          </td>
+                        </tr>
+                      );
+                    }
+                    const row = entry.row;
+                    if (!row) return null;
+
+                    const isBlueTotal = entry.label === 'Total income' || entry.label === 'Total expenses';
+                    const isRedTotal = entry.label === 'Profit before tax' || entry.label === 'Profit for the year' || entry.label === 'Total other comprehensive income / (loss), net of tax' || entry.label === 'Total comprehensive income for the year';
+                    const isBoldTotal = isBlueTotal || isRedTotal;
+                    const shouldIndent = currentSection !== null && indentingSections.has(currentSection);
+                    const noIndentItems = ['Total other comprehensive income / (loss), net of tax', 'Total comprehensive income for the year', 'Total expenses', 'Profit before tax', 'Profit for the year'];
+                    const finalShouldIndent = shouldIndent && !noIndentItems.includes(entry.label);
+
+                    return (
+                      <tr key={idx} className={`${isBlueTotal ? 'bg-blue-50' : ''} ${isRedTotal ? 'bg-red-50' : ''} ${isBoldTotal ? 'font-semibold' : ''}`}>
+                        <td className={`px-4 py-3 text-sm border-b border-gray-100 ${isBlueTotal ? 'text-blue-900' : isRedTotal ? 'text-red-900' : 'text-gray-900'}`} style={{ paddingLeft: finalShouldIndent ? '2rem' : '1rem' }}>
+                          {entry.label}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-right border-b border-gray-100" style={{ color: getValueColor(row.FY2023) }}>{formatValue(row.FY2023)}</td>
+                        <td className="px-4 py-3 text-sm text-right border-b border-gray-100" style={{ color: getValueColor(row.FY2024) }}>{formatValue(row.FY2024)}</td>
+                        <td className="px-4 py-3 text-sm text-right border-b border-gray-100" style={{ color: getValueColor(row.FY2025) }}>{formatValue(row.FY2025)}</td>
+                      </tr>
+                    );
+                  });
+                })()}
               </tbody>
             </table>
           </div>
         </div>
-      )}
-    </>
-  );
-};
+      );
+    };
 
-
-
+    return (
+      <>
+        {renderTable(firstTableRows, "Profit & Loss Summary")}
+        <div style={{ marginTop: '24px' }}>
+          {renderTable(secondTableRows, "Profit and Loss (contd.)")}
+        </div>
+      </>
+    );
+  };
 
   const renderBSTable = (data: FinancialItem[]) => {
     if (!data || data.length === 0) return null;
+
+    const renderedBSItems = new Set<string>();
+    const normMap = buildNormalizedMap(data);
 
     const sections = [
       {
@@ -481,11 +437,12 @@ const CompanyDetails: React.FC = () => {
     const renderRows = (items: (string | { heading: string; children: any[] })[], level = 0) =>
       items.map((item) => {
         if (typeof item === "string") {
-          const row = data.find((r) => r.item === item);
+          const row = getRowFromData(data, normMap, item);
           if (!row) return null;
 
           const isTotal = row.item.toLowerCase().startsWith("total");
           const padding = `${16 + level * 24}px`;
+          renderedBSItems.add(row.item);
 
           return (
             <tr
@@ -536,47 +493,85 @@ const CompanyDetails: React.FC = () => {
       });
 
     return (
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="flex items-center justify-between px-5 py-4 bg-gray-50 border-b border-gray-200">
-          <h3 className="text-base font-semibold text-gray-900">
-            Balance Sheet Summary{" "}
-            <span className="text-sm font-normal text-gray-500">
-              (all amounts in Crores of Rs.)
-            </span>
-          </h3>
+      <>
+        <div className="bg-white rounded-lg shadow overflow-hidden">
+          <div className="flex items-center justify-between px-5 py-4 bg-gray-50 border-b border-gray-200">
+            <h3 className="text-base font-semibold text-gray-900">
+              Balance Sheet Summary{" "}
+              <span className="text-sm font-normal text-gray-500">
+                (all amounts in Crores of Rs.)
+              </span>
+            </h3>
+          </div>
+          <div className="overflow-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="bg-gray-50">
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">
+                    Item
+                  </th>
+                  <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
+                    FY2023
+                  </th>
+                  <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
+                    FY2024
+                  </th>
+                  <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
+                    FY2025
+                  </th>
+                </tr>
+              </thead>
+              <tbody>{renderRows(sections)}</tbody>
+            </table>
+          </div>
         </div>
-        <div className="overflow-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-gray-50">
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">
-                  Item
-                </th>
-                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
-                  FY2023
-                </th>
-                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
-                  FY2024
-                </th>
-                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
-                  FY2025
-                </th>
-              </tr>
-            </thead>
-            <tbody>{renderRows(sections)}</tbody>
-          </table>
-        </div>
-      </div>
+
+        {data.filter((r) => !renderedBSItems.has(r.item)).length > 0 && (
+          <div className="bg-white rounded-lg shadow overflow-hidden mt-6">
+            <div className="flex items-center justify-between px-5 py-4 bg-gray-50 border-b border-gray-200">
+              <h3 className="text-base font-semibold text-gray-900">
+                Balance Sheet Summary (Additional items) {" "}
+                <span className="text-sm font-normal text-gray-500">(all amounts in Crores of Rs.)</span>
+              </h3>
+            </div>
+            <div className="overflow-auto">
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="bg-gray-50">
+                    <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">Item</th>
+                    <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">FY2023</th>
+                    <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">FY2024</th>
+                    <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">FY2025</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data
+                    .filter((r) => !renderedBSItems.has(r.item))
+                    .map((row) => (
+                      <tr key={row._id}>
+                        <td className="px-4 py-3 text-sm text-gray-900 border-b border-gray-100" style={{ paddingLeft: '2rem' }}>
+                          {row.item}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-right border-b border-gray-100">{formatValue(row.FY2023)}</td>
+                        <td className="px-4 py-3 text-sm text-right border-b border-gray-100">{formatValue(row.FY2024)}</td>
+                        <td className="px-4 py-3 text-sm text-right border-b border-gray-100">{formatValue(row.FY2025)}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </>
     );
   };
-
-
 
   const renderCFTable = (data: FinancialItem[], plData?: FinancialItem[]) => {
     if (!data || data.length === 0) return null;
 
     // Combine cash flow data with P&L data for "Profit for the year" and "Finance cost"
     const combinedData = [...data];
+    const normMap = buildNormalizedMap(combinedData);
     if (plData) {
       const profitForYear = plData.find(item => item.item === "Profit for the year");
       if (profitForYear) {
@@ -588,7 +583,6 @@ const CompanyDetails: React.FC = () => {
       }
     }
 
-    // Sections and sub-items exactly as per your document
     const sections = [
       {
         heading: "Cash Flow from Operating Activities",
@@ -683,11 +677,10 @@ const CompanyDetails: React.FC = () => {
       },
     ];
 
-    // Recursive row rendering
     const renderRows = (items: (string | { heading: string; children: any[] })[], level = 0) => {
       return items.map((item) => {
         if (typeof item === "string") {
-          const row = combinedData.find((r) => r.item === item);
+          const row = getRowFromData(combinedData, normMap, item);
           if (!row) return null;
 
           const isTotal =
@@ -769,67 +762,10 @@ const CompanyDetails: React.FC = () => {
 
               const isBlueHeading = [
                 "Adjustments to reconcile net profit to net cash provided by operating activities:",
-                "Changes in assets and liabilities"
-              ].includes(item.heading);
-
-              // Handle normal text headings
-              const isNormalHeading = [
+                "Changes in assets and liabilities",
                 "Payments to acquire investments",
                 "Proceeds on sale of investments"
               ].includes(item.heading);
-
-              if (isNormalHeading) {
-                const row = data.find((r) => r.item === item.heading);
-                return (
-                  <tr key={item.heading} className="bg-white">
-                    <td className="py-3 text-sm border-b border-gray-100 text-left text-gray-900" style={{ paddingLeft: '1rem' }}>
-                      {item.heading}
-                    </td>
-                    <td className="px-4 py-3 text-sm text-right border-b border-gray-100 text-gray-900">
-                      {(() => { if (row) { renderedPLItems.add(row.item); return formatValue(row.FY2023); } return '-'; })()}
-                    </td>
-                    <td className="px-4 py-3 text-sm text-right border-b border-gray-100 text-gray-900">
-                      {row ? formatValue(row.FY2024) : '-'}
-                    </td>
-                    <td className="px-4 py-3 text-sm text-right border-b border-gray-100 text-gray-900">
-                      {row ? formatValue(row.FY2025) : '-'}
-                    </td>
-                  </tr>
-                );
-              }
-
-              // If it's not red, blue, or normal heading, treat as normal text line
-              if (!isRedHeading && !isBlueHeading) {
-                const row = data.find((r) => r.item === item.heading);
-                if (row) {
-                  renderedPLItems.add(row.item);
-                  return (
-                    <tr key={row.item} className="bg-white">
-                      <td className="py-3 text-sm border-b border-gray-100 text-left text-gray-900" style={{ paddingLeft: '1rem' }}>
-                        {row.item}
-                      </td>
-                      <td
-                        className="px-4 py-3 text-sm text-right border-b border-gray-100"
-                        style={{ color: getValueColor(row.FY2023) }}
-                      >
-                        {formatValue(row.FY2023)}
-                      </td>
-                      <td
-                        className="px-4 py-3 text-sm text-right border-b border-gray-100"
-                        style={{ color: getValueColor(row.FY2024) }}
-                      >
-                        {formatValue(row.FY2024)}
-                      </td>
-                      <td
-                        className="px-4 py-3 text-sm text-right border-b border-gray-100"
-                        style={{ color: getValueColor(row.FY2025) }}
-                      >
-                        {formatValue(row.FY2025)}
-                      </td>
-                    </tr>
-                  );
-                }
-              }
 
               return (
                 <tr className={`${isRedHeading ? "bg-red-50" : "bg-blue-50"} font-semibold`}>
@@ -846,42 +782,31 @@ const CompanyDetails: React.FC = () => {
     };
 
     return (
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white rounded-lg shadow overflow-hidden mt-6">
         <div className="flex items-center justify-between px-5 py-4 bg-gray-50 border-b border-gray-200">
           <h3 className="text-base font-semibold text-gray-900">
-            Cash Flow Summary{" "}
-            <span className="text-sm font-normal text-gray-500">
-              (all amounts in Crores of Rs.)
-            </span>
+            Statement of Cash Flows{" "}
+            <span className="text-sm font-normal text-gray-500">(all amounts in Crores of Rs.)</span>
           </h3>
         </div>
         <div className="overflow-auto">
           <table className="w-full border-collapse">
             <thead>
               <tr className="bg-gray-50">
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">
-                  Item
-                </th>
-                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
-                  FY2023
-                </th>
-                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
-                  FY2024
-                </th>
-                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
-                  FY2025
-                </th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">Item</th>
+                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">FY2023</th>
+                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">FY2024</th>
+                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">FY2025</th>
               </tr>
             </thead>
-            <tbody>{renderRows(sections)}</tbody>
+            <tbody>
+              {renderRows(sections)}
+            </tbody>
           </table>
         </div>
       </div>
     );
   };
-
-
-
 
   if (!company) {
     return (
@@ -1014,37 +939,6 @@ const CompanyDetails: React.FC = () => {
               </svg>
               <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>Documents</h3>
             </div>
-
-            {/* Year Selection
-            <div style={{ marginBottom: '16px' }}>
-              <label style={{
-                fontSize: '14px',
-                fontWeight: '500',
-                color: '#374151',
-                marginBottom: '8px',
-                display: 'block',
-                fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
-              }}>
-                Select Year
-              </label>
-              <select
-                value={selectedYear}
-                onChange={(e) => setSelectedYear(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '8px 12px',
-                  border: '1px solid #d1d5db',
-                  borderRadius: '6px',
-                  fontSize: '14px',
-                  backgroundColor: '#ffffff',
-                  fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
-                }}
-              >
-                <option value="2023">2023</option>
-                <option value="2024">2024</option>
-                <option value="2025">2025</option>
-              </select>
-            </div> */}
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {financialDocuments.map((doc) => (
