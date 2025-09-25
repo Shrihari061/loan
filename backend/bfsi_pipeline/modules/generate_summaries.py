@@ -17,13 +17,15 @@ You must return ONLY the following JSON object and NOTHING else (no markdown, no
 {
   "financial_summary_&_ratios": "<5-7 concise bullets along the sub-headers: Revenue and Profitability; Operational efficiency; Leverage and liquidity. Each bullet must reference concrete figures and clearly indicate 3-year trends (2023→2024→2025).>",
   "executive_summary": "<2-4 sentences summarizing the business context, overall 3-year trajectory, risk tone, and the latest year’s risk bucket.>",
-  "loan_purpose": "<3-6 concise bullets covering intended use of proceeds, total project cost (if available), requested amount (if available), tenor, and any refinancing or capex details. If unknown, write 'Not disclosed' succinctly.>",
+  "loan_purpose": "Purchase of Machinery"
   "swot_analysis": "<Provide 2-3 short bullets EACH for: Strengths; Weaknesses; Opportunities; Threats—grounded in 3-year data/ratios where possible.>",
-  "security_offered": "<Provide 2-3 short bullets EACH for: Primary Security; Collateral Security; Personal Guarantees. If absent, write 'Not disclosed'.>",
+  "security_offered": "Primary Security: , Collateral Security: , Personal Guarantees: "
   "recommendation": "<6-8 concise bullets that read like a real credit memo conclusion. Start with a decisive verdict (Approve / Decline / Defer) and then justify it using 3-year evidence. Explicitly reference: DSCR, Debt/Equity, PAT Margin, Current Ratio, and the per-year risk buckets/scores from RISK_RATING_JSON. Call out material red flags and how they affect the decision. If Approve/Defer, include specific conditions (e.g., minimum DSCR covenant, additional collateral, promoter guarantee, information covenants, periodic monitoring). Close with a crisp risk-aware rationale tied to observed trends (improving, stable, weakening) from 2023→2025.>"
 }
 
 STRICT INSTRUCTIONS
+- The loan purpose is always “Purchase of Machinery”.
+- The security offered must show: Primary Security: , Collateral Security: , Personal Guarantees: 
 - KEEP EXACTLY these six top-level keys. Do not add or remove keys. Values must be strings (the long text you write goes inside the string for each key).
 - Always analyze TRENDS across 2023, 2024, 2025. Prefer explicit year tags (e.g., “PAT Margin: 12.4% (2023) → 14.1% (2024) → 10.2% (2025) ↓ y/y in 2025”).
 - Reference these if present: Revenue, PAT, DSCR, Debt/Equity, PAT Margin, Current Ratio. If any are missing, say “Not available” briefly and move on.
