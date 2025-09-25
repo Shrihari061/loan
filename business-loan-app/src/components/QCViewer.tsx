@@ -2,6 +2,10 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
+import { ChevronsUpDown, Check } from 'lucide-react';
+import { cn } from '../lib/utils';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from './ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 
 type ExtractedData = Record<string, string>;
 
@@ -58,6 +62,8 @@ const QCViewer: React.FC = () => {
   const [selectedYear, setSelectedYear] = useState<string>('2025');
   const [financialData, setFinancialData] = useState<FinancialData | null>(null);
   const [isFinancialDataEdited, setIsFinancialDataEdited] = useState(false);
+  const [openCollection, setOpenCollection] = useState(false);
+  const [openYear, setOpenYear] = useState(false);
 
   const collections = ['Balance Sheet Summary', 'Profit & Loss Summary', 'Cash Flow Summary'];
   const years = ['2023', '2024', '2025'];
@@ -66,6 +72,38 @@ const QCViewer: React.FC = () => {
     () => [selectedCollection, id, data, selectedYear],
     [selectedCollection, id, data, selectedYear]
   );
+
+  // UI helpers: value coloring and input look
+  const isNegativeValue = (val: string | number | null | undefined) => {
+    if (val === null || val === undefined || val === '') return false;
+    const s = String(val).trim();
+    if (!s) return false;
+    if (/^\(.*\)$/.test(s)) return true;
+    const n = Number(s.replace(/[, ]/g, ''));
+    return !isNaN(n) && n < 0;
+  };
+
+  const isPositiveValue = (val: string | number | null | undefined) => {
+    if (val === null || val === undefined || val === '') return false;
+    const s = String(val).trim();
+    if (!s) return false;
+    if (/^\(.*\)$/.test(s)) return false;
+    const n = Number(s.replace(/[, ]/g, ''));
+    return !isNaN(n) && n > 0;
+  };
+
+  const getValueInputClass = (val: string | number | null | undefined, emphasize = false) => {
+    const negative = isNegativeValue(val);
+    const positive = isPositiveValue(val);
+    return `w-full text-right bg-transparent px-1 py-1 rounded transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent border border-transparent hover:bg-gray-50 ${negative ? 'text-red-600' : positive ? 'text-green-600' : 'text-gray-900'} ${emphasize ? 'font-semibold' : ''}`;
+  };
+
+  // Simple toast/snackbar
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 1800);
+  };
 
   // 🔹 Convert extracted data to text and back
   const extractedDataToText = (obj?: ExtractedData) => {
@@ -251,6 +289,7 @@ const QCViewer: React.FC = () => {
       const row = findRowFlexible(items, candidates ?? label);
       const displayLabel = label;
       const value = row ? (row[`FY${year}`] ?? '') : '';
+      const isParenNegative = typeof value === 'string' && /\(.*\)/.test(value.trim());
 
       return (
         <tr key={displayLabel} className="hover:bg-gray-50">
@@ -260,7 +299,7 @@ const QCViewer: React.FC = () => {
           >
             {displayLabel}
           </td>
-          <td className="px-4 py-2 text-sm border-b text-right w-48">
+          <td className={`px-4 py-2 text-sm border-b text-right min-w-[140px] ${bold ? 'bg-blue-50 border-t border-blue-200' : ''}`}>
             <input
               type="text"
               value={value}
@@ -294,7 +333,7 @@ const QCViewer: React.FC = () => {
                 setFinancialData(newFD);
                 setIsFinancialDataEdited(true);
               }}
-              className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-right"
+              className={getValueInputClass(value, !!bold)}
               placeholder="-"
             />
           </td>
@@ -303,16 +342,16 @@ const QCViewer: React.FC = () => {
     };
 
     // heading renderer
-    const renderHeading = (label: string, red = false) => (
-      <tr key={`h-${label}`} className={red ? 'bg-red-50' : 'bg-gray-50'}>
-        <td colSpan={2} className="px-4 py-2 text-sm font-semibold text-gray-900">
+    const renderHeading = (label: string, red = false, keySuffix?: string) => (
+      <tr key={`h-${label}-${keySuffix ?? ''}`} className={`${red ? 'bg-red-50' : 'bg-gray-50'} border-l-4 ${red ? 'border-red-300' : 'border-gray-300'}`}>
+        <td colSpan={2} className="px-4 py-3 text-sm font-semibold text-gray-900">
           {label}
         </td>
       </tr>
     );
 
     return (
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="flex items-center justify-between px-5 py-4 bg-gray-50 border-b border-gray-200">
           <h3 className="text-base font-semibold text-gray-900">
             Balance Sheet Summary{' '}
@@ -324,26 +363,26 @@ const QCViewer: React.FC = () => {
 
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50 sticky top-0 z-10">
               <tr>
                 <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase border-b">
                   Particulars
                 </th>
-                <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase border-b">
+                <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase border-b min-w-[140px]">
                   {year}
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white divide-y divide-gray-200 [&>tr:nth-child(even)]:bg-gray-50/40">
               {/* ASSETS */}
-              {renderHeading('Assets', true)}
-              {renderHeading('Non-current assets')}
+              {renderHeading('Assets', true, 'assets')}
+              {renderHeading('Non-current assets', false, 'noncurrent')}
               {renderRow('Property, plant and equipment')}
               {renderRow('Right-of-use assets')}
               {renderRow('Capital work-in-progress')}
               {renderRow('Goodwill')}
 
-              {renderHeading('Financial assets')}
+              {renderHeading('Financial assets', false, 'nc-financial-assets')}
               {renderRow('Financial assets - Investments (Non-current)')}
               {renderRow('Financial assets - Loans (Non-current)')}
               {renderRow('Other financial assets (Non-current)')}
@@ -352,8 +391,8 @@ const QCViewer: React.FC = () => {
               {renderRow('Other non-current assets')}
               {renderRow('Total non-current assets', { bold: true })}
 
-              {renderHeading('Current assets')}
-              {renderHeading('Financial assets')}
+              {renderHeading('Current assets', false, 'current-assets')}
+              {renderHeading('Financial assets', false, 'c-financial-assets')}
               {renderRow('Financial assets - Investments (Current)')}
               {renderRow('Trade receivables')}
               {renderRow('Cash and cash equivalents')}
@@ -365,23 +404,23 @@ const QCViewer: React.FC = () => {
               {renderRow('Total assets', { bold: true })}
 
               {/* EQUITY & LIABILITIES */}
-              {renderHeading('Equity and Liabilities', true)}
-              {renderHeading('Equity')}
+              {renderHeading('Equity and Liabilities', true, 'eq-liab')}
+              {renderHeading('Equity', false, 'equity')}
               {renderRow('Equity share capital')}
               {renderRow('Other equity')}
               {renderRow('Total equity', { bold: true })}
 
-              {renderHeading('Liabilities')}
-              {renderHeading('Non-current liabilities')}
-              {renderHeading('Financial liabilities')}
+              {renderHeading('Liabilities', false, 'liabilities')}
+              {renderHeading('Non-current liabilities', false, 'noncurrent-liabilities')}
+              {renderHeading('Financial liabilities', false, 'nc-financial-liabilities')}
               {renderRow('Financial liabilities - Lease liabilities (Non-current)')}
               {renderRow('Other financial liabilities (Non-current)')}
               {renderRow('Deferred tax liabilities (net)')}
               {renderRow('Other non-current liabilities')}
               {renderRow('Total non-current liabilities', { bold: true })}
 
-              {renderHeading('Current liabilities')}
-              {renderHeading('Financial liabilities')}
+              {renderHeading('Current liabilities', false, 'current-liabilities')}
+              {renderHeading('Financial liabilities', false, 'c-financial-liabilities')}
               {renderRow('Financial liabilities - Lease liabilities (Current)')}
 
               {renderRow(
@@ -432,7 +471,7 @@ const QCViewer: React.FC = () => {
           >
             {displayLabel}
           </td>
-          <td className="px-4 py-2 text-sm border-b text-right w-48">
+          <td className={`px-4 py-2 text-sm border-b text-right min-w-[140px] ${bold ? 'bg-blue-50 border-t border-blue-200' : ''}`}>
             <input
               type="text"
               value={value}
@@ -466,7 +505,7 @@ const QCViewer: React.FC = () => {
                 setFinancialData(newFD);
                 setIsFinancialDataEdited(true);
               }}
-              className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-right"
+              className={getValueInputClass(value, !!bold)}
               placeholder="-"
             />
           </td>
@@ -483,7 +522,7 @@ const QCViewer: React.FC = () => {
     );
 
     return (
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="flex items-center justify-between px-5 py-4 bg-gray-50 border-b border-gray-200">
           <h3 className="text-base font-semibold text-gray-900">
             Profit & Loss Summary{' '}
@@ -496,17 +535,17 @@ const QCViewer: React.FC = () => {
         {/* First table */}
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50 sticky top-0 z-10">
               <tr>
                 <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase border-b">
                   Particulars
                 </th>
-                <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase border-b">
+                <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase border-b min-w-[140px]">
                   {year}
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white divide-y divide-gray-200 [&>tr:nth-child(even)]:bg-gray-50/40">
               {renderRow('Revenue from operations')}
               {renderRow('Other income, net')}
               {renderRow('Total income', { bold: true })}
@@ -549,7 +588,7 @@ const QCViewer: React.FC = () => {
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white divide-y divide-gray-200 [&>tr:nth-child(even)]:bg-gray-50/40">
               {renderHeading('Profit and Loss (Contd.)')}
               {renderHeading('Other comprehensive income', true)}
               {renderHeading(
@@ -581,6 +620,7 @@ const QCViewer: React.FC = () => {
               })}
 
               {renderHeading('Earnings per equity share', true)}
+              {renderHeading('Equity shares of par value ₹5/- each')}
               {renderRow('Basic (in ₹ per share)')}
               {renderRow('Diluted (in ₹ per share)')}
 
@@ -645,7 +685,7 @@ const QCViewer: React.FC = () => {
           >
             {label}
           </td>
-          <td className="px-4 py-2 text-sm border-b text-right w-48">
+          <td className={`px-4 py-2 text-sm border-b text-right min-w-[140px] ${bold ? 'bg-blue-50 border-t border-blue-200' : ''}`}>
             <input
               type="text"
               value={value}
@@ -669,7 +709,7 @@ const QCViewer: React.FC = () => {
                 setFinancialData(newFD);
                 setIsFinancialDataEdited(true);
               }}
-              className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-right"
+              className={getValueInputClass(value, !!bold)}
               placeholder="-"
             />
           </td>
@@ -678,15 +718,15 @@ const QCViewer: React.FC = () => {
     };
 
     const renderHeading = (label: string, red = false) => (
-      <tr key={`h-${label}`} className={red ? 'bg-red-50' : 'bg-gray-50'}>
-        <td colSpan={2} className="px-4 py-2 text-sm font-semibold text-gray-900">
+      <tr key={`h-${label}`} className={`${red ? 'bg-red-50' : 'bg-gray-50'} border-l-4 ${red ? 'border-red-300' : 'border-gray-300'}`}>
+        <td colSpan={2} className="px-4 py-3 text-sm font-semibold text-gray-900">
           {label}
         </td>
       </tr>
     );
 
     return (
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="flex items-center justify-between px-5 py-4 bg-gray-50 border-b border-gray-200">
           <h3 className="text-base font-semibold text-gray-900">
             Cash Flow Summary{' '}
@@ -695,17 +735,17 @@ const QCViewer: React.FC = () => {
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50 sticky top-0 z-10">
               <tr>
                 <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase border-b">
                   Particulars
                 </th>
-                <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase border-b">
+                <th className="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase border-b min-w-[140px]">
                   {year}
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white divide-y divide-gray-200 [&>tr:nth-child(even)]:bg-gray-50/40">
               {renderHeading('Cash flow from operating activities:', true)}
               {renderRow('Profit for the year', {
                 candidates: ['Profit for the year', 'Profit after tax']
@@ -918,13 +958,13 @@ const QCViewer: React.FC = () => {
           status: updated.record.status,
           customer_name: updated.record.business_name
         });
-        alert('Customer approved successfully!');
+        showToast('Customer approved successfully!', 'success');
       } else {
-        alert('Failed to approve.');
+        showToast('Failed to approve.', 'error');
       }
     } catch (err) {
       console.error('Error approving:', err);
-      alert('Error approving.');
+      showToast('Error approving.', 'error');
     }
   };
 
@@ -941,13 +981,13 @@ const QCViewer: React.FC = () => {
           status: updated.record.status,
           customer_name: updated.record.business_name
         });
-        alert('Customer rejected successfully!');
+        showToast('Customer rejected successfully!', 'success');
       } else {
-        alert('Failed to reject.');
+        showToast('Failed to reject.', 'error');
       }
     } catch (err) {
       console.error('Error rejecting:', err);
-      alert('Error rejecting.');
+      showToast('Error rejecting.', 'error');
     }
   };
 
@@ -985,11 +1025,11 @@ const QCViewer: React.FC = () => {
         });
       }
 
-      alert('Changes saved successfully ✅');
+      showToast('Changes saved successfully ✅', 'success');
       setIsFinancialDataEdited(false);
     } catch (err) {
       console.error('Save failed:', err);
-      alert('Failed to save changes ❌');
+      showToast('Failed to save changes ❌', 'error');
     }
   };
 
@@ -998,6 +1038,15 @@ const QCViewer: React.FC = () => {
 
   return (
     <div className="p-6 space-y-6">
+      {toast && (
+        <div
+          className={`fixed top-4 right-4 z-50 px-4 py-2 rounded shadow-sm border text-sm ${
+            toast.type === 'success' ? 'bg-green-50 text-green-800 border-green-200' : 'bg-red-50 text-red-800 border-red-200'
+          }`}
+        >
+          {toast.message}
+        </div>
+      )}
       <Button
         onClick={() => navigate('/qc')}
         // className="bg-gray-200 text-gray-800 px-3 py-1.5 rounded-md text-sm font-medium hover:bg-gray-300 transition-colors"
@@ -1005,34 +1054,130 @@ const QCViewer: React.FC = () => {
         ← Back to QC Table
       </Button>
 
-      <div className="border-b pb-4">
-        <h2 className="text-xl font-semibold mb-2">Customer Details</h2>
-        <p><strong>Customer Name:</strong> {data.customer_name ?? '-'}</p>
-        <p><strong>Lead ID:</strong> {data.lead_id ?? '-'}</p>
-        <p><strong>Status:</strong> {data.status ?? 'Pending'}</p>
+      <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-5">
+        <div className="flex items-start justify-between">
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900">Customer Details</h2>
+            <div className="mt-1 text-sm text-gray-500">Overview of the selected lead</div>
+          </div>
+          <span
+            className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium
+              ${
+                (data.status || 'Pending') === 'Approved'
+                  ? 'bg-green-50 text-green-700 border border-green-200'
+                  : (data.status || 'Pending') === 'Rejected'
+                  ? 'bg-red-50 text-red-700 border border-red-200'
+                  : (data.status || 'Pending') === 'In Progress'
+                  ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                  : 'bg-gray-50 text-gray-700 border border-gray-200'
+              }
+            `}
+          >
+            {data.status ?? 'Pending'}
+          </span>
+        </div>
+
+        <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="rounded-md bg-gray-50 p-3 border border-gray-100">
+            <div className="text-xs uppercase tracking-wide text-gray-500">Customer Name</div>
+            <div className="mt-1 text-sm font-medium text-gray-900">{data.customer_name ?? '-'}</div>
+          </div>
+          <div className="rounded-md bg-gray-50 p-3 border border-gray-100">
+            <div className="text-xs uppercase tracking-wide text-gray-500">Lead ID</div>
+            <div className="mt-1 text-sm font-medium text-gray-900">{data.lead_id ?? '-'}</div>
+          </div>
+        </div>
       </div>
 
       <div className="flex gap-4 items-center">
         <div>
           <label className="block mb-2 font-medium">Select the type of financial document:</label>
-          <select
-            className="border p-2 rounded w-full max-w-md"
-            value={selectedCollection}
-            onChange={(e) => setSelectedCollection(e.target.value)}
-          >
-            <option value="" disabled>Choose the document</option>
-            {collections.map((col) => <option key={col} value={col}>{col}</option>)}
-          </select>
+          <Popover open={openCollection} onOpenChange={setOpenCollection}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                role="combobox"
+                aria-expanded={openCollection}
+                className="w-[280px] justify-between"
+              >
+                {selectedCollection || 'Choose the document'}
+                <ChevronsUpDown className="opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[280px] p-0">
+              <Command>
+                <CommandInput placeholder="Search document..." className="h-9" />
+                <CommandList>
+                  <CommandEmpty>No document found.</CommandEmpty>
+                  <CommandGroup>
+                    {collections.map((col) => (
+                      <CommandItem
+                        key={col}
+                        value={col}
+                        onSelect={(currentValue) => {
+                          setSelectedCollection(currentValue);
+                          setOpenCollection(false);
+                        }}
+                      >
+                        {col}
+                        <Check
+                          className={cn(
+                            'ml-auto',
+                            selectedCollection === col ? 'opacity-100' : 'opacity-0'
+                          )}
+                        />
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
         </div>
+
         <div>
           <label className="block mb-2 font-medium">Select a year:</label>
-          <select
-            className="border p-2 rounded w-full max-w-md"
-            value={selectedYear}
-            onChange={(e) => setSelectedYear(e.target.value)}
-          >
-            {years.map((yr) => <option key={yr} value={yr}>{yr}</option>)}
-          </select>
+          <Popover open={openYear} onOpenChange={setOpenYear}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                role="combobox"
+                aria-expanded={openYear}
+                className="w-[180px] justify-between"
+              >
+                {selectedYear || 'Select year'}
+                <ChevronsUpDown className="opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[180px] p-0">
+              <Command>
+                <CommandInput placeholder="Search year..." className="h-9" />
+                <CommandList>
+                  <CommandEmpty>No year found.</CommandEmpty>
+                  <CommandGroup>
+                    {years.map((yr) => (
+                      <CommandItem
+                        key={yr}
+                        value={yr}
+                        onSelect={(currentValue) => {
+                          setSelectedYear(currentValue);
+                          setOpenYear(false);
+                        }}
+                      >
+                        {yr}
+                        <Check
+                          className={cn(
+                            'ml-auto',
+                            selectedYear === yr ? 'opacity-100' : 'opacity-0'
+                          )}
+                        />
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
 
@@ -1071,20 +1216,29 @@ const QCViewer: React.FC = () => {
 
       {selectedCollection && (
         <div className="mt-8 flex justify-end space-x-4">
-          <button
-            onClick={handleDecline}
-            className="text-white px-4 py-2 rounded hover:opacity-90"
-            style={{ backgroundColor: '#00306E' }}
-          >
-            Decline
-          </button>
-          <button
-            onClick={handleApprove}
-            className="text-white px-4 py-2 rounded hover:opacity-90"
-            style={{ backgroundColor: '#0266F4' }}
-          >
-            Approve
-          </button>
+          {(() => {
+            const isFinalized = (data.status === 'Approved' || data.status === 'Rejected');
+            return (
+              <>
+                <button
+                  onClick={handleDecline}
+                  disabled={isFinalized}
+                  className={`text-white px-4 py-2 rounded ${isFinalized ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'}`}
+                  style={{ backgroundColor: '#00306E' }}
+                >
+                  Decline
+                </button>
+                <button
+                  onClick={handleApprove}
+                  disabled={isFinalized}
+                  className={`text-white px-4 py-2 rounded ${isFinalized ? 'opacity-50 cursor-not-allowed' : 'hover:opacity-90'}`}
+                  style={{ backgroundColor: '#0266F4' }}
+                >
+                  Approve
+                </button>
+              </>
+            );
+          })()}
         </div>
       )}
     </div>
