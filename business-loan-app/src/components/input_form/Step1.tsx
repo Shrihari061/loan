@@ -23,7 +23,7 @@ interface DirectorDetails {
 
 export default function Step1({
   setLeadData,
-  leadData,
+  leadData: _leadData,
   goToNextStep,
 }: {
   setLeadData: React.Dispatch<React.SetStateAction<any>>;
@@ -150,7 +150,7 @@ export default function Step1({
   const handleSaveAndContinue = () => {
     if (!companyDetails) return;
 
-    setLeadData(prevData => ({
+    setLeadData((prevData: any) => ({
       ...prevData,
       lead_id: companyDetails.lead_id,
       cin: cin,
@@ -317,8 +317,8 @@ export default function Step1({
           <label className="text-sm font-semibold text-gray-700 mb-2">Designation</label>
           <input
             value={designation}
-            onChange={(e) => setDesignation(e.target.value)}
-            className="w-full border border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            readOnly
+            className="w-full border border-gray-300 px-4 py-3 rounded-lg bg-gray-50"
             placeholder="Designation will auto-populate"
           />
         </div>
@@ -326,8 +326,8 @@ export default function Step1({
           <label className="text-sm font-semibold text-gray-700 mb-2">Phone Number</label>
           <input
             value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-            className="w-full border border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            readOnly
+            className="w-full border border-gray-300 px-4 py-3 rounded-lg bg-gray-50"
             placeholder="Phone number will auto-populate"
           />
         </div>

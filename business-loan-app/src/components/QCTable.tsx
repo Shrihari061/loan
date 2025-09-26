@@ -24,18 +24,81 @@ const QCTable: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:5000/leads/") // switched from /cq to /leads
-      .then((res) => res.json())
-      .then((leads) =>
-        // map business_name into customer_name
-        setData(
-          leads.map((lead: any) => ({
-            ...lead,
-            customer_name: lead.business_name,
-          }))
-        )
-      )
-      .catch((err) => console.error("Failed to fetch leads data:", err));
+    const loadAndFilter = async () => {
+      try {
+        const [leadsRes, analysisRes, ratiosRes, risksRes] = await Promise.all([
+          fetch("http://localhost:5000/leads/"),
+          fetch("http://localhost:5000/analysis/"),
+          fetch("http://localhost:5000/analysis/ratios"),
+          fetch("http://localhost:5000/risk/")
+        ]);
+
+        const [leads, analysis, ratios, risks] = await Promise.all([
+          leadsRes.ok ? leadsRes.json() : [],
+          analysisRes.ok ? analysisRes.json() : [],
+          ratiosRes.ok ? ratiosRes.json() : [],
+          risksRes.ok ? risksRes.json() : []
+        ]);
+
+        const normalize = (s: any) => (typeof s === 'string' ? s.trim() : s);
+
+        // Index by lead_id for quick matching
+        const leadByLeadId = new Map<string, any>();
+        (leads || []).forEach((lead: any) => {
+          if (lead && lead.lead_id) leadByLeadId.set(lead.lead_id, lead);
+        });
+
+        // Build maps keyed by lead_id
+        const analysisByLeadId = new Map<string, any>();
+        (analysis || []).forEach((a: any) => {
+          if (a && a.lead_id) analysisByLeadId.set(a.lead_id, a);
+        });
+
+        const ratiosByLeadId = new Map<string, any>();
+        (ratios || []).forEach((r: any) => {
+          if (r && r.lead_id) ratiosByLeadId.set(r.lead_id, r);
+        });
+
+        const risksByLeadId = new Map<string, any>();
+        (risks || []).forEach((rk: any) => {
+          if (rk && rk.lead_id) risksByLeadId.set(rk.lead_id, rk);
+        });
+
+        // Only include entries where all four sources have the same lead_id and matching names
+        const merged: QCEntry[] = [];
+        for (const [leadId, lead] of leadByLeadId.entries()) {
+          const a = analysisByLeadId.get(leadId);
+          const r = ratiosByLeadId.get(leadId);
+          const k = risksByLeadId.get(leadId);
+          if (!a || !r || !k) continue; // model outputs not ready
+
+          const leadName = normalize(lead.business_name);
+          const aName = normalize(a.company_name || a.customer_name);
+          const rName = normalize(r.customer_name);
+          const kName = normalize(k.customer_name);
+
+          if (!leadName || !aName || !rName || !kName) continue;
+
+          // Strict match: ensure names align across collections for the same lead_id
+          if (leadName === aName && leadName === rName && leadName === kName) {
+            merged.push({
+              _id: lead._id,
+              customer_id: lead._id,
+              customer_name: leadName,
+              lead_id: leadId,
+              status: lead.status || "In progress",
+              documents: []
+            });
+          }
+        }
+
+        setData(merged);
+      } catch (err) {
+        console.error("Failed to fetch QC data:", err);
+      }
+    };
+
+    loadAndFilter();
   }, []);
 
   const toggleMenu = (id: string, e: React.MouseEvent<HTMLButtonElement>) => {
