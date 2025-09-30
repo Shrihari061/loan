@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-
 interface CompanyDetails {
   name: string;
   registrationNo: string;
@@ -44,22 +43,8 @@ export default function Step1({
   const [loanType, setLoanType] = useState<string>('');
   const [loanAmount, setLoanAmount] = useState<string>('');
 
-  const [contactPersonData] = useState<Array<{ name: string, phone: string, designation: string }>>([
-  { name: 'Ashwini Shekhawat', phone: '+91-98765-43210', designation: 'RM' },
-  { name: 'Sarah Johnson', phone: '+91-91234-56780', designation: 'BM' },
-  { name: 'Shrihari Rao', phone: '+91-87654-32109', designation: 'RM' },
-  { name: 'Emily Davis', phone: '+91-92345-67890', designation: 'BM' },
-  { name: 'Rajesh Kumar', phone: '+91-76543-21098', designation: 'RM' },
-  { name: 'Lisa Anderson', phone: '+91-93456-78901', designation: 'BM' },
-  { name: 'Robert Taylor', phone: '+91-94567-89012', designation: 'RM' },
-  { name: 'Jennifer Martinez', phone: '+91-95678-90123', designation: 'BM' },
-  { name: 'David Schwimmer', phone: '+91-96789-01234', designation: 'RM' },
-  { name: 'Monica Geller', phone: '+91-97890-12345', designation: 'BM' },
-  { name: 'Phoebe Buffay', phone: '+91-98901-23456', designation: 'RM' },
-  { name: 'Joey Tribbiani', phone: '+91-99012-34567', designation: 'BM' },
-  { name: 'Chandler Bing', phone: '+91-90123-45678', designation: 'RM' },
-  { name: 'Rachel Green', phone: '+91-91234-56789', designation: 'BM' },
-]);
+  const [contactPersonData, setContactPersonData] = useState<Array<{ name: string, phone: string, designation: string }>>([]);
+  const [loanTypes, setLoanTypes] = useState<string[]>([]);
 
   const availableContactPersons = contactPersonData.map(person => person.name);
 
@@ -91,41 +76,35 @@ export default function Step1({
     return 'LEAD-' + Math.random().toString(36).substring(2, 10).toUpperCase();
   };
 
-  const validateCIN = () => {
-    const regex = /^[A-Z][0-9]{5}[A-Z]{2}[0-9]{4}[A-Z]{3}[0-9]{6}$/;
+  const validateCIN = async () => {
+    const regex = /^[A-Z0-9]{21}$/;
     const isValid = regex.test(cin);
     setCinValid(isValid);
     if (!isValid) return;
 
-    const mockData = {
-      company: {
-        name: 'Infosys',
-        registrationNo: cin,
-        incorporatedDate: '02-07-1981',
-        email: 'askus@infosys.com',
-        address: {
-          line1: 'No. 44/97 A, Next to SBI Bank, Hosur Road, Electronic City',
-          city: 'Bengaluru',
-          state: 'Karnataka-560100',
-          country: 'India',
-        },
-        lead_id: generateLeadId(),
-      },
-      directors: [
-        { din: '00041245', firstName: 'Nandan', lastName: 'Nilekani' },
-        { din: '01876159', firstName: 'Salil', lastName: 'Parekh' },
-        { din: '00019437', firstName: 'Bobby', lastName: 'Parekh' },
-      ],
-    };
+    try {
+      const response = await fetch(`http://localhost:5000/leads/${cin}/data`);
+      if (!response.ok) {
+        setCinValid(false);
+        return;
+      }
 
-    setCompanyDetails(mockData.company);
-    setDirectorDetails(mockData.directors);
+      const data = await response.json();
 
-    startAMLCheckForCompany(mockData.company.name);
+      setCompanyDetails({ ...data.company, registrationNo: cin, lead_id: generateLeadId() });
+      setDirectorDetails(data.directors || []);
+      setContactPersonData(data.contactPersons || []);
+      setLoanTypes(data.loanTypes || []);
 
-    const incorporatedYear = parseInt(mockData.company.incorporatedDate.split('-')[2], 10);
-    if (new Date().getFullYear() - incorporatedYear < 5) {
-      startAMLCheckForDirectors(mockData.directors);
+      startAMLCheckForCompany(data.company.name);
+
+      const incorporatedYear = parseInt(data.company.incorporatedDate.split('-')[2], 10);
+      if (new Date().getFullYear() - incorporatedYear < 5) {
+        startAMLCheckForDirectors(data.directors || []);
+      }
+    } catch (err) {
+      console.error("Error verifying CIN:", err);
+      setCinValid(false);
     }
   };
 
@@ -211,28 +190,34 @@ export default function Step1({
       {companyDetails && (
         <div className="grid grid-cols-2 gap-6 mb-8">
           <div>
-            <label className="text-sm font-semibold text-gray-700 mb-2">Company Name</label>
-            <input value={companyDetails.name} readOnly className="w-full border border-gray-300 px-4 py-3 rounded-lg bg-gray-50" />
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Company Name</label>
+            <div className="w-full px-4 py-3 rounded-lg bg-gray-50 text-gray-900">
+              {companyDetails.name}
+            </div>
           </div>
           <div>
-            <label className="text-sm font-semibold text-gray-700 mb-2">Lead ID</label>
-            <input value={companyDetails.lead_id} readOnly className="w-full border border-gray-300 px-4 py-3 rounded-lg bg-gray-50" />
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Lead ID</label>
+            <div className="w-full px-4 py-3 rounded-lg bg-gray-50 text-gray-900">
+              {companyDetails.lead_id}
+            </div>
           </div>
           <div>
-            <label className="text-sm font-semibold text-gray-700 mb-2">Incorporation Date</label>
-            <input value={companyDetails.incorporatedDate} readOnly className="w-full border border-gray-300 px-4 py-3 rounded-lg bg-gray-50" />
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Incorporation Date</label>
+            <div className="w-full px-4 py-3 rounded-lg bg-gray-50 text-gray-900">
+              {companyDetails.incorporatedDate}
+            </div>
           </div>
           <div>
-            <label className="text-sm font-semibold text-gray-700 mb-2">Email</label>
-            <input value={companyDetails.email} readOnly className="w-full border border-gray-300 px-4 py-3 rounded-lg bg-gray-50" />
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Email</label>
+            <div className="w-full px-4 py-3 rounded-lg bg-gray-50 text-gray-900">
+              {companyDetails.email}
+            </div>
           </div>
           <div className="col-span-2">
-            <label className="text-sm font-semibold text-gray-700 mb-2">Address</label>
-            <input
-              value={`${companyDetails.address.line1}, ${companyDetails.address.city}, ${companyDetails.address.state}`}
-              readOnly
-              className="w-full border border-gray-300 px-4 py-3 rounded-lg bg-gray-50"
-            />
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Address</label>
+            <div className="w-full px-4 py-3 rounded-lg bg-gray-50 text-gray-900">
+              {`${companyDetails.address.line1}, ${companyDetails.address.city}, ${companyDetails.address.state}`}
+            </div>
           </div>
         </div>
       )}
@@ -245,16 +230,16 @@ export default function Step1({
             {directorDetails.map((d, idx) => (
               <div key={idx} className="grid grid-cols-3 gap-6">
                 <div>
-                  <label className="text-sm font-semibold text-gray-700 mb-2">DIN</label>
-                  <input value={d.din} readOnly className="w-full border border-gray-300 px-4 py-3 rounded-lg bg-gray-50" />
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">DIN</label>
+                  <div className="w-full px-4 py-3 rounded-lg bg-gray-50 text-gray-900">{d.din}</div>
                 </div>
                 <div>
-                  <label className="text-sm font-semibold text-gray-700 mb-2">First Name</label>
-                  <input value={d.firstName} readOnly className="w-full border border-gray-300 px-4 py-3 rounded-lg bg-gray-50" />
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">First Name</label>
+                  <div className="w-full px-4 py-3 rounded-lg bg-gray-50 text-gray-900">{d.firstName}</div>
                 </div>
                 <div>
-                  <label className="text-sm font-semibold text-gray-700 mb-2">Last Name</label>
-                  <input value={d.lastName} readOnly className="w-full border border-gray-300 px-4 py-3 rounded-lg bg-gray-50" />
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Last Name</label>
+                  <div className="w-full px-4 py-3 rounded-lg bg-gray-50 text-gray-900">{d.lastName}</div>
                 </div>
               </div>
             ))}
@@ -314,22 +299,16 @@ export default function Step1({
           </select>
         </div>
         <div>
-          <label className="text-sm font-semibold text-gray-700 mb-2">Designation</label>
-          <input
-            value={designation}
-            readOnly
-            className="w-full border border-gray-300 px-4 py-3 rounded-lg bg-gray-50"
-            placeholder="Designation will auto-populate"
-          />
+          <label className="block text-sm font-semibold text-gray-700 mb-1">Designation</label>
+          <div className="w-full px-4 py-3 rounded-lg bg-gray-50 text-gray-900">
+            {designation || '—'}
+          </div>
         </div>
         <div>
-          <label className="text-sm font-semibold text-gray-700 mb-2">Phone Number</label>
-          <input
-            value={phoneNumber}
-            readOnly
-            className="w-full border border-gray-300 px-4 py-3 rounded-lg bg-gray-50"
-            placeholder="Phone number will auto-populate"
-          />
+          <label className="block text-sm font-semibold text-gray-700 mb-1">Phone Number</label>
+          <div className="w-full px-4 py-3 rounded-lg bg-gray-50 text-gray-900">
+            {phoneNumber || '—'}
+          </div>
         </div>
         <div>
           <label className="text-sm font-semibold text-gray-700 mb-2">Loan Type</label>
@@ -339,10 +318,9 @@ export default function Step1({
             className="w-full border border-gray-300 px-4 py-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">Select Loan Type</option>
-            <option value="Term Loan">Term Loan</option>
-            <option value="OD/CC">OD/CC</option>
-            <option value="LC">LC</option>
-            <option value="BG">BG</option>
+            {loanTypes.map((lt) => (
+              <option key={lt} value={lt}>{lt}</option>
+            ))}
           </select>
         </div>
         <div>

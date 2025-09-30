@@ -37,6 +37,40 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+// -------------------- GET DATA BY LEAD ID (mock JSON) --------------------
+router.get('/:id/data', async (req, res) => {
+  try {
+    const recordId = req.params.id;
+
+    // Load JSON file
+    const mockDataPath = path.join(__dirname, '../data/mockData.json');
+    const raw = fs.readFileSync(mockDataPath, 'utf8');
+    const mockData = JSON.parse(raw);
+
+    // Verify CIN in the JSON
+    if (!mockData.company || !mockData.company.cin) {
+      return res.status(500).json({ error: 'Mock data is missing CIN field' });
+    }
+
+    // Here, treat recordId as CIN (or adapt if your ID is Mongo _id)
+    if (recordId !== mockData.company.cin) {
+      return res.status(404).json({ error: 'No data found for this CIN' });
+    }
+
+    res.json({
+      success: true,
+      company: mockData.company,
+      directors: mockData.directors,
+      contactPersons: mockData.contactPersons,
+      loanTypes: mockData.loanTypes
+    });
+
+  } catch (err) {
+    console.error('Error fetching mock data:', err);
+    res.status(500).json({ error: 'Failed to fetch mock data' });
+  }
+});
+
 // -------------------- CREATE NEW LEAD --------------------
 router.post(
   '/',

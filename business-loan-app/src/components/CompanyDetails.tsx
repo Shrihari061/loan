@@ -924,55 +924,57 @@ const CompanyDetails: React.FC = () => {
 
         {/* Main Content */}
         <div style={{ display: 'flex', gap: '24px' }}>
-          {/* Left Panel - Documents */}
-          <div style={{
-            width: '300px',
-            backgroundColor: '#fff',
-            borderRadius: '12px',
-            padding: '20px',
-            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-            height: 'fit-content'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" style={{ color: '#6b7280', marginRight: '8px' }}>
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-              </svg>
-              <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>Documents</h3>
-            </div>
+          {/* Left Panel - Documents (hidden on Ratio tab) */}
+          {activeTab !== 'ratio' && (
+            <div style={{
+              width: '300px',
+              backgroundColor: '#fff',
+              borderRadius: '12px',
+              padding: '20px',
+              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+              height: 'fit-content'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" style={{ color: '#6b7280', marginRight: '8px' }}>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                </svg>
+                <h3 style={{ fontSize: '16px', fontWeight: '600', color: '#111827', fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>Documents</h3>
+              </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {financialDocuments.map((doc) => (
-                <div
-                  key={doc.key}
-                  onClick={() => setSelectedDocument(doc.key as 'balance_sheet' | 'profit_loss' | 'cash_flow')}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    padding: '12px',
-                    backgroundColor: selectedDocument === doc.key ? '#e0f2fe' : '#f9fafb',
-                    borderRadius: '8px',
-                    border: `1px solid ${selectedDocument === doc.key ? '#0288d1' : '#e5e7eb'}`,
-                    cursor: 'pointer',
-                    transition: 'all 0.2s'
-                  }}
-                >
-                  <div style={{ marginRight: '12px', fontSize: '20px' }}>
-                    {doc.icon}
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{
-                      fontSize: '14px',
-                      color: selectedDocument === doc.key ? '#0288d1' : '#111827',
-                      fontWeight: selectedDocument === doc.key ? '600' : '500',
-                      fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
-                    }}>
-                      {doc.name}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {financialDocuments.map((doc) => (
+                  <div
+                    key={doc.key}
+                    onClick={() => setSelectedDocument(doc.key as 'balance_sheet' | 'profit_loss' | 'cash_flow')}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      padding: '12px',
+                      backgroundColor: selectedDocument === doc.key ? '#e0f2fe' : '#f9fafb',
+                      borderRadius: '8px',
+                      border: `1px solid ${selectedDocument === doc.key ? '#0288d1' : '#e5e7eb'}`,
+                      cursor: 'pointer',
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    <div style={{ marginRight: '12px', fontSize: '20px' }}>
+                      {doc.icon}
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{
+                        fontSize: '14px',
+                        color: selectedDocument === doc.key ? '#0288d1' : '#111827',
+                        fontWeight: selectedDocument === doc.key ? '600' : '500',
+                        fontFamily: 'Figtree, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+                      }}>
+                        {doc.name}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Right Panel - Content */}
           <div style={{ flex: 1 }}>

@@ -1,0 +1,42 @@
+{
+  "company": {
+    "cin": "U12345MH2020PLC123456",
+    "name": "Infosys",
+    "registrationNo": "DYNAMIC_CIN",
+    "incorporatedDate": "02-07-1981",
+    "email": "askus@infosys.com",
+    "address": {
+      "line1": "No. 44/97 A, Next to SBI Bank, Hosur Road, Electronic City",
+      "city": "Bengaluru",
+      "state": "Karnataka-560100",
+      "country": "India"
+    }
+  },
+  "directors": [
+    { "din": "00041245", "firstName": "Nandan", "lastName": "Nilekani" },
+    { "din": "01876159", "firstName": "Salil", "lastName": "Parekh" },
+    { "din": "00019437", "firstName": "Bobby", "lastName": "Parekh" }
+  ],
+  "contactPersons": [
+    { "name": "Ashwini Shekhawat", "phone": "+91-98765-43210", "designation": "RM" },
+    { "name": "Sarah Johnson", "phone": "+91-91234-56780", "designation": "BM" },
+    { "name": "Shrihari Rao", "phone": "+91-87654-32109", "designation": "RM" },
+    { "name": "Emily Davis", "phone": "+91-92345-67890", "designation": "BM" },
+    { "name": "Rajesh Kumar", "phone": "+91-76543-21098", "designation": "RM" },
+    { "name": "Lisa Anderson", "phone": "+91-93456-78901", "designation": "BM" },
+    { "name": "Robert Taylor", "phone": "+91-94567-89012", "designation": "RM" },
+    { "name": "Jennifer Martinez", "phone": "+91-95678-90123", "designation": "BM" },
+    { "name": "David Schwimmer", "phone": "+91-96789-01234", "designation": "RM" },
+    { "name": "Monica Geller", "phone": "+91-97890-12345", "designation": "BM" },
+    { "name": "Phoebe Buffay", "phone": "+91-98901-23456", "designation": "RM" },
+    { "name": "Joey Tribbiani", "phone": "+91-99012-34567", "designation": "BM" },
+    { "name": "Chandler Bing", "phone": "+91-90123-45678", "designation": "RM" },
+    { "name": "Rachel Green", "phone": "+91-91234-56789", "designation": "BM" }
+  ],
+  "loanTypes": [
+    "Term Loan",
+    "OD/CC",
+    "LC",
+    "BG"
+  ]
+}
