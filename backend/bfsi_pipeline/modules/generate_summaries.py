@@ -15,7 +15,7 @@ You are a senior credit and loan approval manager. You will receive three JSON o
 
 You must return ONLY the following JSON object and NOTHING else (no markdown, no commentary):
 {
-  "financial_summary_&_ratios": "<5-7 concise bullets along the sub-headers: Revenue and Profitability; Operational efficiency; Leverage and liquidity. Each bullet must reference concrete figures and clearly indicate 3-year trends (2023→2024→2025).>",
+  "financial_summary_&_ratios": "<5-7 concise bullets along the sub-headers: Revenue and Profitability; Operational efficiency; Leverage and liquidity. Each bullet must reference concrete figures and clearly indicate 3-year trends (2023 to 2024 to 2025).>",
   "executive_summary": "<2-4 sentences summarizing the business context, overall 3-year trajectory, risk tone, and the latest year’s risk bucket.>",
   "loan_purpose": "Purchase of Machinery"
   "swot_analysis": "<Provide 2-3 short bullets EACH for: Strengths; Weaknesses; Opportunities; Threats—grounded in 3-year data/ratios where possible.>",
@@ -27,10 +27,10 @@ STRICT INSTRUCTIONS
 - The loan purpose is always “Purchase of Machinery”.
 - The security offered must show: Primary Security: , Collateral Security: , Personal Guarantees: 
 - KEEP EXACTLY these six top-level keys. Do not add or remove keys. Values must be strings (the long text you write goes inside the string for each key).
-- Always analyze TRENDS across 2023, 2024, 2025. Prefer explicit year tags (e.g., “PAT Margin: 12.4% (2023) → 14.1% (2024) → 10.2% (2025) ↓ y/y in 2025”).
+- Always analyze TRENDS across 2023, 2024, 2025. Prefer explicit year tags (e.g., “PAT Margin: 12.4% in 2023 to 14.1% in 2024 to 10.2% in 2025”).
 - Reference these if present: Revenue, PAT, DSCR, Debt/Equity, PAT Margin, Current Ratio. If any are missing, say “Not available” briefly and move on.
 - Use the RISK_RATING_JSON to report (a) per-year financial strength subtotals, (b) per-year total scores & buckets, and (c) top red-flagged ratios for each year; weave those into the narrative.
-- Be factual, concise, and neutral; avoid generic filler. Prefer numbers and direction-of-change (↑/↓/→).
+- Be factual, concise, and neutral; avoid generic filler. Don't use direction-of-change (↑/↓/→) but instead use descriptive language.
 - Formatting inside strings:
   • Use short bullets with semicolons/commas for readability.
   • For “financial_summary_&_ratios”, group bullets under the three sub-headers exactly as: “Revenue and Profitability: …”, “Operational efficiency: …”, “Leverage and liquidity: …”.
@@ -93,25 +93,23 @@ def generate_summaries(
         json.dump(content, f, ensure_ascii=False, indent=2)
     print(f"Summaries saved to {summaries_path}")
 
-    """
     # --- MongoDB output (replaces file write) ---
-    mongo_client = MongoClient(
-        "mongodb+srv://shriharir:shriharir@cluster0.orh9uhk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-    )
-    db = mongo_client["LOMAS"]
-    col = db["summaries"]
+    # mongo_client = MongoClient(
+    #     "mongodb+srv://shriharir:shriharir@cluster0.orh9uhk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    # )
+    # db = mongo_client["LOMAS"]
+    # col = db["summaries"]
 
-    doc = {
-        "financial_summary_&_ratios": content.get("financial_summary_&_ratios"),
-        "executive_summary": content.get("executive_summary"),
-        "loan_purpose": content.get("loan_purpose"),
-        "swot_analysis": content.get("swot_analysis"),
-        "security_offered": content.get("security_offered"),
-        "recommendation": content.get("recommendation"),
-    }
+    # doc = {
+    #     "financial_summary_&_ratios": content.get("financial_summary_&_ratios"),
+    #     "executive_summary": content.get("executive_summary"),
+    #     "loan_purpose": content.get("loan_purpose"),
+    #     "swot_analysis": content.get("swot_analysis"),
+    #     "security_offered": content.get("security_offered"),
+    #     "recommendation": content.get("recommendation"),
 
-    result = col.insert_one(doc)
-    print(f" Summaries saved to MongoDB 'LOMAS.summaries' with _id={result.inserted_id}")
-    """
+    # }
 
+    # result = col.insert_one(doc)
+    # print(f" Summaries saved to MongoDB 'LOMAS.summaries' with _id={result.inserted_id}")
     return content
