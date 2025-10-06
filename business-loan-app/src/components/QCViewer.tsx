@@ -1071,6 +1071,25 @@ const QCViewer: React.FC = () => {
         });
       }
 
+      // Fire-and-forget: trigger recompute of ratios, risk, and summaries after saving edits
+      try {
+        // Uses Mongo _id from `data._id` as required by the backend route
+        fetch(`http://localhost:5000/leads/${data._id}/recompute-analysis`, {
+          method: 'POST'
+        })
+          .then(async (res) => {
+            if (!res.ok) {
+              const text = await res.text().catch(() => '');
+              console.error('Recompute trigger failed:', text || res.status);
+            }
+          })
+          .catch((e) => {
+            console.error('Recompute trigger error:', e);
+          });
+      } catch (e) {
+        console.error('Failed to initiate recompute:', e);
+      }
+
       showToast('Changes saved successfully ✅', 'success');
       setIsFinancialDataEdited(false);
 
