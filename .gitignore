@@ -45,3 +45,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/ 
+
+*.pdf
+json_data
+ratio
