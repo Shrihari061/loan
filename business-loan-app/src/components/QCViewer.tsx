@@ -1,11 +1,26 @@
-// QCViewer.tsx (full updated file)
+// QCViewer.tsx (full updated file with shadcn Dialog integration and Save button removed)
 import React, { useEffect, useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import { ChevronsUpDown, Check } from 'lucide-react';
 import { cn } from '../lib/utils';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from './ui/command';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from './ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+} from './ui/dialog';
 
 type ExtractedData = Record<string, string>;
 
@@ -61,9 +76,13 @@ const QCViewer: React.FC = () => {
   const [selectedCollection, setSelectedCollection] = useState<string>('');
   const [selectedYear, setSelectedYear] = useState<string>('2025');
   const [financialData, setFinancialData] = useState<FinancialData | null>(null);
+  const [originalFinancialData, setOriginalFinancialData] = useState<FinancialData | null>(null);
   const [isFinancialDataEdited, setIsFinancialDataEdited] = useState(false);
   const [openCollection, setOpenCollection] = useState(false);
   const [openYear, setOpenYear] = useState(false);
+
+  // Confirmation dialog state (for unsaved changes)
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   const collections = ['Balance Sheet Summary', 'Profit & Loss Summary', 'Cash Flow Summary'];
   const years = ['2023', '2024', '2025'];
@@ -95,7 +114,8 @@ const QCViewer: React.FC = () => {
   const getValueInputClass = (val: string | number | null | undefined, emphasize = false) => {
     const negative = isNegativeValue(val);
     const positive = isPositiveValue(val);
-    return `w-full text-right bg-transparent px-1 py-1 rounded transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent border border-transparent hover:bg-gray-50 ${negative ? 'text-red-600' : positive ? 'text-green-600' : 'text-gray-900'} ${emphasize ? 'font-semibold' : ''}`;
+    return `w-full text-right bg-transparent px-1 py-1 rounded transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent border border-transparent hover:bg-gray-50 ${negative ? 'text-red-600' : positive ? 'text-green-600' : 'text-gray-900'} ${emphasize ? 'font-semibold' : ''
+      }`;
   };
 
   // Simple toast/snackbar
@@ -169,7 +189,7 @@ const QCViewer: React.FC = () => {
       });
   }, [id]);
 
-  // 🔹 Fetch selected collection
+  // 🔹 Fetch selected collection (and capture original snapshot)
   useEffect(() => {
     if (!selectedCollection || !id || !data || !selectedYear) return;
 
@@ -213,6 +233,16 @@ const QCViewer: React.FC = () => {
           }))
         };
         setFinancialData(dataWithFY);
+
+        // Capture a deep copy as the "original" snapshot for discarding changes later
+        try {
+          setOriginalFinancialData(JSON.parse(JSON.stringify(dataWithFY)));
+          setIsFinancialDataEdited(false);
+        } catch (err) {
+          // fallback if something fails in serialization
+          setOriginalFinancialData(dataWithFY);
+          setIsFinancialDataEdited(false);
+        }
 
         const selectedData =
           selectedCollection === 'Balance Sheet Summary'
@@ -841,8 +871,6 @@ const QCViewer: React.FC = () => {
     );
   };
 
-
-
   // ---------------------------
   // Generic flat table renderer (used for P&L and Cash Flow)
   // (kept from previous implementation, including cash-flow injections)
@@ -943,9 +971,11 @@ const QCViewer: React.FC = () => {
   };
 
   // ---------------------------
-  // Approve / Decline handlers (unchanged)
+  // Approve / Decline handlers (updated to support unsaved changes dialog)
   // ---------------------------
-  const handleApprove = async () => {
+
+  // centralize approve API logic so we can call it from multiple places
+  const doApprove = async () => {
     if (!data) return;
     try {
       const res = await fetch(`http://localhost:5000/leads/${data._id}/approve`, {
@@ -966,6 +996,19 @@ const QCViewer: React.FC = () => {
       console.error('Error approving:', err);
       showToast('Error approving.', 'error');
     }
+  };
+
+  const handleApprove = async () => {
+    if (!data) return;
+
+    // If there are unsaved edits, open the confirmation modal.
+    if (isFinancialDataEdited) {
+      setShowConfirmDialog(true);
+      return;
+    }
+
+    // No edits: proceed to approve as before
+    await doApprove();
   };
 
   const handleDecline = async () => {
@@ -991,6 +1034,9 @@ const QCViewer: React.FC = () => {
     }
   };
 
+  // ---------------------------
+  // Save handler (unchanged logic, but update original snapshot after success)
+  // ---------------------------
   const handleSave = async () => {
     if (!financialData || !data) return;
 
@@ -1025,15 +1071,71 @@ const QCViewer: React.FC = () => {
         });
       }
 
+      // Fire-and-forget: trigger recompute of ratios, risk, and summaries after saving edits
+      try {
+        // Uses Mongo _id from `data._id` as required by the backend route
+        fetch(`http://localhost:5000/leads/${data._id}/recompute-analysis`, {
+          method: 'POST'
+        })
+          .then(async (res) => {
+            if (!res.ok) {
+              const text = await res.text().catch(() => '');
+              console.error('Recompute trigger failed:', text || res.status);
+            }
+          })
+          .catch((e) => {
+            console.error('Recompute trigger error:', e);
+          });
+      } catch (e) {
+        console.error('Failed to initiate recompute:', e);
+      }
+
       showToast('Changes saved successfully ✅', 'success');
       setIsFinancialDataEdited(false);
+
+      // update snapshot to current saved data
+      try {
+        setOriginalFinancialData(JSON.parse(JSON.stringify(financialData)));
+      } catch (err) {
+        setOriginalFinancialData(financialData);
+      }
     } catch (err) {
       console.error('Save failed:', err);
       showToast('Failed to save changes ❌', 'error');
     }
   };
 
+  // ---------------------------
+  // Confirmation dialog actions
+  // - Save & Approve: save first then approve
+  // - Discard: revert to snapshot and close dialog (do NOT approve)
+  // - Cancel: close dialog
+  // ---------------------------
+  const confirmSaveAndApprove = async () => {
+    setShowConfirmDialog(false);
+    await handleSave();
+    // After saving, ensure isFinancialDataEdited is false and snapshot updated, then approve
+    await doApprove();
+  };
 
+  const confirmDiscardChanges = () => {
+    // restore original snapshot (deep copy)
+    if (originalFinancialData) {
+      try {
+        setFinancialData(JSON.parse(JSON.stringify(originalFinancialData)));
+      } catch (err) {
+        setFinancialData(originalFinancialData);
+      }
+    }
+    setIsFinancialDataEdited(false);
+    setShowConfirmDialog(false);
+    showToast('Changes discarded.', 'success');
+    // Important: do NOT approve — user must click Approve manually if they want to proceed.
+  };
+
+  // ---------------------------
+  // Render
+  // ---------------------------
   if (!data) return <div className="p-4">Loading customer data...</div>;
 
   return (
@@ -1047,12 +1149,31 @@ const QCViewer: React.FC = () => {
           {toast.message}
         </div>
       )}
-      <Button
-        onClick={() => navigate('/qc')}
-        // className="bg-gray-200 text-gray-800 px-3 py-1.5 rounded-md text-sm font-medium hover:bg-gray-300 transition-colors"
-      >
-        ← Back to QC Table
-      </Button>
+
+      {/* Confirmation Dialog */}
+      <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Unsaved Changes Detected</DialogTitle>
+            <DialogDescription>
+              There are unsaved changes. Do you want to save them before approving?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex justify-end space-x-2">
+            <Button variant="outline" onClick={() => setShowConfirmDialog(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={confirmDiscardChanges}>
+              Discard Changes
+            </Button>
+            <Button onClick={confirmSaveAndApprove}>
+              Save & Approve
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Button onClick={() => navigate('/qc')}>← Back to QC Table</Button>
 
       <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-5">
         <div className="flex items-start justify-between">
@@ -1193,19 +1314,9 @@ const QCViewer: React.FC = () => {
                   : null
             )}
 
-            <div className="mt-4 flex gap-2">
-              <button
-                onClick={handleSave}
-                className={`px-4 py-2 rounded transition-colors ${isFinancialDataEdited
-                    ? 'bg-blue-600 text-white hover:bg-blue-700'
-                    : 'bg-gray-400 text-white cursor-not-allowed'
-                  }`}
-                disabled={!isFinancialDataEdited}
-              >
-                {isFinancialDataEdited ? 'Save Changes' : 'No Changes to Save'}
-              </button>
+            {/* Save Changes button removed by request - edits are tracked via isFinancialDataEdited,
+                approval now triggers the confirmation dialog when edits exist. */}
 
-            </div>
           </div>
         ) : (
           <div className="text-gray-500 text-center py-8">

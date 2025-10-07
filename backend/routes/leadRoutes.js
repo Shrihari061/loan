@@ -528,5 +528,75 @@ router.post('/:id/analyze', async (req, res) => {
   }
 });
 
+// Recompute ratios, risk, summaries from Mongo values
+router.post('/:id/recompute-analysis', async (req, res) => {
+  try {
+    const lead = await Lead.findById(req.params.id);
+    if (!lead) {
+      return res.status(404).json({ error: "Lead not found" });
+    }
+
+    const bfsiPath = path.join(__dirname, '../bfsi_pipeline');
+
+    // Run python in unbuffered mode and stream output to avoid pipe blocking
+    const pythonShell = new PythonShell('recompute_from_mongo.py', {
+      mode: 'text',
+      pythonPath: 'python',
+      pythonOptions: ['-u'],
+      scriptPath: bfsiPath,
+      args: [lead.lead_id, lead.business_name],
+    });
+
+    let lines = [];
+    let finished = false;
+
+    // 10-minute timeout safeguard
+    const timeoutMs = 10 * 60 * 1000;
+    const timeout = setTimeout(() => {
+      if (!finished) {
+        console.error('⏰ Recompute script timeout after 10 minutes');
+        try { pythonShell.terminate(); } catch (_) {}
+        if (!res.headersSent) {
+          res.status(504).json({ error: 'Recompute timed out' });
+        }
+      }
+    }, timeoutMs);
+
+    pythonShell.on('message', (msg) => {
+      lines.push(String(msg));
+      console.log(`🐍 Recompute: ${msg}`);
+    });
+
+    pythonShell.end((err) => {
+      finished = true;
+      clearTimeout(timeout);
+      if (err) {
+        console.error('Python error:', err);
+        return res.status(500).json({ error: err.message });
+      }
+
+      // Try to parse the last JSON-looking line
+      let parsed = null;
+      for (let i = lines.length - 1; i >= 0; i--) {
+        const line = lines[i].trim();
+        if (line.startsWith('{') && line.endsWith('}')) {
+          try { parsed = JSON.parse(line); } catch (_) { /* continue */ }
+          if (parsed) break;
+        }
+      }
+
+      if (!parsed) {
+        console.error('Parsing result failed. Raw output:', lines);
+        return res.status(500).json({ error: 'Parsing result failed', raw: lines });
+      }
+
+      res.json({ message: 'Recompute finished', result: parsed });
+    });
+  } catch (e) {
+    console.error("Server error:", e);
+    res.status(500).json({ error: e.message });
+  }
+});
+
 
 module.exports = router;
