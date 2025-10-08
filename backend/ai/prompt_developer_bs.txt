@@ -1,0 +1,513 @@
+## BALANCE SHEET TARGET SCHEMA STRUCTURE
+
+Extract data according to the following comprehensive nested structure for Balance Sheet. Each field must include the exact field name as it appears in the PDF for traceability:
+
+{
+  "companyName": "string",
+  "balanceSheet": {
+    "fileGroup": "BALANCE_SHEET",
+    "sourceFiles": [
+      "BS_2024_25.pdf",
+      "BS_2023_24.pdf"
+    ],
+    "totalAssets": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "bs",
+      "unit": "string",
+      "fieldName": "Total Assets"
+    },
+    "totalEquityAndLiabilities": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "bs",
+      "unit": "string",
+      "fieldName": "Total Equity and Liabilities"
+    },
+    "nonCurrentAssets": {
+      "total": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Total Non-current Assets"
+      },
+      "propertyPlantAndEquipment": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Property, Plant and Equipment"
+      },
+      "rightOfUseAssets": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Right-of-Use Assets"
+      },
+      "capitalWorkInProgress": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Capital Work-in-Progress"
+      },
+      "goodwill": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Goodwill"
+      },
+      "financialAssetsInvestments": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Financial Assets - Investments"
+      },
+      "financialAssetsLoans": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Financial Assets - Loans"
+      },
+      "otherFinancialAssets": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Other Financial Assets"
+      },
+      "deferredTaxAssetsNet": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Deferred Tax Assets (Net)"
+      },
+      "incomeTaxAssetsNet": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Income Tax Assets (Net)"
+      },
+      "otherNonCurrentAssets": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Other Non-current Assets"
+      },
+      "intangibleAssets": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Intangible Assets"
+      },
+      "flexibleGroupItems": []
+    },
+    "currentAssets": {
+      "total": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Total Current Assets"
+      },
+      "financialAssetsInvestments": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Financial Assets - Investments"
+      },
+      "tradeReceivables": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Trade Receivables"
+      },
+      "cashAndCashEquivalents": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Cash and Cash Equivalents"
+      },
+      "financialAssetsLoans": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Financial Assets - Loans"
+      },
+      "otherFinancialAssets": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Other Financial Assets"
+      },
+      "incomeTaxAssetsNet": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Income Tax Assets (Net)"
+      },
+      "otherCurrentAssets": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Other Current Assets"
+      },
+      "flexibleGroupItems": []
+    },
+    "equityAndLiabilities": {
+      "totalEquity": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Total Equity"
+      },
+      "equityShareCapital": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Equity Share Capital"
+      },
+      "otherEquity": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Other Equity"
+      },
+      "nonCurrentLiabilities": {
+        "total": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Total Non-current Liabilities"
+        },
+        "financialLiabilitiesBorrowings": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Financial Liabilities - Borrowings"
+        },
+        "financialLiabilitiesLease": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Financial Liabilities - Lease"
+        },
+        "otherFinancialLiabilities": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Other Financial Liabilities"
+        },
+        "deferredTaxLiabilitiesNet": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Deferred Tax Liabilities (Net)"
+        },
+        "otherNonCurrentLiabilities": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Other Non-current Liabilities"
+        },
+        "flexibleGroupItems": []
+      },
+      "currentLiabilities": {
+        "total": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Total Current Liabilities"
+        },
+        "financialLiabilitiesBorrowings": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Financial Liabilities - Borrowings"
+        },
+        "financialLiabilitiesLease": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Financial Liabilities - Lease"
+        },
+        "tradePayablesMicroAndSmall": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Trade Payables - Micro and Small enterprises"
+        },
+        "tradePayablesOtherCreditors": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Trade Payables - Other Creditors"
+        },
+        "otherFinancialLiabilities": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Other Financial Liabilities"
+        },
+        "otherCurrentLiabilities": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Other Current Liabilities"
+        },
+        "provisionsCurrent": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Provisions (Current)"
+        },
+        "incomeTaxLiabilitiesNet": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Income Tax Liabilities (Net)"
+        },
+        "flexibleGroupItems": []
+      },
+      "flexibleGroupItems": []
+    },
+    "flexibleGroupItems": []
+  }
+}
+
+## BALANCE SHEET EXTRACTION RULES
+
+### TOP-LEVEL AGGREGATES (Mandatory Totals):
+- `totalAssets`: **EXTRACTION RULE**: Find the value where total assets information is present and extract the grand total of all assets. This must equal `totalEquityAndLiabilities`. Look for the final balance sheet total that represents the sum of all company assets.
+- `totalEquityAndLiabilities`: **EXTRACTION RULE**: Find the value where total equity and liabilities information is present and extract the grand total. This must equal `totalAssets`. Look for the final balance sheet total that represents the sum of all equity and liabilities.
+
+### NON-CURRENT ASSETS SECTION:
+- `nonCurrentAssets.total`: **EXTRACTION RULE**: Find the value where total non-current assets information is present and extract the sum of all non-current asset sub-fields. Look for the total that represents all long-term assets.
+- `propertyPlantAndEquipment`: **EXTRACTION RULE**: Find the value where property, plant and equipment information is present and extract the net value after accumulated depreciation/impairment. Look for tangible fixed assets like land, buildings, machinery, etc.
+- `rightOfUseAssets`: **EXTRACTION RULE**: Find the value where right-of-use assets information is present and extract the value. Look for assets from operating leases recognized under lease accounting standards.
+- `capitalWorkInProgress`: **EXTRACTION RULE**: Find the value where capital work-in-progress information is present and extract the cost. Look for assets currently under construction or installation.
+- `goodwill`: **EXTRACTION RULE**: Find the value where goodwill information is present and extract the value. Look for intangible assets arising from business combinations and acquisitions.
+- `financialAssetsInvestments`: **EXTRACTION RULE**: Find the value where long-term investments information is present and extract the value. Look for investments in subsidiaries, joint ventures, associates, or other non-current portfolios.
+- `financialAssetsLoans`: **EXTRACTION RULE**: Find the value where non-current loans information is present and extract the value. Look for loans given by the company to employees, related parties, or other entities.
+- `otherFinancialAssets`: **EXTRACTION RULE**: Find the value where other non-current financial assets information is present and extract the value. Look for restricted cash, long-term trade deposits, derivatives, etc.
+- `deferredTaxAssetsNet`: **EXTRACTION RULE**: Find the value where deferred tax assets information is present and extract the net value. Look for future tax benefits arising from temporary differences.
+- `incomeTaxAssetsNet`: **EXTRACTION RULE**: Find the value where income tax assets information is present and extract the net value. Look for advance tax payments exceeding liability for non-current recovery.
+- `otherNonCurrentAssets`: **EXTRACTION RULE**: Find the value where other non-current assets information is present and extract the value. Look for miscellaneous non-financial assets.
+- `intangibleAssets`: **EXTRACTION RULE**: Find the value where intangible assets information is present and extract the value. Look for non-physical assets like patents, trademarks, software, or assets under development.
+
+### CURRENT ASSETS SECTION:
+- `currentAssets.total`: **EXTRACTION RULE**: Find the value where total current assets information is present and extract the sum of all current asset sub-fields. Look for the total that represents all short-term assets.
+- `financialAssetsInvestments`: **EXTRACTION RULE**: Find the value where short-term investments information is present and extract the value. Look for investments in liquid mutual funds or market instruments maturing within 12 months.
+- `tradeReceivables`: **EXTRACTION RULE**: Find the value where trade receivables information is present and extract the net value. Look for accounts receivable outstanding from customers, net of impairment allowance.
+- `cashAndCashEquivalents`: **EXTRACTION RULE**: Find the value where cash and cash equivalents information is present and extract the value. Look for cash in hand, bank balances, and highly liquid investments.
+- `financialAssetsLoans`: **EXTRACTION RULE**: Find the value where current loans information is present and extract the value. Look for current portion of loans and short-term loans given by the company.
+- `otherFinancialAssets`: **EXTRACTION RULE**: Find the value where other current financial assets information is present and extract the value. Look for accrued interest, short-term deposits, etc.
+- `incomeTaxAssetsNet`: **EXTRACTION RULE**: Find the value where income tax assets information is present and extract the net value. Look for advance tax payments for the current period/recovery.
+- `otherCurrentAssets`: **EXTRACTION RULE**: Find the value where other current assets information is present and extract the value. Look for prepaid expenses, inventory other than primary stocks, etc.
+
+### EQUITY AND LIABILITIES SECTION:
+- `totalEquity`: **EXTRACTION RULE**: Find the value where total equity information is present and extract the value. Look for the total shareholders' equity (Share Capital + Other Equity).
+- `equityShareCapital`: **EXTRACTION RULE**: Find the value where equity share capital information is present and extract the value. Look for the face value of issued and paid-up shares.
+- `otherEquity`: **EXTRACTION RULE**: Find the value where other equity information is present and extract the value. Look for reserves and surplus, retained earnings, OCI, etc.
+
+### NON-CURRENT LIABILITIES:
+- `nonCurrentLiabilities.total`: **EXTRACTION RULE**: Find the value where total non-current liabilities information is present and extract the sum of all non-current liability sub-fields. Look for the total that represents all long-term liabilities.
+- `nonCurrentLiabilities.financialLiabilitiesBorrowings`: **EXTRACTION RULE**: Find the value where non-current borrowings information is present and extract the value. Look for long-term loans and debentures that capture the principal debt component.
+- `nonCurrentLiabilities.financialLiabilitiesLease`: **EXTRACTION RULE**: Find the value where non-current lease liabilities information is present and extract the value. Look for the principal portion of ROU liability.
+- `nonCurrentLiabilities.otherFinancialLiabilities`: **EXTRACTION RULE**: Find the value where other non-current financial liabilities information is present and extract the value. Look for derivatives, non-current deposits, etc.
+- `nonCurrentLiabilities.deferredTaxLiabilitiesNet`: **EXTRACTION RULE**: Find the value where deferred tax liabilities information is present and extract the net value. Look for liabilities arising from temporary differences.
+- `nonCurrentLiabilities.otherNonCurrentLiabilities`: **EXTRACTION RULE**: Find the value where other non-current liabilities information is present and extract the value. Look for long-term deferred revenue, statutory payables, etc.
+
+### CURRENT LIABILITIES:
+- `currentLiabilities.total`: **EXTRACTION RULE**: Find the value where total current liabilities information is present and extract the sum of all current liability sub-fields. Look for the total that represents all short-term liabilities.
+- `currentLiabilities.financialLiabilitiesBorrowings`: **EXTRACTION RULE**: Find the value where current borrowings information is present and extract the value. Look for short-term loans and current maturity of long-term debt that captures the short-term debt component.
+- `currentLiabilities.financialLiabilitiesLease`: **EXTRACTION RULE**: Find the value where current lease liabilities information is present and extract the value. Look for the principal portion of lease liability due within 12 months.
+- `currentLiabilities.tradePayablesMicroAndSmall`: **EXTRACTION RULE**: Find the value where trade payables for micro and small enterprises information is present and extract the value. Look for total outstanding dues of micro and small enterprises.
+- `currentLiabilities.tradePayablesOtherCreditors`: **EXTRACTION RULE**: Find the value where trade payables for other creditors information is present and extract the value. Look for total outstanding dues of creditors other than micro and small enterprises.
+- `currentLiabilities.otherFinancialLiabilities`: **EXTRACTION RULE**: Find the value where other current financial liabilities information is present and extract the value. Look for accrued expenses, derivatives, etc.
+- `currentLiabilities.otherCurrentLiabilities`: **EXTRACTION RULE**: Find the value where other current liabilities information is present and extract the value. Look for statutory dues, short-term deferred revenue, etc.
+- `currentLiabilities.provisionsCurrent`: **EXTRACTION RULE**: Find the value where current provisions information is present and extract the value. Look for provisions for employee benefits, warranties, or other short-term obligations.
+- `currentLiabilities.incomeTaxLiabilitiesNet`: **EXTRACTION RULE**: Find the value where income tax liabilities information is present and extract the net value. Look for tax liabilities for the current period.
+
+## FLEXIBLE GROUP ITEMS EXTRACTION RULES
+
+### CRITICAL INSTRUCTIONS FOR flexibleGroupItems:
+The `flexibleGroupItems` array is used to capture additional financial fields that are present in the source documents but not explicitly defined in the standard schema. These items must be relevant to their respective sections and subsections.
+
+**FORMAT FOR flexibleGroupItems:**
+```json
+{
+  "fieldName": "Exact field name as it appears in PDF",
+  "value_2025": number,
+  "value_2024": number, 
+  "value_2023": number,
+  "source": "bs",
+  "unit": "unit as provided in document",
+}
+```
+
+**BALANCE SHEET flexibleGroupItems:**
+- **Non-Current Assets**: Add any additional non-current asset line items not covered in the standard schema
+- **Current Assets**: Add any additional current asset line items not covered in the standard schema  
+- **Non-Current Liabilities**: Add any additional non-current liability line items not covered in the standard schema
+- **Current Liabilities**: Add any additional current liability line items not covered in the standard schema
+- **Equity**: Add any additional equity line items not covered in the standard schema
+
+**EXTRACTION RULES FOR flexibleGroupItems:**
+1. **RELEVANCE CHECK**: Only include fields that are relevant to the specific section/subsection
+2. **COMPLETENESS**: If a section has additional line items beyond the standard schema, capture them in flexibleGroupItems
+3. **FORMAT CONSISTENCY**: Use the exact same format as standard fields: {value_2025, value_2024, value_2023, source, unit, fieldName}
+4. **SOURCE ATTRIBUTION**: Set appropriate source ("bs" for Balance Sheet)
+5. **UNIT PRESERVATION**: Preserve exact units as printed in the document
+6. **FIELD NAME ACCURACY**: Use exact field name as it appears in the PDF document
+
+## FIELD NAME EXTRACTION RULES
+
+### CRITICAL INSTRUCTIONS FOR fieldName ATTRIBUTE:
+1. **EXACT MATCHING**: The `fieldName` must be the EXACT text as it appears in the PDF document
+2. **CASE SENSITIVE**: Preserve the exact capitalization from the source document
+3. **PUNCTUATION PRESERVATION**: Include all punctuation, parentheses, and special characters exactly as printed
+4. **SECTION CONTEXT**: If a field appears under a sub-heading, include the full context
+5. **ALTERNATIVE NAMES**: If multiple names exist for the same field, use the most specific/complete version
+6. **MISSING FIELDS**: If a field is not present in the main section, set `fieldName` to "Not Found" and `value_2025`, `value_2024`, `value_2023` to "null"
+
+## CRITICAL MULTI-YEAR EXTRACTION INSTRUCTIONS
+
+### EXTRACTION STRATEGY:
+1. **2024-25 FILE PROCESSING**:
+   - Look for TWO columns: "2025" (current year) and "2024" (previous year)
+   - Extract value_2025 from the "2025" column
+   - Extract value_2024 from the "2024" column
+   - Both values come from the SAME 2024-25 file
+
+2. **2023-24 FILE PROCESSING**:
+   - Look for TWO columns: "2024" (current year) and "2023" (previous year)
+   - Extract value_2023 from the "2023" column
+   - The "2024" column in this file should match the "2024" column from 2024-25 file
+
+3. **FINAL RESULT**:
+   - value_2025: From 2024-25 file, "2025" column
+   - value_2024: From 2024-25 file, "2024" column  
+   - value_2023: From 2023-24 file, "2023" column
+
+### COLUMN IDENTIFICATION RULES:
+- Look for column headers like "As at March 31, 2025" and "As at March 31, 2024"
+- Look for column headers like "2025" and "2024"
+- Look for column headers like "Current Year" and "Previous Year"
+- The 2024-25 file will have BOTH 2025 and 2024 data
+- The 2023-24 file will have BOTH 2024 and 2023 data
+
+### DATA TYPE AND UNIT SPECIFICATIONS
+
+**BALANCE SHEET DATA TYPES:**
+- All monetary values are expected to be reported in **Crore** (Indian Rupee)
+- Data Type: `number` for all monetary amounts
+- Units: Use exactly "₹ Crore" or "₹ Million" format
+- Special Cases: 
+  - Negative values: Preserve parentheses format "(1234)"
+
+### Data Processing Rules
+1. **Year Mapping**: 
+   - **2024-25 financial year file** → Extract value_2025 (current year) AND value_2024 (previous year)
+   - **2023-24 financial year file** → Extract value_2023 (previous year)
+   - **CRITICAL**: The 2024-25 file contains BOTH 2025 and 2024 data in separate columns
+   - **CRITICAL**: The 2023-24 file contains BOTH 2024 and 2023 data in separate columns
+
+2. **Multi-Year Data Extraction Rules**:
+   - **From 2024-25 file**: Extract value_2025 (current year column) AND value_2024 (previous year column)
+   - **From 2023-24 file**: Extract value_2023 (previous year column)
+   - **Result**: You will have 3 years of data: 2023, 2024, 2025
+
+3. **Value Formatting**:
+   - Remove commas from numbers: 1,23,456 → 123456
+   - Preserve parentheses for negative values: (1,234) → "(1234)"
+   - Convert integers for monetary amounts: 1,23,456 → 123456
+
+4. **Missing Data Handling**:
+   - If value is missing or unreadable: use "null"
+   - If line item doesn't exist: use "null"
+   - If value is zero and explicitly stated: use 0
+   - If value is zero but not explicitly stated: use "null"
+
+5. **Source Attribution**:
+   - Always set "source": "bs" for Balance Sheet items
+   - All monetary values use "₹ Crore" or "₹ Million" format
+   - If no unit is specified, use empty string ""
+
+6. **Unit Preservation Rules**:
+   - **Balance Sheet**: All monetary values use "₹ Crore" or "₹ Million" format
+   - **Special Handling**: If units are not specified, look once in PDF; if still not found, use "₹ Crore"

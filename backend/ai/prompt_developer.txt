@@ -6,143 +6,842 @@ Extract data according to the following comprehensive nested structure. Each fie
   "companyName": "string",
   "balanceSheet": {
     "fileGroup": "BALANCE_SHEET",
-    "sourceFiles": ["BS_2024_25.pdf", "BS_2023_24.pdf"],
-    "totalAssets": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Total Assets"},
-    "totalEquityAndLiabilities": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Total Equity and Liabilities"},
+    "sourceFiles": [
+      "BS_2024_25.pdf",
+      "BS_2023_24.pdf"
+    ],
+    "totalAssets": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "bs",
+      "unit": "string",
+      "fieldName": "Total Assets"
+    },
+    "totalEquityAndLiabilities": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "bs",
+      "unit": "string",
+      "fieldName": "Total Equity and Liabilities"
+    },
     "nonCurrentAssets": {
-      "total": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Total Non-current Assets"},
-      "propertyPlantAndEquipment": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Property, Plant and Equipment"},
-      "rightOfUseAssets": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Right-of-Use Assets"},
-      "capitalWorkInProgress": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Capital Work-in-Progress"},
-      "goodwill": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Goodwill"},
-      "financialAssetsInvestments": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Financial Assets - Investments"},
-      "financialAssetsLoans": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Financial Assets - Loans"},
-      "otherFinancialAssets": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Other Financial Assets"},
-      "deferredTaxAssetsNet": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Deferred Tax Assets (Net)"},
-      "incomeTaxAssetsNet": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Income Tax Assets (Net)"},
-      "otherNonCurrentAssets": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Other Non-current Assets"},
-      "intangibleAssets": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Intangible Assets"},
+      "total": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Total Non-current Assets"
+      },
+      "propertyPlantAndEquipment": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Property, Plant and Equipment"
+      },
+      "rightOfUseAssets": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Right-of-Use Assets"
+      },
+      "capitalWorkInProgress": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Capital Work-in-Progress"
+      },
+      "goodwill": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Goodwill"
+      },
+      "financialAssetsInvestments": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Financial Assets - Investments"
+      },
+      "financialAssetsLoans": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Financial Assets - Loans"
+      },
+      "otherFinancialAssets": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Other Financial Assets"
+      },
+      "deferredTaxAssetsNet": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Deferred Tax Assets (Net)"
+      },
+      "incomeTaxAssetsNet": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Income Tax Assets (Net)"
+      },
+      "otherNonCurrentAssets": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Other Non-current Assets"
+      },
+      "intangibleAssets": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Intangible Assets"
+      },
       "flexibleGroupItems": []
     },
     "currentAssets": {
-      "total": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Total Current Assets"},
-      "financialAssetsInvestments": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Financial Assets - Investments"},
-      "tradeReceivables": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Trade Receivables"},
-      "cashAndCashEquivalents": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Cash and Cash Equivalents"},
-      "financialAssetsLoans": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Financial Assets - Loans"},
-      "otherFinancialAssets": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Other Financial Assets"},
-      "incomeTaxAssetsNet": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Income Tax Assets (Net)"},
-      "otherCurrentAssets": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Other Current Assets"},
+      "total": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Total Current Assets"
+      },
+      "financialAssetsInvestments": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Financial Assets - Investments"
+      },
+      "tradeReceivables": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Trade Receivables"
+      },
+      "cashAndCashEquivalents": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Cash and Cash Equivalents"
+      },
+      "financialAssetsLoans": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Financial Assets - Loans"
+      },
+      "otherFinancialAssets": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Other Financial Assets"
+      },
+      "incomeTaxAssetsNet": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Income Tax Assets (Net)"
+      },
+      "otherCurrentAssets": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Other Current Assets"
+      },
       "flexibleGroupItems": []
     },
     "equityAndLiabilities": {
-      "totalEquity": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Total Equity"},
-      "equityShareCapital": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Equity Share Capital"},
-      "otherEquity": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Other Equity"},
+      "totalEquity": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Total Equity"
+      },
+      "equityShareCapital": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Equity Share Capital"
+      },
+      "otherEquity": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "bs",
+        "unit": "string",
+        "fieldName": "Other Equity"
+      },
       "nonCurrentLiabilities": {
-        "total": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Total Non-current Liabilities"},
-        "financialLiabilitiesBorrowings": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Financial Liabilities - Borrowings"},
-        "financialLiabilitiesLease": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Financial Liabilities - Lease"},
-        "otherFinancialLiabilities": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Other Financial Liabilities"},
-        "deferredTaxLiabilitiesNet": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Deferred Tax Liabilities (Net)"},
-        "otherNonCurrentLiabilities": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Other Non-current Liabilities"},
+        "total": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Total Non-current Liabilities"
+        },
+        "financialLiabilitiesBorrowings": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Financial Liabilities - Borrowings"
+        },
+        "financialLiabilitiesLease": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Financial Liabilities - Lease"
+        },
+        "otherFinancialLiabilities": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Other Financial Liabilities"
+        },
+        "deferredTaxLiabilitiesNet": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Deferred Tax Liabilities (Net)"
+        },
+        "otherNonCurrentLiabilities": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Other Non-current Liabilities"
+        },
         "flexibleGroupItems": []
       },
       "currentLiabilities": {
-        "total": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Total Current Liabilities"},
-        "financialLiabilitiesBorrowings": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Financial Liabilities - Borrowings"},
-        "financialLiabilitiesLease": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Financial Liabilities - Lease"},
-        "tradePayablesMicroAndSmall": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Trade Payables - Micro and Small enterprises"},
-        "tradePayablesOtherCreditors": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Trade Payables - Other Creditors"},
-        "otherFinancialLiabilities": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Other Financial Liabilities"},
-        "otherCurrentLiabilities": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Other Current Liabilities"},
-        "provisionsCurrent": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Provisions (Current)"},
-        "incomeTaxLiabilitiesNet": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "bs", "unit": "string", "fieldName": "Income Tax Liabilities (Net)"},
+        "total": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Total Current Liabilities"
+        },
+        "financialLiabilitiesBorrowings": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Financial Liabilities - Borrowings"
+        },
+        "financialLiabilitiesLease": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Financial Liabilities - Lease"
+        },
+        "tradePayablesMicroAndSmall": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Trade Payables - Micro and Small enterprises"
+        },
+        "tradePayablesOtherCreditors": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Trade Payables - Other Creditors"
+        },
+        "otherFinancialLiabilities": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Other Financial Liabilities"
+        },
+        "otherCurrentLiabilities": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Other Current Liabilities"
+        },
+        "provisionsCurrent": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Provisions (Current)"
+        },
+        "incomeTaxLiabilitiesNet": {
+          "value_2025": number,
+          "value_2024": number,
+          "value_2023": number,
+          "source": "bs",
+          "unit": "string",
+          "fieldName": "Income Tax Liabilities (Net)"
+        },
         "flexibleGroupItems": []
-      }
-    }
+      },
+      "flexibleGroupItems": []
+    },
+    "flexibleGroupItems": []
   },
   "profitAndLoss": {
     "fileGroup": "PROFIT_AND_LOSS",
-    "sourceFiles": ["PL_2024_25.pdf", "PL_2023_24.pdf"],
-    "totalIncome": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "pl", "unit": "string", "fieldName": "Total Income"},
-    "revenueFromOperations": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "pl", "unit": "string", "fieldName": "Revenue from Operations"},
-    "otherIncomeNet": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "pl", "unit": "string", "fieldName": "Other Income"},
-    "coreOperatingCosts": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "pl", "unit": "string", "fieldName": "Core Operating Costs"},
-    "exceptionalItemsNet": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "pl", "unit": "string", "fieldName": "Exceptional Items (Net)"},
-    "totalExpenses": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "pl", "unit": "string", "fieldName": "Total Expenses"},
-    "employeeBenefitExpenses": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "pl", "unit": "string", "fieldName": "Employee Benefits Expense"},
-    "depreciationAndAmortizationExpenses": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "pl", "unit": "string", "fieldName": "Depreciation, Amortisation and Impairment Expenses"},
-    "financeCost": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "pl", "unit": "string", "fieldName": "Finance Costs"},
-    "costOfTechnicalSubContractors": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "pl", "unit": "string", "fieldName": "Cost of Technical Sub-Contractors"},
-    "travelExpenses": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "pl", "unit": "string", "fieldName": "Travel Expenses"},
-    "communicationExpenses": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "pl", "unit": "string", "fieldName": "Communication Expenses"},
-    "consultancyAndProfessionalCharges": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "pl", "unit": "string", "fieldName": "Consultancy and professional charges"},
-    "otherExpensesAggregated": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "pl", "unit": "string", "fieldName": "Other expenses"},
-    "profitBeforeTax": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "pl", "unit": "string", "fieldName": "Profit Before Tax"},
-    "profitForTheYear": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "pl", "unit": "string", "fieldName": "Profit/(Loss) for the Year"},
-    "currentTax": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "pl", "unit": "string", "fieldName": "Current Tax"},
-    "deferredTax": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "pl", "unit": "string", "fieldName": "Deferred Tax"},
-    "totalComprehensiveIncomeForTheYear": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "pl", "unit": "string", "fieldName": "Total Comprehensive Income for the Year"},
+    "sourceFiles": [
+      "PL_2024_25.pdf",
+      "PL_2023_24.pdf"
+    ],
+    "totalIncome": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Total Income"
+    },
+    "revenueFromOperations": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Revenue from Operations"
+    },
+    "otherIncomeNet": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Other Income"
+    },
+    "coreOperatingCosts": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Core Operating Costs"
+    },
+    "exceptionalItemsNet": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Exceptional Items (Net)"
+    },
+    "totalExpenses": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Total Expenses"
+    },
+    "employeeBenefitExpenses": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Employee Benefits Expense"
+    },
+    "depreciationAndAmortizationExpenses": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Depreciation, Amortisation and Impairment Expenses"
+    },
+    "financeCost": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Finance Costs"
+    },
+    "costOfTechnicalSubContractors": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Cost of Technical Sub-Contractors"
+    },
+    "travelExpenses": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Travel Expenses"
+    },
+    "communicationExpenses": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Communication Expenses"
+    },
+    "consultancyAndProfessionalCharges": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Consultancy and professional charges"
+    },
+    "otherExpensesAggregated": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Other expenses"
+    },
+    "profitBeforeTax": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Profit Before Tax"
+    },
+    "profitForTheYear": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Profit/(Loss) for the Year"
+    },
+    "currentTax": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Current Tax"
+    },
+    "deferredTax": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Deferred Tax"
+    },
+    "totalComprehensiveIncomeForTheYear": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Total Comprehensive Income for the Year"
+    },
     "earningsPerShare": {
-      "basic": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "pl", "unit": "string", "fieldName": "Basic Earnings per share"},
-      "diluted": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "pl", "unit": "string", "fieldName": "Diluted Earnings per share"}
+      "basic": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "pl",
+        "unit": "string",
+        "fieldName": "Basic Earnings per share"
+      },
+      "diluted": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "pl",
+        "unit": "string",
+        "fieldName": "Diluted Earnings per share"
+      }
     },
     "flexibleGroupItems": []
   },
   "cashFlows": {
     "fileGroup": "CASH_FLOW",
-    "sourceFiles": ["CF_2024_25.pdf", "CF_2023_24.pdf"],
-    "netCashGeneratedByOperatingActivities": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Net cash flow from Operating Activities"},
-    "netCashUsedInInvestingActivities": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Net cash flow from Investing Activities"},
-    "netCashUsedInFinancingActivities": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Net cash flow from Financing Activities"},
-    "cashGeneratedFromOperations": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Cash generated from operations"},
-    "profitForTheYear": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Profit/(Loss) for the Year"},
-    "incomeTaxesPaid": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Income taxes paid"},
+    "sourceFiles": [
+      "CF_2024_25.pdf",
+      "CF_2023_24.pdf"
+    ],
+    "netCashGeneratedByOperatingActivities": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Net cash flow from Operating Activities"
+    },
+    "netCashUsedInInvestingActivities": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Net cash flow from Investing Activities"
+    },
+    "netCashUsedInFinancingActivities": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Net cash flow from Financing Activities"
+    },
+    "cashGeneratedFromOperations": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Cash generated from operations"
+    },
+    "profitForTheYear": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Profit/(Loss) for the Year"
+    },
+    "incomeTaxesPaid": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Income taxes paid"
+    },
     "adjustmentsToReconcileNetProfitToNetCashProvidedByOperatingActivities": {
-      "depreciationAndAmortization": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Depreciation and Amortization"},
-      "incomeTaxExpense": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Income Tax Expense"},
-      "impairmentLossRecognizedReversed": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Impairment loss recognized/(reversed)"},
-      "financeCost": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Finance Cost"},
-      "interestAndDividendIncome": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Interest and dividend income"},
-      "stockCompensationExpense": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Stock compensation expense"},
-      "otherAdjustments": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Other adjustments"},
+      "depreciationAndAmortization": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "cf",
+        "unit": "string",
+        "fieldName": "Depreciation and Amortization"
+      },
+      "incomeTaxExpense": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "cf",
+        "unit": "string",
+        "fieldName": "Income Tax Expense"
+      },
+      "impairmentLossRecognizedReversed": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "cf",
+        "unit": "string",
+        "fieldName": "Impairment loss recognized/(reversed)"
+      },
+      "financeCost": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "cf",
+        "unit": "string",
+        "fieldName": "Finance Cost"
+      },
+      "interestAndDividendIncome": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "cf",
+        "unit": "string",
+        "fieldName": "Interest and dividend income"
+      },
+      "stockCompensationExpense": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "cf",
+        "unit": "string",
+        "fieldName": "Stock compensation expense"
+      },
+      "otherAdjustments": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "cf",
+        "unit": "string",
+        "fieldName": "Other adjustments"
+      },
       "flexibleGroupItems": []
     },
     "changesInAssetsAndLiabilities": {
-      "tradeReceivablesAndUnbilledRevenue": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Trade Receivables and Unbilled Revenue"},
-      "loansOtherFinancialAssetsAndOtherAssets": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Loans, Other Financial Assets and Other Assets"},
-      "tradePayables": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Trade Payables"},
-      "otherFinancialLiabilitiesOtherLiabilitiesAndProvisions": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Other Financial Liabilities, Other Liabilities and Provisions"},
+      "tradeReceivablesAndUnbilledRevenue": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "cf",
+        "unit": "string",
+        "fieldName": "Trade Receivables and Unbilled Revenue"
+      },
+      "loansOtherFinancialAssetsAndOtherAssets": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "cf",
+        "unit": "string",
+        "fieldName": "Loans, Other Financial Assets and Other Assets"
+      },
+      "tradePayables": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "cf",
+        "unit": "string",
+        "fieldName": "Trade Payables"
+      },
+      "otherFinancialLiabilitiesOtherLiabilitiesAndProvisions": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "cf",
+        "unit": "string",
+        "fieldName": "Other Financial Liabilities, Other Liabilities and Provisions"
+      },
       "flexibleGroupItems": []
     },
-    "expenditureOnPropertyPlantAndEquipment": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Expenditure on property, plant and equipment"},
-    "depositsPlacedWithCorporation": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Deposits placed with Corporation"},
-    "redemptionOfDepositsPlacedWithCorporation": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Redemption of deposits placed with Corporation"},
-    "interestAndDividendReceived": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Interest and dividend received"},
-    "dividendReceivedFromSubsidiary": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Dividend received from subsidiary"},
-    "loanGivenToSubsidiaries": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Loan given to subsidiaries"},
-    "loanRepaidBySubsidiaries": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Loan repaid by subsidiaries"},
-    "investmentInSubsidiaries": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Investment in subsidiaries"},
-    "paymentTowardsAcquisitionOfEntities": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Payment towards acquisition of entities"},
-    "receiptPaymentTowardsBusinessTransferForEntitiesUnderCommonControl": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Receipt/Payment towards business transfer for entities under common control"},
-    "receiptPaymentFromEntitiesUnderLiquidation": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Receipt/Payment from entities under liquidation"},
-    "otherReceipts": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Other receipts"},
+    "expenditureOnPropertyPlantAndEquipment": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Expenditure on property, plant and equipment"
+    },
+    "depositsPlacedWithCorporation": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Deposits placed with Corporation"
+    },
+    "redemptionOfDepositsPlacedWithCorporation": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Redemption of deposits placed with Corporation"
+    },
+    "interestAndDividendReceived": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Interest and dividend received"
+    },
+    "dividendReceivedFromSubsidiary": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Dividend received from subsidiary"
+    },
+    "loanGivenToSubsidiaries": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Loan given to subsidiaries"
+    },
+    "loanRepaidBySubsidiaries": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Loan repaid by subsidiaries"
+    },
+    "investmentInSubsidiaries": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Investment in subsidiaries"
+    },
+    "paymentTowardsAcquisitionOfEntities": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Payment towards acquisition of entities"
+    },
+    "receiptPaymentTowardsBusinessTransferForEntitiesUnderCommonControl": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Receipt/Payment towards business transfer for entities under common control"
+    },
+    "receiptPaymentFromEntitiesUnderLiquidation": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Receipt/Payment from entities under liquidation"
+    },
+    "otherReceipts": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Other receipts"
+    },
     "paymentsToAcquireInvestments": {
       "flexibleGroupItems": []
     },
     "proceedsOnSaleOfInvestments": {
       "flexibleGroupItems": []
     },
-    "paymentOfLeaseLiabilities": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Payment of lease liabilities"},
-    "sharesIssuedOnExerciseOfEmployeeStockOptions": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Shares issued on exercise of employee stock options"},
-    "otherPayments": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Other payments"},
-    "paymentOfDividends": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Payment of dividends"},
-    "netIncreaseDecreaseInCashAndCashEquivalents": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Net increase/(decrease) in cash and cash equivalents"},
-    "effectOfExchangeDifferencesOnTranslationOfForeignCurrencyCashAndCashEquivalents": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Effect of exchange differences on translation of foreign currency cash and cash equivalents"},
-    "cashAndCashEquivalentsAtTheBeginningOfTheYear": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Cash and cash equivalents at the beginning of the year"},
-    "cashAndCashEquivalentsAtTheEndOfTheYear": {"value_2025": number, "value_2024": number, "value_2023": number, "source": "cf", "unit": "string", "fieldName": "Cash and cash equivalents as at the end of the year"}
-  }
+    "paymentOfLeaseLiabilities": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Payment of lease liabilities"
+    },
+    "sharesIssuedOnExerciseOfEmployeeStockOptions": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Shares issued on exercise of employee stock options"
+    },
+    "otherPayments": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Other payments"
+    },
+    "paymentOfDividends": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Payment of dividends"
+    },
+    "netIncreaseDecreaseInCashAndCashEquivalents": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Net increase/(decrease) in cash and cash equivalents"
+    },
+    "effectOfExchangeDifferencesOnTranslationOfForeignCurrencyCashAndCashEquivalents": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Effect of exchange differences on translation of foreign currency cash and cash equivalents"
+    },
+    "cashAndCashEquivalentsAtTheBeginningOfTheYear": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Cash and cash equivalents at the beginning of the year"
+    },
+    "cashAndCashEquivalentsAtTheEndOfTheYear": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Cash and cash equivalents as at the end of the year"
+    },
+    "flexibleGroupItems": []
+  },
+  "flexibleGroupItems": []
 }
 ## COMPREHENSIVE FIELD EXTRACTION RULES
 
@@ -421,4 +1120,5 @@ The `flexibleGroupItems` array is used to capture additional financial fields th
    - **Profit & Loss**: All monetary values use "₹ Crore" or "₹ Million" format, EPS use "per share ₹ Crore"
    - **Cash Flow**: All monetary values use "₹ Crore" or "₹ Million" format
    - **Special Handling**: If units are not specified, look once in PDF; if still not found, use "₹ Crore"
+
 

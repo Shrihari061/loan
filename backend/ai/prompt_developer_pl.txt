@@ -1,0 +1,323 @@
+## PROFIT & LOSS TARGET SCHEMA STRUCTURE
+
+Extract data according to the following comprehensive nested structure for Profit & Loss. Each field must include the exact field name as it appears in the PDF for traceability:
+
+{
+  "companyName": "string",
+  "profitAndLoss": {
+    "fileGroup": "PROFIT_AND_LOSS",
+    "sourceFiles": [
+      "PL_2024_25.pdf",
+      "PL_2023_24.pdf"
+    ],
+    "totalIncome": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Total Income"
+    },
+    "revenueFromOperations": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Revenue from Operations"
+    },
+    "otherIncomeNet": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Other Income"
+    },
+    "coreOperatingCosts": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Core Operating Costs"
+    },
+    "exceptionalItemsNet": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Exceptional Items (Net)"
+    },
+    "totalExpenses": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Total Expenses"
+    },
+    "employeeBenefitExpenses": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Employee Benefits Expense"
+    },
+    "depreciationAndAmortizationExpenses": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Depreciation, Amortisation and Impairment Expenses"
+    },
+    "financeCost": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Finance Costs"
+    },
+    "costOfTechnicalSubContractors": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Cost of Technical Sub-Contractors"
+    },
+    "travelExpenses": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Travel Expenses"
+    },
+    "communicationExpenses": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Communication Expenses"
+    },
+    "consultancyAndProfessionalCharges": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Consultancy and professional charges"
+    },
+    "otherExpensesAggregated": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Other expenses"
+    },
+    "profitBeforeTax": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Profit Before Tax"
+    },
+    "profitForTheYear": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Profit/(Loss) for the Year"
+    },
+    "currentTax": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Current Tax"
+    },
+    "deferredTax": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Deferred Tax"
+    },
+    "totalComprehensiveIncomeForTheYear": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "pl",
+      "unit": "string",
+      "fieldName": "Total Comprehensive Income for the Year"
+    },
+    "earningsPerShare": {
+      "basic": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "pl",
+        "unit": "string",
+        "fieldName": "Basic Earnings per share"
+      },
+      "diluted": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "pl",
+        "unit": "string",
+        "fieldName": "Diluted Earnings per share"
+      }
+    },
+    "flexibleGroupItems": []
+  }
+}
+
+## PROFIT & LOSS EXTRACTION RULES
+
+### INCOME AND TOP-LEVEL AGGREGATES:
+- `totalIncome`: **EXTRACTION RULE**: Find the value where total income information is present and extract the value. Look for the sum of revenue from operations and other income.
+- `revenueFromOperations`: **EXTRACTION RULE**: Find the value where revenue from operations information is present and extract the value. Look for the primary operational revenue stream (net sales/net revenue/income from operations).
+- `otherIncomeNet`: **EXTRACTION RULE**: Find the value where other income information is present and extract the value. Look for income from non-core operations like interest, dividends, etc.
+
+### EXPENSES AND CORE COSTS:
+- `totalExpenses`: **EXTRACTION RULE**: Find the value where total expenses information is present and extract the value. Look for the sum of all expenditures excluding exceptional items and tax.
+- `coreOperatingCosts`: **EXTRACTION RULE**: Find the value where core operating costs information is present and extract the aggregated value. Look for primary operational cost line items like materials, purchases, etc.
+- `employeeBenefitExpenses`: **EXTRACTION RULE**: Find the value where employee benefit expenses information is present and extract the value. Look for payroll, salaries, wages, and other employee-related benefits.
+- `depreciationAndAmortizationExpenses`: **EXTRACTION RULE**: Find the value where depreciation and amortization expenses information is present and extract the value. Look for non-cash charges for wear and tear of assets.
+- `financeCost`: **EXTRACTION RULE**: Find the value where finance costs information is present and extract the value. Look for interest expense, borrowing costs, etc.
+- `exceptionalItemsNet`: **EXTRACTION RULE**: Find the value where exceptional items information is present and extract the net value. Look for gains or losses from unusual, non-recurring events.
+- `otherExpensesAggregated`: **EXTRACTION RULE**: Find the value where other expenses information is present and extract the value. Look for residual/miscellaneous expenditures not covered by other fields.
+- `costOfTechnicalSubContractors`: **EXTRACTION RULE**: Find the value where cost of technical sub-contractors information is present and extract the value. Look for costs related to technical subcontracting (optional field).
+- `travelExpenses`: **EXTRACTION RULE**: Find the value where travel expenses information is present and extract the value. Look for travel-related costs (optional field).
+- `communicationExpenses`: **EXTRACTION RULE**: Find the value where communication expenses information is present and extract the value. Look for communication-related costs (optional field).
+- `consultancyAndProfessionalCharges`: **EXTRACTION RULE**: Find the value where consultancy and professional charges information is present and extract the value. Look for professional service costs (optional field).
+
+### PROFIT, TAX, AND EARNINGS:
+- `profitBeforeTax`: **EXTRACTION RULE**: Find the value where profit before tax information is present and extract the value. Look for PBT before tax expenses.
+- `profitForTheYear`: **EXTRACTION RULE**: Find the value where profit for the year information is present and extract the value. Look for net profit/PAT after all expenses and taxes.
+- `currentTax`: **EXTRACTION RULE**: Find the value where current tax information is present and extract the value. Look for current tax expense.
+- `deferredTax`: **EXTRACTION RULE**: Find the value where deferred tax information is present and extract the value. Look for deferred tax charge/(credit).
+- `totalComprehensiveIncomeForTheYear`: **EXTRACTION RULE**: Find the value where total comprehensive income information is present and extract the value. Look for net profit plus/minus other comprehensive income.
+- `earningsPerShare.basic`: **EXTRACTION RULE**: Find the value where basic earnings per share information is present and extract the value. Look for basic EPS in ₹ per share.
+- `earningsPerShare.diluted`: **EXTRACTION RULE**: Find the value where diluted earnings per share information is present and extract the value. Look for diluted EPS in ₹ per share.
+
+## FLEXIBLE GROUP ITEMS EXTRACTION RULES
+
+### CRITICAL INSTRUCTIONS FOR flexibleGroupItems:
+The `flexibleGroupItems` array is used to capture additional financial fields that are present in the source documents but not explicitly defined in the standard schema. These items must be relevant to their respective sections and subsections.
+
+**FORMAT FOR flexibleGroupItems:**
+```json
+{
+  "fieldName": "Exact field name as it appears in PDF",
+  "value_2025": number,
+  "value_2024": number, 
+  "value_2023": number,
+  "source": "pl",
+  "unit": "unit as provided in document",
+}
+```
+
+**PROFIT & LOSS flexibleGroupItems:**
+- **Income Items**: Add any additional income line items not covered in the standard schema
+- **Expense Items**: Add any additional expense line items not covered in the standard schema
+- **Profit Items**: Add any additional profit/tax line items not covered in the standard schema
+
+**EXTRACTION RULES FOR flexibleGroupItems:**
+1. **RELEVANCE CHECK**: Only include fields that are relevant to the specific section/subsection
+2. **COMPLETENESS**: If a section has additional line items beyond the standard schema, capture them in flexibleGroupItems
+3. **FORMAT CONSISTENCY**: Use the exact same format as standard fields: {value_2025, value_2024, value_2023, source, unit, fieldName}
+4. **SOURCE ATTRIBUTION**: Set appropriate source ("pl" for Profit & Loss)
+5. **UNIT PRESERVATION**: Preserve exact units as printed in the document
+6. **FIELD NAME ACCURACY**: Use exact field name as it appears in the PDF document
+
+## FIELD NAME EXTRACTION RULES
+
+### CRITICAL INSTRUCTIONS FOR fieldName ATTRIBUTE:
+1. **EXACT MATCHING**: The `fieldName` must be the EXACT text as it appears in the PDF document
+2. **CASE SENSITIVE**: Preserve the exact capitalization from the source document
+3. **PUNCTUATION PRESERVATION**: Include all punctuation, parentheses, and special characters exactly as printed
+4. **SECTION CONTEXT**: If a field appears under a sub-heading, include the full context
+5. **ALTERNATIVE NAMES**: If multiple names exist for the same field, use the most specific/complete version
+6. **MISSING FIELDS**: If a field is not present in the main section, set `fieldName` to "Not Found" and `value_2025`, `value_2024`, `value_2023` to "null"
+
+## CRITICAL MULTI-YEAR EXTRACTION INSTRUCTIONS
+
+### EXTRACTION STRATEGY:
+1. **2024-25 FILE PROCESSING**:
+   - Look for TWO columns: "2025" (current year) and "2024" (previous year)
+   - Extract value_2025 from the "2025" column
+   - Extract value_2024 from the "2024" column
+   - Both values come from the SAME 2024-25 file
+
+2. **2023-24 FILE PROCESSING**:
+   - Look for TWO columns: "2024" (current year) and "2023" (previous year)
+   - Extract value_2023 from the "2023" column
+   - The "2024" column in this file should match the "2024" column from 2024-25 file
+
+3. **FINAL RESULT**:
+   - value_2025: From 2024-25 file, "2025" column
+   - value_2024: From 2024-25 file, "2024" column  
+   - value_2023: From 2023-24 file, "2023" column
+
+### COLUMN IDENTIFICATION RULES:
+- Look for column headers like "As at March 31, 2025" and "As at March 31, 2024"
+- Look for column headers like "2025" and "2024"
+- Look for column headers like "Current Year" and "Previous Year"
+- The 2024-25 file will have BOTH 2025 and 2024 data
+- The 2023-24 file will have BOTH 2024 and 2023 data
+
+### DATA TYPE AND UNIT SPECIFICATIONS
+
+**PROFIT & LOSS DATA TYPES:**
+- All monetary values are expected to be reported in **Crore** (Indian Rupee)
+- Data Type: `number` for all monetary amounts
+- Units: Use exactly "₹ Crore" or "₹ Million" format
+- Special Cases:
+  - `earningsPerShare.basic` and `earningsPerShare.diluted`: Units in "per share ₹ Crore"
+  - Negative values: Preserve parentheses format "(1234)"
+
+### Data Processing Rules
+1. **Year Mapping**: 
+   - **2024-25 financial year file** → Extract value_2025 (current year) AND value_2024 (previous year)
+   - **2023-24 financial year file** → Extract value_2023 (previous year)
+   - **CRITICAL**: The 2024-25 file contains BOTH 2025 and 2024 data in separate columns
+   - **CRITICAL**: The 2023-24 file contains BOTH 2024 and 2023 data in separate columns
+
+2. **Multi-Year Data Extraction Rules**:
+   - **From 2024-25 file**: Extract value_2025 (current year column) AND value_2024 (previous year column)
+   - **From 2023-24 file**: Extract value_2023 (previous year column)
+   - **Result**: You will have 3 years of data: 2023, 2024, 2025
+
+3. **Value Formatting**:
+   - Remove commas from numbers: 1,23,456 → 123456
+   - Preserve parentheses for negative values: (1,234) → "(1234)"
+   - Keep decimal places for per-share values: 12.34 → 12.34
+   - Convert integers for monetary amounts: 1,23,456 → 123456
+
+4. **Missing Data Handling**:
+   - If value is missing or unreadable: use "null"
+   - If line item doesn't exist: use "null"
+   - If value is zero and explicitly stated: use 0
+   - If value is zero but not explicitly stated: use "null"
+
+5. **Source Attribution**:
+   - Always set "source": "pl" for Profit & Loss items
+   - All monetary values use "₹ Crore" or "₹ Million" format
+   - If no unit is specified, use empty string ""
+
+6. **Unit Preservation Rules**:
+   - **Profit & Loss**: All monetary values use "₹ Crore" or "₹ Million" format, EPS use "per share ₹ Crore"
+   - **Special Handling**: If units are not specified, look once in PDF; if still not found, use "₹ Crore"

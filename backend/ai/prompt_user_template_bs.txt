@@ -1,0 +1,13 @@
+## BALANCE SHEET EXTRACTION TASK
+
+### Input Documents (2 files total)
+
+**BALANCE SHEET GROUP:**
+- Balance Sheet for FY 2024-25 (ending March 31, 2025) - File: `{BS_2024_25_FILENAME}`
+- Balance Sheet for FY 2023-24 (ending March 31, 2024) - File: `{BS_2023_24_FILENAME}`
+
+### Task Instructions
+Extract Balance Sheet financial data from the provided documents according to the Balance Sheet schema and rules defined in the developer instructions. Ensure all values are extracted exactly as they appear in the source documents without any calculations or derivations.
+
+### Expected Output
+Return a valid, minified JSON object following the exact Balance Sheet schema structure provided in the developer instructions.

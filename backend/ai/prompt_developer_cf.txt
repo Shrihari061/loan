@@ -1,0 +1,483 @@
+## CASH FLOW TARGET SCHEMA STRUCTURE
+
+Extract data according to the following comprehensive nested structure for Cash Flow. Each field must include the exact field name as it appears in the PDF for traceability:
+
+{
+  "companyName": "string",
+  "cashFlows": {
+    "fileGroup": "CASH_FLOW",
+    "sourceFiles": [
+      "CF_2024_25.pdf",
+      "CF_2023_24.pdf"
+    ],
+    "netCashGeneratedByOperatingActivities": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Net cash flow from Operating Activities"
+    },
+    "netCashUsedInInvestingActivities": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Net cash flow from Investing Activities"
+    },
+    "netCashUsedInFinancingActivities": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Net cash flow from Financing Activities"
+    },
+    "cashGeneratedFromOperations": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Cash generated from operations"
+    },
+    "profitForTheYear": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Profit/(Loss) for the Year"
+    },
+    "incomeTaxesPaid": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Income taxes paid"
+    },
+    "adjustmentsToReconcileNetProfitToNetCashProvidedByOperatingActivities": {
+      "depreciationAndAmortization": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "cf",
+        "unit": "string",
+        "fieldName": "Depreciation and Amortization"
+      },
+      "incomeTaxExpense": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "cf",
+        "unit": "string",
+        "fieldName": "Income Tax Expense"
+      },
+      "impairmentLossRecognizedReversed": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "cf",
+        "unit": "string",
+        "fieldName": "Impairment loss recognized/(reversed)"
+      },
+      "financeCost": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "cf",
+        "unit": "string",
+        "fieldName": "Finance Cost"
+      },
+      "interestAndDividendIncome": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "cf",
+        "unit": "string",
+        "fieldName": "Interest and dividend income"
+      },
+      "stockCompensationExpense": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "cf",
+        "unit": "string",
+        "fieldName": "Stock compensation expense"
+      },
+      "otherAdjustments": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "cf",
+        "unit": "string",
+        "fieldName": "Other adjustments"
+      },
+      "flexibleGroupItems": []
+    },
+    "changesInAssetsAndLiabilities": {
+      "tradeReceivablesAndUnbilledRevenue": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "cf",
+        "unit": "string",
+        "fieldName": "Trade Receivables and Unbilled Revenue"
+      },
+      "loansOtherFinancialAssetsAndOtherAssets": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "cf",
+        "unit": "string",
+        "fieldName": "Loans, Other Financial Assets and Other Assets"
+      },
+      "tradePayables": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "cf",
+        "unit": "string",
+        "fieldName": "Trade Payables"
+      },
+      "otherFinancialLiabilitiesOtherLiabilitiesAndProvisions": {
+        "value_2025": number,
+        "value_2024": number,
+        "value_2023": number,
+        "source": "cf",
+        "unit": "string",
+        "fieldName": "Other Financial Liabilities, Other Liabilities and Provisions"
+      },
+      "flexibleGroupItems": []
+    },
+    "expenditureOnPropertyPlantAndEquipment": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Expenditure on property, plant and equipment"
+    },
+    "depositsPlacedWithCorporation": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Deposits placed with Corporation"
+    },
+    "redemptionOfDepositsPlacedWithCorporation": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Redemption of deposits placed with Corporation"
+    },
+    "interestAndDividendReceived": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Interest and dividend received"
+    },
+    "dividendReceivedFromSubsidiary": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Dividend received from subsidiary"
+    },
+    "loanGivenToSubsidiaries": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Loan given to subsidiaries"
+    },
+    "loanRepaidBySubsidiaries": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Loan repaid by subsidiaries"
+    },
+    "investmentInSubsidiaries": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Investment in subsidiaries"
+    },
+    "paymentTowardsAcquisitionOfEntities": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Payment towards acquisition of entities"
+    },
+    "receiptPaymentTowardsBusinessTransferForEntitiesUnderCommonControl": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Receipt/Payment towards business transfer for entities under common control"
+    },
+    "receiptPaymentFromEntitiesUnderLiquidation": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Receipt/Payment from entities under liquidation"
+    },
+    "otherReceipts": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Other receipts"
+    },
+    "paymentsToAcquireInvestments": {
+      "flexibleGroupItems": []
+    },
+    "proceedsOnSaleOfInvestments": {
+      "flexibleGroupItems": []
+    },
+    "paymentOfLeaseLiabilities": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Payment of lease liabilities"
+    },
+    "sharesIssuedOnExerciseOfEmployeeStockOptions": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Shares issued on exercise of employee stock options"
+    },
+    "otherPayments": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Other payments"
+    },
+    "paymentOfDividends": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Payment of dividends"
+    },
+    "netIncreaseDecreaseInCashAndCashEquivalents": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Net increase/(decrease) in cash and cash equivalents"
+    },
+    "effectOfExchangeDifferencesOnTranslationOfForeignCurrencyCashAndCashEquivalents": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Effect of exchange differences on translation of foreign currency cash and cash equivalents"
+    },
+    "cashAndCashEquivalentsAtTheBeginningOfTheYear": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Cash and cash equivalents at the beginning of the year"
+    },
+    "cashAndCashEquivalentsAtTheEndOfTheYear": {
+      "value_2025": number,
+      "value_2024": number,
+      "value_2023": number,
+      "source": "cf",
+      "unit": "string",
+      "fieldName": "Cash and cash equivalents as at the end of the year"
+    },
+    "flexibleGroupItems": []
+  }
+}
+
+## CASH FLOW EXTRACTION RULES
+
+### TOP-LEVEL CF TOTALS (Mandatory Summary):
+- `netCashGeneratedByOperatingActivities`: **EXTRACTION RULE**: Find the value where net cash flow from operating activities information is present and extract the value. Look for the final result of the Cash Flow from Operating Activities section.
+- `netCashUsedInInvestingActivities`: **EXTRACTION RULE**: Find the value where net cash flow from investing activities information is present and extract the value. Look for the final result of the Cash Flow from Investing Activities section.
+- `netCashUsedInFinancingActivities`: **EXTRACTION RULE**: Find the value where net cash flow from financing activities information is present and extract the value. Look for the final result of the Cash Flow from Financing Activities section.
+- `netIncreaseDecreaseInCashAndCashEquivalents`: **EXTRACTION RULE**: Find the value where net increase/decrease in cash and cash equivalents information is present and extract the value. Look for the sum of CFO + CFI + CFF.
+- `cashAndCashEquivalentsAtTheEndOfTheYear`: **EXTRACTION RULE**: Find the value where cash and cash equivalents at the end of the year information is present and extract the value. Look for the final balance of cash.
+
+### CASH FLOW FROM OPERATING ACTIVITIES (CFO):
+- `profitForTheYear`: **EXTRACTION RULE**: Find the value where profit for the year information is present and extract the value. Look for the starting point of the indirect cash flow method (profit before tax or net profit).
+- `cashGeneratedFromOperations`: **EXTRACTION RULE**: Find the value where cash generated from operations information is present and extract the value. Look for the subtotal before deducting income taxes paid.
+- `incomeTaxesPaid`: **EXTRACTION RULE**: Find the value where income taxes paid information is present and extract the value. Look for actual cash outflow for taxes (net of refunds).
+
+### ADJUSTMENTS (Non-Cash and Non-Operating):
+- `adjustmentsToReconcileNetProfitToNetCashProvidedByOperatingActivities.depreciationAndAmortization`: **EXTRACTION RULE**: Find the value where depreciation and amortization expenses information is present and extract the value. Look for non-cash charges added back for asset wear and tear.
+- `adjustmentsToReconcileNetProfitToNetCashProvidedByOperatingActivities.incomeTaxExpense`: **EXTRACTION RULE**: Find the value where income tax expense information is present and extract the value. Look for non-cash adjustments recognized in P&L.
+- `adjustmentsToReconcileNetProfitToNetCashProvidedByOperatingActivities.impairmentLossRecognizedReversed`: **EXTRACTION RULE**: Find the value where impairment loss information is present and extract the value. Look for impairment losses recognized or reversed under expected credit loss model.
+- `adjustmentsToReconcileNetProfitToNetCashProvidedByOperatingActivities.financeCost`: **EXTRACTION RULE**: Find the value where finance cost information is present and extract the value. Look for interest expense recognized in P&L as non-cash adjustment.
+- `adjustmentsToReconcileNetProfitToNetCashProvidedByOperatingActivities.interestAndDividendIncome`: **EXTRACTION RULE**: Find the value where interest and dividend income information is present and extract the value. Look for non-operating income that should be deducted.
+- `adjustmentsToReconcileNetProfitToNetCashProvidedByOperatingActivities.stockCompensationExpense`: **EXTRACTION RULE**: Find the value where stock compensation expense information is present and extract the value. Look for share-based payment expense as non-cash charge.
+- `adjustmentsToReconcileNetProfitToNetCashProvidedByOperatingActivities.otherAdjustments`: **EXTRACTION RULE**: Find the value where other adjustments information is present and extract the value. Look for residual reconciling items like gains/losses on derivatives, unrealised exchange differences, provisions written back.
+
+### WORKING CAPITAL CHANGES:
+- `changesInAssetsAndLiabilities.tradeReceivablesAndUnbilledRevenue`: **EXTRACTION RULE**: Find the value where trade receivables and unbilled revenue changes information is present and extract the net change. Look for changes in accounts receivable and unbilled revenue.
+- `changesInAssetsAndLiabilities.loansOtherFinancialAssetsAndOtherAssets`: **EXTRACTION RULE**: Find the value where loans and other financial assets changes information is present and extract the net change. Look for changes in current and non-current loans, other financial assets, and other non-financial assets.
+- `changesInAssetsAndLiabilities.tradePayables`: **EXTRACTION RULE**: Find the value where trade payables changes information is present and extract the net change. Look for changes in accounts payable.
+- `changesInAssetsAndLiabilities.otherFinancialLiabilitiesOtherLiabilitiesAndProvisions`: **EXTRACTION RULE**: Find the value where other financial liabilities and provisions changes information is present and extract the net change. Look for changes in residual current liabilities and provisions.
+
+### CASH FLOW FROM INVESTING ACTIVITIES (CFI):
+- `expenditureOnPropertyPlantAndEquipment`: **EXTRACTION RULE**: Find the value where expenditure on property, plant and equipment information is present and extract the value. Look for actual cash outflow for CapEx including purchase of intangible assets and CWIP.
+- `depositsPlacedWithCorporation`: **EXTRACTION RULE**: Find the value where deposits placed with corporation information is present and extract the value. Look for cash deposits made with corporation.
+- `redemptionOfDepositsPlacedWithCorporation`: **EXTRACTION RULE**: Find the value where redemption of deposits placed with corporation information is present and extract the value. Look for cash received from redemption of deposits.
+- `interestAndDividendReceived`: **EXTRACTION RULE**: Find the value where interest and dividend received information is present and extract the value. Look for cash inflow from interest and dividends (separate from subsidiary dividends).
+- `dividendReceivedFromSubsidiary`: **EXTRACTION RULE**: Find the value where dividend received from subsidiary information is present and extract the value. Look for cash inflow from subsidiary dividends.
+- `loanGivenToSubsidiaries`: **EXTRACTION RULE**: Find the value where loan given to subsidiaries information is present and extract the value. Look for cash outflow for loans to subsidiaries.
+- `loanRepaidBySubsidiaries`: **EXTRACTION RULE**: Find the value where loan repaid by subsidiaries information is present and extract the value. Look for cash inflow from loan repayments by subsidiaries.
+- `investmentInSubsidiaries`: **EXTRACTION RULE**: Find the value where investment in subsidiaries information is present and extract the value. Look for cash outflow for investments in subsidiaries.
+- `paymentTowardsAcquisitionOfEntities`: **EXTRACTION RULE**: Find the value where payment towards acquisition of entities information is present and extract the value. Look for cash outflow for entity acquisitions.
+- `receiptPaymentTowardsBusinessTransferForEntitiesUnderCommonControl`: **EXTRACTION RULE**: Find the value where business transfer for entities under common control information is present and extract the value. Look for cash receipts/payments for business transfers.
+- `receiptPaymentFromEntitiesUnderLiquidation`: **EXTRACTION RULE**: Find the value where receipt/payment from entities under liquidation information is present and extract the value. Look for cash receipts/payments from liquidating entities.
+- `otherReceipts`: **EXTRACTION RULE**: Find the value where other receipts information is present and extract the value. Look for miscellaneous cash receipts from investing activities.
+
+### CASH FLOW FROM FINANCING ACTIVITIES (CFF):
+- `paymentOfLeaseLiabilities`: **EXTRACTION RULE**: Find the value where payment of lease liabilities information is present and extract the value. Look for cash outflow for lease payments (principal and interest components).
+- `sharesIssuedOnExerciseOfEmployeeStockOptions`: **EXTRACTION RULE**: Find the value where shares issued on exercise of employee stock options information is present and extract the value. Look for cash inflow from employee stock option exercises.
+- `otherPayments`: **EXTRACTION RULE**: Find the value where other payments information is present and extract the value. Look for miscellaneous cash payments from financing activities.
+- `paymentOfDividends`: **EXTRACTION RULE**: Find the value where payment of dividends information is present and extract the value. Look for cash outflow to shareholders as dividend payments.
+
+### CASH FLOW SUMMARY:
+- `effectOfExchangeDifferencesOnTranslationOfForeignCurrencyCashAndCashEquivalents`: **EXTRACTION RULE**: Find the value where effect of exchange differences information is present and extract the value. Look for foreign currency translation effects on cash and cash equivalents.
+- `cashAndCashEquivalentsAtTheBeginningOfTheYear`: **EXTRACTION RULE**: Find the value where cash and cash equivalents at the beginning of the year information is present and extract the value. Look for opening cash balance for the year.
+
+## FLEXIBLE GROUP ITEMS EXTRACTION RULES
+
+### CRITICAL INSTRUCTIONS FOR flexibleGroupItems:
+The `flexibleGroupItems` array is used to capture additional financial fields that are present in the source documents but not explicitly defined in the standard schema. These items must be relevant to their respective sections and subsections.
+
+**FORMAT FOR flexibleGroupItems:**
+```json
+{
+  "fieldName": "Exact field name as it appears in PDF",
+  "value_2025": number,
+  "value_2024": number, 
+  "value_2023": number,
+  "source": "cf",
+  "unit": "unit as provided in document",
+}
+```
+
+**CASH FLOW flexibleGroupItems:**
+- **Operating Activities**: Add any additional operating cash flow line items not covered in the standard schema
+- **Investing Activities**: Add any additional investing cash flow line items not covered in the standard schema
+- **Financing Activities**: Add any additional financing cash flow line items not covered in the standard schema
+
+**EXTRACTION RULES FOR flexibleGroupItems:**
+1. **RELEVANCE CHECK**: Only include fields that are relevant to the specific section/subsection
+2. **COMPLETENESS**: If a section has additional line items beyond the standard schema, capture them in flexibleGroupItems
+3. **FORMAT CONSISTENCY**: Use the exact same format as standard fields: {value_2025, value_2024, value_2023, source, unit, fieldName}
+4. **SOURCE ATTRIBUTION**: Set appropriate source ("cf" for Cash Flow)
+5. **UNIT PRESERVATION**: Preserve exact units as printed in the document
+6. **FIELD NAME ACCURACY**: Use exact field name as it appears in the PDF document
+
+## FIELD NAME EXTRACTION RULES
+
+### CRITICAL INSTRUCTIONS FOR fieldName ATTRIBUTE:
+1. **EXACT MATCHING**: The `fieldName` must be the EXACT text as it appears in the PDF document
+2. **CASE SENSITIVE**: Preserve the exact capitalization from the source document
+3. **PUNCTUATION PRESERVATION**: Include all punctuation, parentheses, and special characters exactly as printed
+4. **SECTION CONTEXT**: If a field appears under a sub-heading, include the full context
+5. **ALTERNATIVE NAMES**: If multiple names exist for the same field, use the most specific/complete version
+6. **MISSING FIELDS**: If a field is not present in the main section, set `fieldName` to "Not Found" and `value_2025`, `value_2024`, `value_2023` to "null"
+
+## CRITICAL MULTI-YEAR EXTRACTION INSTRUCTIONS
+
+### EXTRACTION STRATEGY:
+1. **2024-25 FILE PROCESSING**:
+   - Look for TWO columns: "2025" (current year) and "2024" (previous year)
+   - Extract value_2025 from the "2025" column
+   - Extract value_2024 from the "2024" column
+   - Both values come from the SAME 2024-25 file
+
+2. **2023-24 FILE PROCESSING**:
+   - Look for TWO columns: "2024" (current year) and "2023" (previous year)
+   - Extract value_2023 from the "2023" column
+   - The "2024" column in this file should match the "2024" column from 2024-25 file
+
+3. **FINAL RESULT**:
+   - value_2025: From 2024-25 file, "2025" column
+   - value_2024: From 2024-25 file, "2024" column  
+   - value_2023: From 2023-24 file, "2023" column
+
+### COLUMN IDENTIFICATION RULES:
+- Look for column headers like "As at March 31, 2025" and "As at March 31, 2024"
+- Look for column headers like "2025" and "2024"
+- Look for column headers like "Current Year" and "Previous Year"
+- The 2024-25 file will have BOTH 2025 and 2024 data
+- The 2023-24 file will have BOTH 2024 and 2023 data
+
+### DATA TYPE AND UNIT SPECIFICATIONS
+
+**CASH FLOW DATA TYPES:**
+- All monetary values are expected to be reported in **Crore** (Indian Rupee)
+- Data Type: `number` for all monetary amounts
+- Units: Use exactly "₹ Crore" or "₹ Million" format
+- Special Cases:
+  - Negative values: Preserve parentheses format "(1234)"
+
+### Data Processing Rules
+1. **Year Mapping**: 
+   - **2024-25 financial year file** → Extract value_2025 (current year) AND value_2024 (previous year)
+   - **2023-24 financial year file** → Extract value_2023 (previous year)
+   - **CRITICAL**: The 2024-25 file contains BOTH 2025 and 2024 data in separate columns
+   - **CRITICAL**: The 2023-24 file contains BOTH 2024 and 2023 data in separate columns
+
+2. **Multi-Year Data Extraction Rules**:
+   - **From 2024-25 file**: Extract value_2025 (current year column) AND value_2024 (previous year column)
+   - **From 2023-24 file**: Extract value_2023 (previous year column)
+   - **Result**: You will have 3 years of data: 2023, 2024, 2025
+
+3. **Value Formatting**:
+   - Remove commas from numbers: 1,23,456 → 123456
+   - Preserve parentheses for negative values: (1,234) → "(1234)"
+   - Convert integers for monetary amounts: 1,23,456 → 123456
+
+4. **Missing Data Handling**:
+   - If value is missing or unreadable: use "null"
+   - If line item doesn't exist: use "null"
+   - If value is zero and explicitly stated: use 0
+   - If value is zero but not explicitly stated: use "null"
+
+5. **Source Attribution**:
+   - Always set "source": "cf" for Cash Flow items
+   - All monetary values use "₹ Crore" or "₹ Million" format
+   - If no unit is specified, use empty string ""
+
+6. **Unit Preservation Rules**:
+   - **Cash Flow**: All monetary values use "₹ Crore" or "₹ Million" format
+   - **Special Handling**: If units are not specified, look once in PDF; if still not found, use "₹ Crore"

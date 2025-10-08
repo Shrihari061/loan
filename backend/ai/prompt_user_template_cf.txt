@@ -1,0 +1,13 @@
+## CASH FLOW EXTRACTION TASK
+
+### Input Documents (2 files total)
+
+**CASH FLOW GROUP:**
+- Cash Flow for FY 2024-25 (ending March 31, 2025) - File: `{CF_2024_25_FILENAME}`
+- Cash Flow for FY 2023-24 (ending March 31, 2024) - File: `{CF_2023_24_FILENAME}`
+
+### Task Instructions
+Extract Cash Flow financial data from the provided documents according to the Cash Flow schema and rules defined in the developer instructions. Ensure all values are extracted exactly as they appear in the source documents without any calculations or derivations.
+
+### Expected Output
+Return a valid, minified JSON object following the exact Cash Flow schema structure provided in the developer instructions.
