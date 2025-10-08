@@ -24,11 +24,11 @@ import RenderCashFlow from "./renderCashFlow";
 import type { AnalysisData, QCEntry } from "./types";
 
 const QCViewer: React.FC = () => {
-  const { id: analysisId } = useParams<{ id: string }>();
+  const { id: leadId } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  
+
   // Debug: Log the analysis ID
-  console.info(`QCViewer mounted with analysisId: ${analysisId}`);
+  console.info(`QCViewer mounted with leadId: ${leadId}`);
 
   const collections = [
     "Balance Sheet Summary",
@@ -98,16 +98,16 @@ const QCViewer: React.FC = () => {
     const loadData = async () => {
       try {
         // Get the analysis ID from URL params
-        if (!analysisId) {
+        if (!leadId) {
           console.error("No analysis ID provided in URL");
           showToast("No analysis ID provided. Please check the URL.", "error");
           return;
         }
-        
-        console.info(`Loading analysis data for ID: ${analysisId}`);
+
+        console.info(`Loading analysis data for ID: ${leadId}`);
         // Load analysis data
         const analysisResponse = await fetch(
-          `http://localhost:5000/analysis/${analysisId}`
+          `http://localhost:5000/analysis/${leadId}`
         );
         if (analysisResponse.ok) {
           const analysisData = await analysisResponse.json();
@@ -124,23 +124,36 @@ const QCViewer: React.FC = () => {
           };
           setData(qcEntry);
         } else {
-          console.error("Failed to load analysis data:", analysisResponse.status, analysisResponse.statusText);
-          throw new Error(`Failed to load analysis data: ${analysisResponse.status} ${analysisResponse.statusText}`);
+          console.error(
+            "Failed to load analysis data:",
+            analysisResponse.status,
+            analysisResponse.statusText
+          );
+          throw new Error(
+            `Failed to load analysis data: ${analysisResponse.status} ${analysisResponse.statusText}`
+          );
         }
       } catch (error) {
         console.error("Error loading data:", error);
         // Show error message to user
-        showToast("Failed to load analysis data. Please check the analysis ID.", "error");
+        showToast(
+          "Failed to load analysis data. Please check the analysis ID.",
+          "error"
+        );
         // You could also navigate back to QC table here
         // navigate("/qc");
       }
     };
 
     loadData();
-  }, [analysisId]);
+  }, [leadId]);
 
   // Helper functions for updating data
-  const updateFieldValue = (path: string, year: string, newValue: string) => {
+  const updateFieldValue = (
+    path: string,
+    year: string,
+    newValue: string
+  ) => {
     if (!analysisData) return;
 
     const newData = cloneDeep(analysisData);
@@ -179,7 +192,7 @@ const QCViewer: React.FC = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/analysis/${analysisData._id}`,
+        `http://localhost:5000/analysis/analysisByid/${analysisData._id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -219,15 +232,13 @@ const QCViewer: React.FC = () => {
       );
 
       if (response.ok) {
-        const result = await response.json();
-        
         // Update local status to reflect rejection
         if (data) {
           setData({ ...data, status: "Rejected" });
         }
-        
+
         showToast("Lead rejected successfully", "success");
-        
+
         // Navigate after a short delay to show the status change
         setTimeout(() => {
           navigate("/qc");
@@ -247,7 +258,7 @@ const QCViewer: React.FC = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/leads/${data._id}/approve`,
+        `http://localhost:5000/leads/${leadId}/approve`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -256,13 +267,13 @@ const QCViewer: React.FC = () => {
       );
 
       if (response.ok) {
-        const result = await response.json();
-        
+        // const result = await response.json();
+
         // Update local status to reflect approval
         if (data) {
           setData({ ...data, status: "Approved" });
         }
-        
+
         if (hasChanges) {
           showToast(
             "Lead approved. Ratios are being generated in the background...",
@@ -271,7 +282,7 @@ const QCViewer: React.FC = () => {
         } else {
           showToast("Lead approved successfully", "success");
         }
-        
+
         // Navigate after a short delay to show the status change
         setTimeout(() => {
           navigate("/qc");
