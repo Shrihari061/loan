@@ -39,7 +39,7 @@ app.use('/memos', memoRoutes); // All memo-related routes prefixed with /memos
 app.use('/analysis', analysisRoutes);
 app.use('/risk', riskRoutes);
 app.use('/dashboard', dashboardRoutes);
-app.use('/cq', qcRoutes); // ⬅️ Add this with other route usages
+app.use('/qc', qcRoutes); // ⬅️ Add this with other route usages
 app.use('/leads', leadRoutes);
 app.use('/summary', summaryRoutes);
 app.use('/notifications', notificationRoutes);

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const ExtractedValues = require('../models/Analysis'); // extracted_values model
+const ExtractedValues = require('../models/ExtractedValues'); // ✅ unified model for 'extractedvalues' collection
 const Ratios = require('../models/Ratios'); // <-- New model for LOMAS.ratios collection
 
 const mongoose = require('mongoose');
@@ -18,33 +18,11 @@ const createDataAccessor = (data) => {
   };
 };
 
-// 🔹 Get ALL analysis data
+// 🔹 Get ALL analysis data (return everything as-is from MongoDB)
 router.get('/', async (req, res) => {
   try {
-    const docs = await ExtractedValues.find();
-
-    const result = docs.map(doc => {
-      const accessor = createDataAccessor(doc.data || {});
-
-      const totalAssets = accessor.get("Total assets")?.value_2025 || 0;
-      const totalNonCurrentLiab = accessor.get("Total non-current liabilities")?.value_2025 || 0;
-      const totalCurrentLiab = accessor.get("Total current liabilities")?.value_2025 || 0;
-
-      const netWorth = totalAssets - (totalNonCurrentLiab + totalCurrentLiab);
-
-      return {
-        _id: doc._id,
-        company_name: doc.customer_name || 'N/A',
-        lead_id: doc.lead_id || 'N/A',
-        last_updated: doc.updatedAt
-          ? new Date(doc.updatedAt).toISOString().split('T')[0]
-          : 'N/A',
-        net_worth: netWorth,
-        year_range: '2023-2025'
-      };
-    });
-
-    res.json(result);
+    const docs = await ExtractedValues.find({});
+    res.json(docs);
   } catch (err) {
     console.error('Error fetching analysis:', err);
     res.status(500).json({ error: 'Server error' });
@@ -150,94 +128,12 @@ router.get('/ratios', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   try {
-    let doc = await ExtractedValues.findById(req.params.id);
-    
+    const doc = await ExtractedValues.findById(req.params.id);
     if (!doc) {
-      const baseDoc = await ExtractedValues.findById(req.params.id, {
-        customer_name: 1,
-        lead_id: 1
-      });
-      if (!baseDoc) return res.status(404).json({ message: 'Company not found' });
-
-      doc = await ExtractedValues.findOne({
-        customer_name: baseDoc.customer_name,
-        lead_id: baseDoc.lead_id
-      });
-      if (!doc) return res.status(404).json({ message: 'Matching company not found' });
+      return res.status(404).json({ message: 'Entry not found' });
     }
-
-    const data = doc.data || {};
-    const accessor = createDataAccessor(data);
-
-    // ---------------- Tables ----------------
-    const balance_sheet = [];
-    const profit_loss = [];
-    const cash_flow = [];
-
-    for (const [key, value] of accessor.entries()) {
-      if (value && typeof value === 'object' && value.source) {
-        const itemObj = {
-          _id: `${doc._id}-${key}`,
-          item: key,
-          FY2023: value.value_2023 ?? null,
-          FY2024: value.value_2024 ?? null,
-          FY2025: value.value_2025 ?? null,
-          unit: value.unit || '₹ crore'
-        };
-
-        if (value.source === 'bs') balance_sheet.push(itemObj);
-        else if (value.source === 'pl') profit_loss.push(itemObj);
-        else if (value.source === 'cf') cash_flow.push(itemObj);
-      }
-    }
-
-    // ---------------- Compute Net Worth for all years ----------------
-    const netWorth = {};
-    ["2023", "2024", "2025"].forEach(year => {
-      const yearKey = `value_${year}`;
-      const totalAssets = accessor.get("Total assets")?.[yearKey] || 0;
-      const totalNonCurrentLiab = accessor.get("Total non-current liabilities")?.[yearKey] || 0;
-      const totalCurrentLiab = accessor.get("Total current liabilities")?.[yearKey] || 0;
-      netWorth[`FY${year}`] = totalAssets - (totalNonCurrentLiab + totalCurrentLiab);
-    });
-
-    // ---------------- Get Ratio Data ----------------
-    const ratioDoc = await Ratios.findOne({
-      customer_name: doc.customer_name,
-      lead_id: doc.lead_id
-    });
-
-    let ratios = {
-      dscr: 'N/A',
-      debt_to_equity: 'N/A',
-      ratio_health: 'N/A'
-    };
-
-    if (ratioDoc) {
-      const dscrRatio = ratioDoc.DSCR;
-      const debtToEquityRatio = ratioDoc['Debt/Equity'];
-      
-      ratios.dscr = dscrRatio?.value ?? 'N/A';
-      ratios.debt_to_equity = debtToEquityRatio?.value ?? 'N/A';
-      ratios.ratio_health = ratioDoc.financial_strength?.subtotal ? 
-        (ratioDoc.financial_strength.subtotal >= 3 ? 'Good' : 
-         ratioDoc.financial_strength.subtotal >= 2 ? 'Moderate' : 'Poor') : 'N/A';
-    }
-
-    res.json({
-      _id: doc._id,
-      company_name: doc.customer_name || 'N/A',
-      lead_id: doc.lead_id || 'N/A',
-      last_updated: doc.updatedAt
-        ? new Date(doc.updatedAt).toISOString().split('T')[0]
-        : 'N/A',
-      net_worth: netWorth,
-      ratios,
-      year_range: "2023-2025",
-      balance_sheet,
-      profit_loss,
-      cash_flow
-    });
+    // Return the raw document from the new ExtractedValues model
+    res.json(doc);
   } catch (err) {
     console.error('Error fetching document:', err);
     res.status(500).json({ error: 'Server error' });
@@ -328,5 +224,7 @@ router.put('/:id', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
+
+
 
 module.exports = router;

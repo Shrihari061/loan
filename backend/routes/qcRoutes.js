@@ -80,31 +80,52 @@ router.put('/:id/revert', async (req, res) => {
 // ✅ Update financial field for a specific customer/lead/year
 router.put('/update', async (req, res) => {
   try {
-    const { customer_name, lead_id, item, year, value } = req.body;
+    const { customer_name, lead_id, item, year, value, section } = req.body;
 
-    if (!customer_name || !lead_id || !item || !year) {
+    if (!customer_name || !lead_id || !item || !year || !section) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
     // Convert to the correct field name, e.g. FY2025 → value_2025
     const yearKey = `value_${year}`;
 
-    // Dynamic path into the data Map
-    const fieldPath = `data.${item}.${yearKey}`;
-
-    const result = await ExtractedValues.updateOne(
-      { customer_name, lead_id },
-      { $set: { [fieldPath]: value } }
-    );
-
-    if (result.matchedCount === 0) {
+    // Find the document first
+    const doc = await ExtractedValues.findOne({ customer_name, lead_id });
+    if (!doc) {
       return res.status(404).json({ error: 'No matching document found' });
     }
 
-    res.json({
-      success: true,
-      updated: { customer_name, lead_id, item, year, value }
-    });
+    // Update the specific field in the appropriate section
+    let updated = false;
+    
+    // Check if it's a flexible group item
+    const sectionData = doc[section];
+    if (sectionData && sectionData.flexibleGroupItems) {
+      const flexibleItem = sectionData.flexibleGroupItems.find(
+        flexItem => flexItem.fieldName === item
+      );
+      if (flexibleItem) {
+        flexibleItem[yearKey] = value;
+        updated = true;
+      }
+    }
+
+    // If not found in flexible items, check direct section fields
+    if (!updated && sectionData) {
+      sectionData[item] = sectionData[item] || {};
+      sectionData[item][yearKey] = value;
+      updated = true;
+    }
+
+    if (updated) {
+      await doc.save();
+      res.json({
+        success: true,
+        updated: { customer_name, lead_id, item, year, value, section }
+      });
+    } else {
+      res.status(404).json({ error: 'Field not found in document' });
+    }
   } catch (err) {
     console.error('Update error:', err);
     res.status(500).json({ error: 'Internal server error' });
