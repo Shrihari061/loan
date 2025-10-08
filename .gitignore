@@ -50,3 +50,4 @@ venv.bak/
 json_data
 ratio
 temp_uploads
+node_modules
