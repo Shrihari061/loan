@@ -1,15 +1,25 @@
-import React from 'react';
-import RenderHeading from './RenderHeading';
-import RenderRow from './RenderRow';
-import RenderFlexibleGroup from './RenderFlexibleGroup';
-import type { AnalysisData } from './types';
+import React from "react";
+import RenderHeading from "./RenderHeading";
+import RenderRow from "./RenderRow";
+import RenderFlexibleGroup from "./RenderFlexibleGroup";
+import type { AnalysisData } from "./types";
 
 interface RenderCashFlowProps {
   analysisData: AnalysisData;
-  selectedYear: string;
-  updateFieldValue: (path: string, year: string, newValue: string) => void;
-  updateFlexibleItem: (path: string, index: number, year: string, newValue: string) => void;
-  getValueInputClass: (val: string | number | null | undefined, emphasize?: boolean) => string;
+  selectedYear?: string;
+  updateFieldValue?: (path: string, year: string, newValue: string) => void;
+  updateFlexibleItem?: (
+    path: string,
+    index: number,
+    year: string,
+    newValue: string
+  ) => void;
+  getValueInputClass?: (
+    val: string | number | null | undefined,
+    emphasize?: boolean
+  ) => string;
+  isMultiYear?: boolean;
+  isReadOnly?: boolean;
 }
 
 const renderCashFlow: React.FC<RenderCashFlowProps> = ({
@@ -17,7 +27,9 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
   selectedYear,
   updateFieldValue,
   updateFlexibleItem,
-  getValueInputClass
+  getValueInputClass,
+  isMultiYear = false,
+  isReadOnly = false,
 }) => {
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -36,14 +48,33 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">
                 Item
               </th>
-              <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
-                {selectedYear}
-              </th>
+              {isMultiYear ? (
+                <>
+                  <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
+                    FY2023
+                  </th>
+                  <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
+                    FY2024
+                  </th>
+                  <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
+                    FY2025
+                  </th>
+                </>
+              ) : (
+                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
+                  {selectedYear}
+                </th>
+              )}
             </tr>
           </thead>
           <tbody>
             {/* CASH FLOW FROM OPERATING ACTIVITIES */}
-            <RenderHeading label="CASH FLOW FROM OPERATING ACTIVITIES" indentLevel={0} isRedHeading={true} />
+            <RenderHeading
+              label="CASH FLOW FROM OPERATING ACTIVITIES"
+              indentLevel={0}
+              isRedHeading={true}
+              isMultiYear={isMultiYear}
+            />
             <RenderRow
               fieldPath="cashFlow.profitForTheYear"
               indentLevel={1}
@@ -51,10 +82,16 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
 
             {/* Adjustments */}
-            <RenderHeading label="Adjustments to reconcile net profit to net cash" indentLevel={1} />
+            <RenderHeading
+              label="Adjustments to reconcile net profit to net cash"
+              indentLevel={1}
+              isMultiYear={isMultiYear}
+            />
             <RenderRow
               fieldPath="cashFlow.adjustmentsToReconcileNetProfitToNetCashProvidedByOperatingActivities.depreciationAndAmortization"
               indentLevel={2}
@@ -62,6 +99,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="cashFlow.adjustmentsToReconcileNetProfitToNetCashProvidedByOperatingActivities.incomeTaxExpense"
@@ -70,6 +109,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="cashFlow.adjustmentsToReconcileNetProfitToNetCashProvidedByOperatingActivities.impairmentLossRecognizedReversed"
@@ -78,6 +119,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="cashFlow.adjustmentsToReconcileNetProfitToNetCashProvidedByOperatingActivities.financeCost"
@@ -86,6 +129,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="cashFlow.adjustmentsToReconcileNetProfitToNetCashProvidedByOperatingActivities.interestAndDividendIncome"
@@ -94,6 +139,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="cashFlow.adjustmentsToReconcileNetProfitToNetCashProvidedByOperatingActivities.stockCompensationExpense"
@@ -102,6 +149,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="cashFlow.adjustmentsToReconcileNetProfitToNetCashProvidedByOperatingActivities.otherAdjustments"
@@ -110,6 +159,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderFlexibleGroup
               parentPath="cashFlow.adjustmentsToReconcileNetProfitToNetCashProvidedByOperatingActivities.flexibleGroupItems"
@@ -118,10 +169,16 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFlexibleItem={updateFlexibleItem}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
 
             {/* Changes in assets and liabilities */}
-            <RenderHeading label="Changes in assets and liabilities" indentLevel={1} />
+            <RenderHeading
+              label="Changes in assets and liabilities"
+              indentLevel={1}
+              isMultiYear={isMultiYear}
+            />
             <RenderRow
               fieldPath="cashFlow.changesInAssetsAndLiabilities.tradeReceivablesAndUnbilledRevenue"
               indentLevel={2}
@@ -129,6 +186,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="cashFlow.changesInAssetsAndLiabilities.loansOtherFinancialAssetsAndOtherAssets"
@@ -137,6 +196,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="cashFlow.changesInAssetsAndLiabilities.tradePayables"
@@ -145,6 +206,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="cashFlow.changesInAssetsAndLiabilities.otherFinancialLiabilitiesOtherLiabilitiesAndProvisions"
@@ -153,6 +216,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderFlexibleGroup
               parentPath="cashFlow.changesInAssetsAndLiabilities.flexibleGroupItems"
@@ -161,6 +226,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFlexibleItem={updateFlexibleItem}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
 
             <RenderRow
@@ -171,6 +238,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="cashFlow.incomeTaxesPaid"
@@ -179,6 +248,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="cashFlow.netCashGeneratedByOperatingActivities"
@@ -188,10 +259,17 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
 
             {/* CASH FLOW FROM INVESTING ACTIVITIES */}
-            <RenderHeading label="CASH FLOW FROM INVESTING ACTIVITIES" indentLevel={0} isRedHeading={true} />
+            <RenderHeading
+              label="CASH FLOW FROM INVESTING ACTIVITIES"
+              indentLevel={0}
+              isRedHeading={true}
+              isMultiYear={isMultiYear}
+            />
             <RenderRow
               fieldPath="cashFlow.expenditureOnPropertyPlantAndEquipment"
               indentLevel={1}
@@ -199,6 +277,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="cashFlow.depositsPlacedWithCorporation"
@@ -207,6 +287,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="cashFlow.redemptionOfDepositsPlacedWithCorporation"
@@ -215,6 +297,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="cashFlow.interestAndDividendReceived"
@@ -223,6 +307,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="cashFlow.dividendReceivedFromSubsidiary"
@@ -231,6 +317,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="cashFlow.loanGivenToSubsidiaries"
@@ -239,6 +327,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="cashFlow.loanRepaidBySubsidiaries"
@@ -247,6 +337,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="cashFlow.investmentInSubsidiaries"
@@ -255,6 +347,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="cashFlow.paymentTowardsAcquisitionOfEntities"
@@ -263,6 +357,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="cashFlow.receiptPaymentTowardsBusinessTransferForEntitiesUnderCommonControl"
@@ -271,6 +367,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="cashFlow.receiptPaymentFromEntitiesUnderLiquidation"
@@ -279,6 +377,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="cashFlow.otherReceipts"
@@ -287,10 +387,16 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
 
             {/* Payments to acquire investments */}
-            <RenderHeading label="Payments to acquire investments" indentLevel={1} />
+            <RenderHeading
+              label="Payments to acquire investments"
+              indentLevel={1}
+              isMultiYear={isMultiYear}
+            />
             <RenderFlexibleGroup
               parentPath="cashFlow.paymentsToAcquireInvestments.flexibleGroupItems"
               indentLevel={2}
@@ -298,10 +404,16 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFlexibleItem={updateFlexibleItem}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
 
             {/* Proceeds on sale of investments */}
-            <RenderHeading label="Proceeds on sale of investments" indentLevel={1} />
+            <RenderHeading
+              label="Proceeds on sale of investments"
+              indentLevel={1}
+              isMultiYear={isMultiYear}
+            />
             <RenderFlexibleGroup
               parentPath="cashFlow.proceedsOnSaleOfInvestments.flexibleGroupItems"
               indentLevel={2}
@@ -309,6 +421,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFlexibleItem={updateFlexibleItem}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
 
             <RenderRow
@@ -319,10 +433,17 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
 
             {/* CASH FLOW FROM FINANCING ACTIVITIES */}
-            <RenderHeading label="CASH FLOW FROM FINANCING ACTIVITIES" indentLevel={0} isRedHeading={true} />
+            <RenderHeading
+              label="CASH FLOW FROM FINANCING ACTIVITIES"
+              indentLevel={0}
+              isRedHeading={true}
+              isMultiYear={isMultiYear}
+            />
             <RenderRow
               fieldPath="cashFlow.paymentOfLeaseLiabilities"
               indentLevel={1}
@@ -330,6 +451,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="cashFlow.sharesIssuedOnExerciseOfEmployeeStockOptions"
@@ -338,6 +461,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="cashFlow.otherPayments"
@@ -346,6 +471,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="cashFlow.paymentOfDividends"
@@ -354,6 +481,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="cashFlow.netCashUsedInFinancingActivities"
@@ -363,10 +492,17 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
 
             {/* NET CHANGE IN CASH */}
-            <RenderHeading label="NET CHANGE IN CASH" indentLevel={0} isRedHeading={true} />
+            <RenderHeading
+              label="NET CHANGE IN CASH"
+              indentLevel={0}
+              isRedHeading={true}
+              isMultiYear={isMultiYear}
+            />
             <RenderRow
               fieldPath="cashFlow.netIncreaseDecreaseInCashAndCashEquivalents"
               indentLevel={1}
@@ -375,6 +511,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="cashFlow.effectOfExchangeDifferencesOnTranslationOfForeignCurrencyCashAndCashEquivalents"
@@ -383,6 +521,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="cashFlow.cashAndCashEquivalentsAtTheBeginningOfTheYear"
@@ -391,6 +531,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="cashFlow.cashAndCashEquivalentsAtTheEndOfTheYear"
@@ -400,6 +542,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
 
             <RenderFlexibleGroup
@@ -409,6 +553,8 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               selectedYear={selectedYear}
               updateFlexibleItem={updateFlexibleItem}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
           </tbody>
         </table>

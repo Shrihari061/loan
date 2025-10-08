@@ -23,6 +23,7 @@ const CompanyRatioAnalysis: React.FC = () => {
         const res = await fetch(`http://localhost:5000/analysis/${id}/ratios`);
         const data = await res.json();
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const transformed: RatioItem[] = data.map((r: any) => ({
           name: r.name,
           threshold: r.threshold,

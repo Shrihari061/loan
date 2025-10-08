@@ -72,6 +72,35 @@ interface RiskDetailData {
   total_assets?: number | null;
 }
 
+// Helper function to format numbers with edge case handling
+const formatNumber = (value: number | string | null | undefined): string => {
+  // Handle null, undefined, empty string, or non-numeric values
+  if (value === null || value === undefined || value === '' || value === 'N/A' || value === '—') {
+    return '0.00';
+  }
+  
+  // Handle string values that might contain non-numeric characters
+  if (typeof value === 'string') {
+    // If it's a percentage string, extract the number part
+    if (value.includes('%')) {
+      const numValue = parseFloat(value.replace('%', ''));
+      return isNaN(numValue) ? '0.00' : numValue.toFixed(2);
+    }
+    
+    // Try to parse as number
+    const numValue = parseFloat(value);
+    return isNaN(numValue) ? '0.00' : numValue.toFixed(2);
+  }
+  
+  // Handle numeric values
+  if (typeof value === 'number') {
+    return isNaN(value) ? '0.00' : value.toFixed(2);
+  }
+  
+  // For any other type, return 0.00
+  return '0.00';
+};
+
 const RiskDetail: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -136,7 +165,7 @@ const RiskDetail: React.FC = () => {
                   key={year}
                   className={`px-2 py-1 rounded ${style}`}
                 >
-                  <strong>{year}</strong>: {score ?? "—"} / 100
+                  <strong>{year}</strong>: {formatNumber(score)} / 100
                 </span>
               );
             })}
@@ -177,21 +206,21 @@ const RiskDetail: React.FC = () => {
           <tbody>
             <tr>
               <td className="px-4 py-2">Financial Strength</td>
-              <td className="px-4 py-2">{data.financial_strength.subtotals?.["2023"]}</td>
-              <td className="px-4 py-2">{data.financial_strength.subtotals?.["2024"]}</td>
-              <td className="px-4 py-2">{data.financial_strength.subtotals?.["2025"]}</td>
+              <td className="px-4 py-2">{formatNumber(data.financial_strength.subtotals?.["2023"])}</td>
+              <td className="px-4 py-2">{formatNumber(data.financial_strength.subtotals?.["2024"])}</td>
+              <td className="px-4 py-2">{formatNumber(data.financial_strength.subtotals?.["2025"])}</td>
             </tr>
             <tr>
               <td className="px-4 py-2">Management Quality</td>
-              <td className="px-4 py-2">{data.management_quality.scores?.["2023"]}</td>
-              <td className="px-4 py-2">{data.management_quality.scores?.["2024"]}</td>
-              <td className="px-4 py-2">{data.management_quality.scores?.["2025"]}</td>
+              <td className="px-4 py-2">{formatNumber(data.management_quality.scores?.["2023"])}</td>
+              <td className="px-4 py-2">{formatNumber(data.management_quality.scores?.["2024"])}</td>
+              <td className="px-4 py-2">{formatNumber(data.management_quality.scores?.["2025"])}</td>
             </tr>
             <tr>
               <td className="px-4 py-2">Industry Risk</td>
-              <td className="px-4 py-2">{data.industry_risk.scores?.["2023"]}</td>
-              <td className="px-4 py-2">{data.industry_risk.scores?.["2024"]}</td>
-              <td className="px-4 py-2">{data.industry_risk.scores?.["2025"]}</td>
+              <td className="px-4 py-2">{formatNumber(data.industry_risk.scores?.["2023"])}</td>
+              <td className="px-4 py-2">{formatNumber(data.industry_risk.scores?.["2024"])}</td>
+              <td className="px-4 py-2">{formatNumber(data.industry_risk.scores?.["2025"])}</td>
             </tr>
           </tbody>
         </table>
@@ -226,10 +255,9 @@ const RiskDetail: React.FC = () => {
                   </td>
                   <td className="px-4 py-2">{details?.threshold ?? "—"}</td>
                   {["2023", "2024", "2025"].map((year) => {
-                    let val = (details as any)?.[`value_${year}`];
-                    if (typeof val === "string" && val.includes("%")) {
-                      val = val.replace("%", ""); // strip % sign from displayed values
-                    }
+                    const val = (details as any)?.[`value_${year}`];
+                    const formattedVal = formatNumber(val);
+                    
                     return (
                       <td key={year} className="px-4 py-2">
                         <div className="flex items-center justify-end relative">
@@ -241,7 +269,7 @@ const RiskDetail: React.FC = () => {
                             borderRadius: '50%',
                             backgroundColor: (details as any)?.[`red_flag_${year}`] ? '#ef4444' : '#22c55e'
                           }}></div>
-                          <span>{val ?? "—"}</span>
+                          <span>{formattedVal}</span>
                         </div>
                       </td>
                     );

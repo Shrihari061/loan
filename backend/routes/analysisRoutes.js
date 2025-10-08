@@ -186,17 +186,19 @@ router.get("/:leadId", async (req, res) => {
 });
 
 // 🔹 Get Ratios by customer_name & lead_id
-router.get("/:id/ratios", async (req, res) => {
+router.get("/:leadId/ratios", async (req, res) => {
   try {
-    const baseDoc = await ExtractedValues.findById(req.params.id, {
-      customer_name: 1,
-      lead_id: 1,
-    });
-    if (!baseDoc) return res.status(404).json({ message: "Company not found" });
+    const lead_id = req.params.leadId;
+    const leadDoc = await Lead.findById(lead_id);
+
+    if (!leadDoc) return res.status(404).json({ message: "Lead not found" });
+
+    const company_name = leadDoc.business_name;
+    const actualLeadId = leadDoc.lead_id;
 
     const ratioDoc = await Ratios.findOne({
-      customer_name: baseDoc.customer_name,
-      lead_id: baseDoc.lead_id,
+      customer_name: company_name,
+      lead_id: actualLeadId,
     });
 
     if (!ratioDoc) {

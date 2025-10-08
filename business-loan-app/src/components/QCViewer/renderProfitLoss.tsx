@@ -1,15 +1,25 @@
-import React from 'react';
-import RenderHeading from './RenderHeading';
-import RenderRow from './RenderRow';
-import RenderFlexibleGroup from './RenderFlexibleGroup';
-import type { AnalysisData } from './types';
+import React from "react";
+import RenderHeading from "./RenderHeading";
+import RenderRow from "./RenderRow";
+import RenderFlexibleGroup from "./RenderFlexibleGroup";
+import type { AnalysisData } from "./types";
 
 interface RenderProfitLossProps {
   analysisData: AnalysisData;
-  selectedYear: string;
-  updateFieldValue: (path: string, year: string, newValue: string) => void;
-  updateFlexibleItem: (path: string, index: number, year: string, newValue: string) => void;
-  getValueInputClass: (val: string | number | null | undefined, emphasize?: boolean) => string;
+  selectedYear?: string;
+  updateFieldValue?: (path: string, year: string, newValue: string) => void;
+  updateFlexibleItem?: (
+    path: string,
+    index: number,
+    year: string,
+    newValue: string
+  ) => void;
+  getValueInputClass?: (
+    val: string | number | null | undefined,
+    emphasize?: boolean
+  ) => string;
+  isMultiYear?: boolean;
+  isReadOnly?: boolean;
 }
 
 const renderProfitLoss: React.FC<RenderProfitLossProps> = ({
@@ -17,7 +27,9 @@ const renderProfitLoss: React.FC<RenderProfitLossProps> = ({
   selectedYear,
   updateFieldValue,
   updateFlexibleItem,
-  getValueInputClass
+  getValueInputClass,
+  isMultiYear = false,
+  isReadOnly = false,
 }) => {
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -36,14 +48,33 @@ const renderProfitLoss: React.FC<RenderProfitLossProps> = ({
               <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">
                 Item
               </th>
-              <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
-                {selectedYear}
-              </th>
+              {isMultiYear ? (
+                <>
+                  <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
+                    FY2023
+                  </th>
+                  <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
+                    FY2024
+                  </th>
+                  <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
+                    FY2025
+                  </th>
+                </>
+              ) : (
+                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
+                  {selectedYear}
+                </th>
+              )}
             </tr>
           </thead>
           <tbody>
             {/* INCOME */}
-            <RenderHeading label="INCOME" indentLevel={0} isRedHeading={true} />
+            <RenderHeading
+              label="INCOME"
+              indentLevel={0}
+              isRedHeading={true}
+              isMultiYear={isMultiYear}
+            />
             <RenderRow
               fieldPath="profitLoss.revenueFromOperations"
               indentLevel={1}
@@ -51,6 +82,8 @@ const renderProfitLoss: React.FC<RenderProfitLossProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="profitLoss.otherIncomeNet"
@@ -59,6 +92,8 @@ const renderProfitLoss: React.FC<RenderProfitLossProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="profitLoss.totalIncome"
@@ -68,10 +103,17 @@ const renderProfitLoss: React.FC<RenderProfitLossProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
 
             {/* EXPENSES */}
-            <RenderHeading label="EXPENSES" indentLevel={0} isRedHeading={true} />
+            <RenderHeading
+              label="EXPENSES"
+              indentLevel={0}
+              isRedHeading={true}
+              isMultiYear={isMultiYear}
+            />
             <RenderRow
               fieldPath="profitLoss.coreOperatingCosts"
               indentLevel={1}
@@ -79,6 +121,8 @@ const renderProfitLoss: React.FC<RenderProfitLossProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="profitLoss.employeeBenefitExpenses"
@@ -87,6 +131,8 @@ const renderProfitLoss: React.FC<RenderProfitLossProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="profitLoss.depreciationAndAmortizationExpenses"
@@ -95,6 +141,8 @@ const renderProfitLoss: React.FC<RenderProfitLossProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="profitLoss.financeCost"
@@ -103,6 +151,8 @@ const renderProfitLoss: React.FC<RenderProfitLossProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="profitLoss.costOfTechnicalSubContractors"
@@ -111,6 +161,8 @@ const renderProfitLoss: React.FC<RenderProfitLossProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="profitLoss.travelExpenses"
@@ -119,6 +171,8 @@ const renderProfitLoss: React.FC<RenderProfitLossProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="profitLoss.communicationExpenses"
@@ -127,6 +181,8 @@ const renderProfitLoss: React.FC<RenderProfitLossProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="profitLoss.consultancyAndProfessionalCharges"
@@ -135,6 +191,8 @@ const renderProfitLoss: React.FC<RenderProfitLossProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="profitLoss.otherExpensesAggregated"
@@ -143,6 +201,8 @@ const renderProfitLoss: React.FC<RenderProfitLossProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="profitLoss.exceptionalItemsNet"
@@ -151,6 +211,8 @@ const renderProfitLoss: React.FC<RenderProfitLossProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="profitLoss.totalExpenses"
@@ -160,10 +222,17 @@ const renderProfitLoss: React.FC<RenderProfitLossProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
 
             {/* PROFIT AND TAX */}
-            <RenderHeading label="PROFIT AND TAX" indentLevel={0} isRedHeading={true} />
+            <RenderHeading
+              label="PROFIT AND TAX"
+              indentLevel={0}
+              isRedHeading={true}
+              isMultiYear={isMultiYear}
+            />
             <RenderRow
               fieldPath="profitLoss.profitBeforeTax"
               indentLevel={1}
@@ -172,10 +241,16 @@ const renderProfitLoss: React.FC<RenderProfitLossProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
 
             {/* Tax Expense */}
-            <RenderHeading label="Tax Expense" indentLevel={1} />
+            <RenderHeading
+              label="Tax Expense"
+              indentLevel={1}
+              isMultiYear={isMultiYear}
+            />
             <RenderRow
               fieldPath="profitLoss.currentTax"
               indentLevel={2}
@@ -183,6 +258,8 @@ const renderProfitLoss: React.FC<RenderProfitLossProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="profitLoss.deferredTax"
@@ -191,6 +268,8 @@ const renderProfitLoss: React.FC<RenderProfitLossProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
 
             <RenderRow
@@ -201,6 +280,8 @@ const renderProfitLoss: React.FC<RenderProfitLossProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="profitLoss.totalComprehensiveIncomeForTheYear"
@@ -210,10 +291,17 @@ const renderProfitLoss: React.FC<RenderProfitLossProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
 
             {/* EARNINGS PER SHARE */}
-            <RenderHeading label="EARNINGS PER SHARE" indentLevel={0} isRedHeading={true} />
+            <RenderHeading
+              label="EARNINGS PER SHARE"
+              indentLevel={0}
+              isRedHeading={true}
+              isMultiYear={isMultiYear}
+            />
             <RenderRow
               fieldPath="profitLoss.earningsPerShare.basic"
               indentLevel={1}
@@ -221,6 +309,8 @@ const renderProfitLoss: React.FC<RenderProfitLossProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="profitLoss.earningsPerShare.diluted"
@@ -229,6 +319,8 @@ const renderProfitLoss: React.FC<RenderProfitLossProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
 
             <RenderFlexibleGroup
@@ -238,6 +330,8 @@ const renderProfitLoss: React.FC<RenderProfitLossProps> = ({
               selectedYear={selectedYear}
               updateFlexibleItem={updateFlexibleItem}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
           </tbody>
         </table>

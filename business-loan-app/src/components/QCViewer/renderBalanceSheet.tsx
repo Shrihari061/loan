@@ -1,15 +1,25 @@
-import React from 'react';
-import RenderHeading from './RenderHeading';
-import RenderRow from './RenderRow';
-import RenderFlexibleGroup from './RenderFlexibleGroup';
-import type { AnalysisData } from './types';
+import React from "react";
+import RenderHeading from "./RenderHeading";
+import RenderRow from "./RenderRow";
+import RenderFlexibleGroup from "./RenderFlexibleGroup";
+import type { AnalysisData } from "./types";
 
 interface RenderBalanceSheetProps {
   analysisData: AnalysisData;
-  selectedYear: string;
-  updateFieldValue: (path: string, year: string, newValue: string) => void;
-  updateFlexibleItem: (path: string, index: number, year: string, newValue: string) => void;
-  getValueInputClass: (val: string | number | null | undefined, emphasize?: boolean) => string;
+  selectedYear?: string;
+  updateFieldValue?: (path: string, year: string, newValue: string) => void;
+  updateFlexibleItem?: (
+    path: string,
+    index: number,
+    year: string,
+    newValue: string
+  ) => void;
+  getValueInputClass?: (
+    val: string | number | null | undefined,
+    emphasize?: boolean
+  ) => string;
+  isMultiYear?: boolean;
+  isReadOnly?: boolean;
 }
 
 const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
@@ -17,7 +27,9 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
   selectedYear,
   updateFieldValue,
   updateFlexibleItem,
-  getValueInputClass
+  getValueInputClass,
+  isMultiYear = false,
+  isReadOnly = false,
 }) => {
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden">
@@ -36,17 +48,39 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200">
                 Item
               </th>
-              <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
-                {selectedYear}
-              </th>
+              {isMultiYear ? (
+                <>
+                  <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
+                    2023
+                  </th>
+                  <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
+                    2024
+                  </th>
+                  <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
+                    2025
+                  </th>
+                </>
+              ) : (
+                <th className="px-4 py-3 text-right text-sm font-semibold text-gray-700 border-b border-gray-200">
+                  {selectedYear}
+                </th>
+              )}
             </tr>
           </thead>
           <tbody>
             {/* ASSETS */}
-            <RenderHeading label="ASSETS" indentLevel={0} isRedHeading={true} />
-            
+            <RenderHeading
+              label="ASSETS"
+              indentLevel={0}
+              isRedHeading={true}
+              isMultiYear={isMultiYear}
+            />
             {/* Non-current Assets */}
-            <RenderHeading label="Non-current Assets" indentLevel={1} />
+            <RenderHeading
+              label="Non-current Assets"
+              indentLevel={1}
+              isMultiYear={isMultiYear}
+            />
             <RenderRow
               fieldPath="balanceSheet.nonCurrentAssets.propertyPlantAndEquipment"
               indentLevel={2}
@@ -54,6 +88,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.nonCurrentAssets.rightOfUseAssets"
@@ -62,6 +98,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.nonCurrentAssets.capitalWorkInProgress"
@@ -70,6 +108,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.nonCurrentAssets.goodwill"
@@ -78,6 +118,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.nonCurrentAssets.financialAssetsInvestments"
@@ -86,6 +128,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.nonCurrentAssets.financialAssetsLoans"
@@ -94,6 +138,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.nonCurrentAssets.otherFinancialAssets"
@@ -102,6 +148,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.nonCurrentAssets.deferredTaxAssetsNet"
@@ -110,6 +158,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.nonCurrentAssets.incomeTaxAssetsNet"
@@ -118,6 +168,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.nonCurrentAssets.otherNonCurrentAssets"
@@ -126,6 +178,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.nonCurrentAssets.intangibleAssets"
@@ -134,6 +188,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.nonCurrentAssets.total"
@@ -143,6 +199,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderFlexibleGroup
               parentPath="balanceSheet.nonCurrentAssets.flexibleGroupItems"
@@ -151,10 +209,15 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFlexibleItem={updateFlexibleItem}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
-
             {/* Current Assets */}
-            <RenderHeading label="Current Assets" indentLevel={1} />
+            <RenderHeading
+              label="Current Assets"
+              indentLevel={1}
+              isMultiYear={isMultiYear}
+            />
             <RenderRow
               fieldPath="balanceSheet.currentAssets.financialAssetsInvestments"
               indentLevel={2}
@@ -162,6 +225,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.currentAssets.tradeReceivables"
@@ -170,6 +235,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.currentAssets.cashAndCashEquivalents"
@@ -178,6 +245,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.currentAssets.financialAssetsLoans"
@@ -186,6 +255,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.currentAssets.otherFinancialAssets"
@@ -194,6 +265,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.currentAssets.incomeTaxAssetsNet"
@@ -202,6 +275,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.currentAssets.otherCurrentAssets"
@@ -210,6 +285,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.currentAssets.total"
@@ -219,6 +296,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderFlexibleGroup
               parentPath="balanceSheet.currentAssets.flexibleGroupItems"
@@ -227,8 +306,9 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFlexibleItem={updateFlexibleItem}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
-
             <RenderRow
               fieldPath="balanceSheet.totalAssets"
               indentLevel={1}
@@ -237,13 +317,22 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
-
             {/* EQUITY AND LIABILITIES */}
-            <RenderHeading label="EQUITY AND LIABILITIES" indentLevel={0} isRedHeading={true} />
-
+            <RenderHeading
+              label="EQUITY AND LIABILITIES"
+              indentLevel={0}
+              isRedHeading={true}
+              isMultiYear={isMultiYear}
+            />
             {/* Equity */}
-            <RenderHeading label="Equity" indentLevel={1} />
+            <RenderHeading
+              label="Equity"
+              indentLevel={1}
+              isMultiYear={isMultiYear}
+            />
             <RenderRow
               fieldPath="balanceSheet.equityAndLiabilities.equityShareCapital"
               indentLevel={2}
@@ -251,6 +340,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.equityAndLiabilities.otherEquity"
@@ -259,6 +350,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.equityAndLiabilities.totalEquity"
@@ -268,6 +361,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderFlexibleGroup
               parentPath="balanceSheet.equityAndLiabilities.flexibleGroupItems"
@@ -276,13 +371,21 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFlexibleItem={updateFlexibleItem}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
-
             {/* Liabilities */}
-            <RenderHeading label="Liabilities" indentLevel={1} />
-
+            <RenderHeading
+              label="Liabilities"
+              indentLevel={1}
+              isMultiYear={isMultiYear}
+            />
             {/* Non-current Liabilities */}
-            <RenderHeading label="Non-current Liabilities" indentLevel={2} />
+            <RenderHeading
+              label="Non-current Liabilities"
+              indentLevel={2}
+              isMultiYear={isMultiYear}
+            />
             <RenderRow
               fieldPath="balanceSheet.equityAndLiabilities.nonCurrentLiabilities.financialLiabilitiesBorrowings"
               indentLevel={3}
@@ -290,6 +393,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.equityAndLiabilities.nonCurrentLiabilities.financialLiabilitiesLease"
@@ -298,6 +403,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.equityAndLiabilities.nonCurrentLiabilities.otherFinancialLiabilities"
@@ -306,6 +413,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.equityAndLiabilities.nonCurrentLiabilities.deferredTaxLiabilitiesNet"
@@ -314,6 +423,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.equityAndLiabilities.nonCurrentLiabilities.otherNonCurrentLiabilities"
@@ -322,6 +433,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.equityAndLiabilities.nonCurrentLiabilities.total"
@@ -331,6 +444,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderFlexibleGroup
               parentPath="balanceSheet.equityAndLiabilities.nonCurrentLiabilities.flexibleGroupItems"
@@ -339,10 +454,15 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFlexibleItem={updateFlexibleItem}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
-
             {/* Current Liabilities */}
-            <RenderHeading label="Current Liabilities" indentLevel={2} />
+            <RenderHeading
+              label="Current Liabilities"
+              indentLevel={2}
+              isMultiYear={isMultiYear}
+            />
             <RenderRow
               fieldPath="balanceSheet.equityAndLiabilities.currentLiabilities.financialLiabilitiesBorrowings"
               indentLevel={3}
@@ -350,6 +470,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.equityAndLiabilities.currentLiabilities.financialLiabilitiesLease"
@@ -358,6 +480,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.equityAndLiabilities.currentLiabilities.tradePayablesMicroAndSmall"
@@ -366,6 +490,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.equityAndLiabilities.currentLiabilities.tradePayablesOtherCreditors"
@@ -374,6 +500,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.equityAndLiabilities.currentLiabilities.otherFinancialLiabilities"
@@ -382,6 +510,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.equityAndLiabilities.currentLiabilities.otherCurrentLiabilities"
@@ -390,6 +520,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.equityAndLiabilities.currentLiabilities.provisionsCurrent"
@@ -398,6 +530,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.equityAndLiabilities.currentLiabilities.incomeTaxLiabilitiesNet"
@@ -406,6 +540,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderRow
               fieldPath="balanceSheet.equityAndLiabilities.currentLiabilities.total"
@@ -415,6 +551,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
             <RenderFlexibleGroup
               parentPath="balanceSheet.equityAndLiabilities.currentLiabilities.flexibleGroupItems"
@@ -423,8 +561,9 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFlexibleItem={updateFlexibleItem}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
-
             <RenderRow
               fieldPath="balanceSheet.totalEquityAndLiabilities"
               indentLevel={1}
@@ -433,8 +572,9 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFieldValue={updateFieldValue}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
-
             <RenderFlexibleGroup
               parentPath="balanceSheet.flexibleGroupItems"
               indentLevel={1}
@@ -442,6 +582,8 @@ const renderBalanceSheet: React.FC<RenderBalanceSheetProps> = ({
               selectedYear={selectedYear}
               updateFlexibleItem={updateFlexibleItem}
               getValueInputClass={getValueInputClass}
+              isMultiYear={isMultiYear}
+              isReadOnly={isReadOnly}
             />
           </tbody>
         </table>
