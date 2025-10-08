@@ -7,15 +7,16 @@ const Risk = require("../models/Risk");
 const Summary = require("../models/Summary");
 const fs = require("fs");
 const path = require("path");
-const { PythonShell } = require("python-shell");
 const { aiInstance } = require("../ai/aiInstance");
 const router = express.Router();
 const { jsonrepair } = require("jsonrepair");
 const {
-  FinancialRatioCalculator,
-} = require("../ai/ratioCalculatorWithFallback");
-const { RiskRatioCalculator } = require("../ai/riskRatioCalculator");
-const { getSummaries } = require("../ai/summariesPrompt");
+  calculateSummary,
+  calculateRisk,
+  calculateRatios,
+} = require("../ai/ratioAndAIUtils");
+const { ObjectId } = require("mongodb");
+
 // Multer setup - store files in memory to save directly in MongoDB
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
@@ -222,19 +223,119 @@ router.put("/:id/revert", async (req, res) => {
   }
 });
 
+async function triggerRatioGeneration(leadId, customerName, hasChanges) {
+  console.info(`🔄 Starting ratio generation for ${customerName} (${leadId})`);
+  console.info(`📊 Data changed: ${hasChanges}`);
+
+  try {
+    console.info(`📈 Calculating ratios for ${customerName}...`);
+    const ratiosResponse = await calculateRatios(leadId);
+    console.info(`✅ Ratios calculated successfully for ${customerName}`);
+
+    console.info(`⚖️ Calculating risk for ${customerName}...`);
+    const riskResponse = await calculateRisk(leadId);
+    console.info(`✅ Risk calculated successfully for ${customerName}`);
+
+    console.info(`📝 Generating summary for ${customerName}...`);
+    const summaryResponse = await calculateSummary(leadId);
+    console.info(`✅ Summary generated successfully for ${customerName}`);
+
+    console.info(`🎉 Ratio generation completed for ${customerName}`);
+    return {
+      status: "processing",
+      message: "Ratio generation initiated",
+      ratios: ratiosResponse,
+      risk: riskResponse,
+      summary: summaryResponse,
+    };
+  } catch (error) {
+    console.error(`❌ Ratio generation failed for ${customerName}:`, error);
+    throw error;
+  }
+}
+
 // 🔹 Approve a CQ record (set status = "approved")
 router.put("/:id/approve", async (req, res) => {
   try {
+    const { hasChanges } = req.body;
+    console.info(`🚀 Approving lead ${req.params.id} with hasChanges: ${hasChanges}`);
+
+    // First check if lead exists
+    const leadExists = await Lead.findById(req.params.id);
+    if (!leadExists) {
+      console.info(`❌ Lead not found for ID: ${req.params.id}`);
+      return res.status(404).json({ error: "Customer not found" });
+    }
+    
+    console.info(`✅ Lead found: ${leadExists.business_name || leadExists.customer_name || 'Unknown'}`);
+
+    // Update lead status
     const updated = await Lead.findByIdAndUpdate(
       req.params.id,
       { status: "Approved" },
       { new: true }
     );
 
-    if (!updated) return res.status(404).json({ error: "Customer not found" });
+    if (!updated) {
+      console.info(`❌ Failed to update lead status for ID: ${req.params.id}`);
+      return res.status(404).json({ error: "Customer not found" });
+    }
 
-    res.json({ message: "Customer approved successfully", record: updated });
+    // Get customer details for ratio generation check
+    const customerName = updated.business_name;
+    const leadId = updated.lead_id;
+    console.info(`👤 Processing approval for ${customerName} (${leadId})`);
+
+    // Check if Ratios, Risk, and Summary documents exist
+    console.info(`🔍 Checking existing ratios/risk/summaries for ${customerName}...`);
+    const ratiosExist = await Ratios.findOne({
+      customer_name: customerName,
+      lead_id: leadId,
+    });
+    const riskExist = await Risk.findOne({
+      customer_name: customerName,
+      lead_id: leadId,
+    });
+    const summaryExist = await Summary.findOne({
+      customer_name: customerName,
+      lead_id: leadId,
+    });
+
+    console.info(`📊 Existing documents - Ratios: ${!!ratiosExist}, Risk: ${!!riskExist}, Summary: ${!!summaryExist}`);
+
+    const needsGeneration =
+      hasChanges || !ratiosExist || !riskExist || !summaryExist;
+
+    if (needsGeneration) {
+      console.info(`🔄 Ratio generation needed for ${customerName} (hasChanges: ${hasChanges})`);
+      // Trigger ratio generation asynchronously
+      triggerRatioGeneration(leadId, customerName, hasChanges)
+        .then((result) => {
+          console.log(
+            `Ratio generation completed for ${customerName}:`,
+            result
+          );
+        })
+        .catch((error) => {
+          console.error(`❌ Ratio generation failed for ${customerName}:`, error);
+        });
+
+      res.json({
+        message:
+          "Customer approved successfully. Ratios are being generated in the background.",
+        record: updated,
+        ratioGeneration: "initiated",
+      });
+    } else {
+      console.info(`⏭️ Skipping ratio generation for ${customerName} - all documents exist and no changes`);
+      res.json({
+        message: "Customer approved successfully",
+        record: updated,
+        ratioGeneration: "skipped",
+      });
+    }
   } catch (err) {
+    console.error("❌ Approve error:", err);
     res.status(500).json({ error: "Failed to update status" });
   }
 });
@@ -242,6 +343,8 @@ router.put("/:id/approve", async (req, res) => {
 // 🔹 Reject a CQ record (set status = "rejected")
 router.put("/:id/reject", async (req, res) => {
   try {
+    console.info(`🚫 Rejecting lead ${req.params.id}`);
+    
     const updated = await Lead.findByIdAndUpdate(
       req.params.id,
       { status: "Rejected" },
@@ -250,8 +353,13 @@ router.put("/:id/reject", async (req, res) => {
 
     if (!updated) return res.status(404).json({ error: "Customer not found" });
 
-    res.json({ message: "Customer rejected successfully", record: updated });
+    console.info(`✅ Lead rejected successfully for ${updated.customer_name}`);
+    res.json({
+      message: "Customer rejected successfully",
+      record: updated,
+    });
   } catch (err) {
+    console.error("❌ Reject error:", err);
     res.status(500).json({ error: "Failed to update status" });
   }
 });
@@ -529,177 +637,6 @@ router.post("/:id/analyze", async (req, res) => {
       leadId: actualLeadId,
       customerName: customerName,
     });
-
-    // // Add timeout wrapper - increased to 20 minutes for OpenAI API calls
-    // let timeoutFired = false;
-    // const timeout = setTimeout(() => {
-    //   if (!timeoutFired) {
-    //     timeoutFired = true;
-    //     console.error('⏰ BFSI-LOS pipeline timeout after 20 minutes');
-    //     try {
-    //       // Update lead status to failed
-    //       Lead.findByIdAndUpdate(recordId, {
-    //         analysis_status: 'failed',
-    //         analysis_date: new Date().toISOString()
-    //       }).catch(err => console.error('Failed to update lead status on timeout:', err));
-    //     } catch (updateErr) {
-    //       console.error('Failed to update lead status on timeout:', updateErr);
-    //     }
-    //     if (!res.headersSent) {
-    //       res.status(500).json({ error: 'Pipeline execution timeout - analysis is taking longer than expected. Please try again later.' });
-    //     }
-    //   }
-    // }, 1200000); // 20 minute timeout
-
-    // Create a new PythonShell with real-time output logging
-    // const { PythonShell } = require('python-shell');
-
-    // // Configure Python shell with real-time output
-    // const pythonShell = new PythonShell('run_pipeline.py', {
-    //   mode: 'text',
-    //   pythonPath: 'python',
-    //   pythonOptions: ['-u'],
-    //   scriptPath: bfsiLosPath,
-    //   args: [tempDir]
-    // });
-
-    // Listen for Python output in real-time
-    // pythonShell.on('message', function (message) {
-    //   console.log(`🐍 Pipeline: ${message}`);
-    // });
-
-    // Handle completion
-    // pythonShell.end(async function (err, code, signal) {
-    //   if (timeoutFired) {
-    //     console.log('Pipeline completed after timeout was fired, ignoring results');
-    //     return;
-    //   }
-
-    //   clearTimeout(timeout);
-
-    //   if (err) {
-    //     console.error('❌ BFSI-LOS pipeline error:', err);
-    //     try {
-    //       // Update lead status to failed
-    //       await Lead.findByIdAndUpdate(recordId, {
-    //         analysis_status: 'failed',
-    //         analysis_date: new Date().toISOString()
-    //       });
-    //     } catch (updateErr) {
-    //       console.error('Failed to update lead status:', updateErr);
-    //     }
-    //     return res.status(500).json({ error: 'Pipeline execution failed', details: err.message });
-    //   }
-
-    //   console.log('🎯 Python pipeline completed successfully!');
-    //   console.log(`📊 Exit code: ${code}, Signal: ${signal}`);
-
-    //   try {
-    //     // Read the generated analysis files
-    //     const extractionsPath = path.join(tempDir, 'Extractions');
-    //     const extractedValuesPath = path.join(extractionsPath, 'extracted_values.json');
-    //     const ratiosPath = path.join(extractionsPath, 'ratios.json');
-    //     const riskRatingPath = path.join(extractionsPath, 'risk_rating.json');
-    //     const summariesPath = path.join(extractionsPath, 'summaries.json');
-
-    //     // 1. Save Extracted Values
-    //     if (fs.existsSync(extractedValuesPath)) {
-    //       const extractedData = JSON.parse(fs.readFileSync(extractedValuesPath, 'utf8'));
-
-    //       // Convert to the format expected by ExtractedValues model
-    //       const dataMap = new Map();
-    //       Object.entries(extractedData).forEach(([key, value]) => {
-    //         dataMap.set(key, {
-    //           value_2025: value.value_2025,
-    //           value_2024: value.value_2024,
-    //           value_2023: value.value_2023,
-    //           source: value.source,
-    //           unit: value.unit
-    //         });
-    //       });
-
-    //       const extractedValuesDoc = new ExtractedValues({
-    //         customer_name: customerName,
-    //         lead_id: actualLeadId, // ✅ use actual business lead_id
-    //         data: dataMap
-    //       });
-    //       await extractedValuesDoc.save();
-    //       console.log('Extracted values saved to MongoDB');
-    //     }
-
-    //     // 2. Save Ratios
-    //     if (fs.existsSync(ratiosPath)) {
-    //       const ratiosData = JSON.parse(fs.readFileSync(ratiosPath, 'utf8'));
-
-    //       const ratiosDoc = new Ratios({
-    //         customer_name: customerName,
-    //         lead_id: actualLeadId, // ✅
-    //         ...ratiosData
-    //       });
-    //       await ratiosDoc.save();
-    //       console.log('Ratios saved to MongoDB');
-    //     }
-
-    //     // 3. Save Risk Rating
-    //     if (fs.existsSync(riskRatingPath)) {
-    //       const riskData = JSON.parse(fs.readFileSync(riskRatingPath, 'utf8'));
-
-    //       const riskDoc = new Risk({
-    //         customer_name: customerName,
-    //         lead_id: actualLeadId, // ✅
-    //         weights: riskData.weights,
-    //         financial_strength: riskData.financial_strength,
-    //         management_quality: riskData.management_quality,
-    //         industry_risk: riskData.industry_risk,
-    //         total_score: riskData.total_score,
-    //         risk_bucket: riskData.risk_bucket,
-    //         red_flags: riskData.red_flags
-    //       });
-    //       await riskDoc.save();
-    //       console.log('Risk rating saved to MongoDB');
-    //     }
-
-    //     // 4. Save Summary
-    //     if (fs.existsSync(summariesPath)) {
-    //       const summaryData = JSON.parse(fs.readFileSync(summariesPath, 'utf8'));
-
-    //       // Parse the summary data to match the model structure
-    //       const summaryDoc = new Summary({
-    //         customer_name: customerName,
-    //         lead_id: actualLeadId, // ✅
-    //         "financial_summary_&_ratios": summaryData["financial_summary_&_ratios"] || "",
-    //         executive_summary: summaryData.executive_summary || "",
-    //         loan_purpose: summaryData.loan_purpose || "Purchase of Machinery",
-    //         swot_analysis: summaryData.swot_analysis || "Not disclosed",
-    //         security_offered: summaryData.security_offered || "Not disclosed",
-    //         recommendation: summaryData.recommendation || "Not disclosed"
-    //       });
-    //       await summaryDoc.save();
-    //       console.log('Summary saved to MongoDB');
-    //     }
-
-    //     // Update lead with analysis status (still by recordId = Mongo _id)
-    //     lead.analysis_status = 'completed';
-    //     lead.analysis_date = new Date().toISOString();
-    //     await lead.save();
-
-    //     // Clean up temporary files
-    //     fs.rmSync(tempDir, { recursive: true, force: true });
-
-    //     console.log(`BFSI-LOS pipeline completed for lead ${recordId}`);
-    //     res.json({
-    //       success: true,
-    //       message: 'Financial analysis completed successfully',
-    //       recordId: recordId,       // Mongo _id
-    //       leadId: actualLeadId,     // actual business lead_id
-    //       customerName: customerName
-    //     });
-
-    //   } catch (readError) {
-    //     console.error('Error reading analysis results:', readError);
-    //     res.status(500).json({ error: 'Failed to read analysis results', details: readError.message });
-    //   }
-    // });
   } catch (error) {
     console.error("Error in BFSI-LOS pipeline:", error);
     res
@@ -709,58 +646,6 @@ router.post("/:id/analyze", async (req, res) => {
 });
 
 // -------------------- CALCULATE RATIOS --------------------
-
-const calculateRatios = async (actualLeadId) => {
-  const extractedValues = await ExtractedValues.findOne({
-    lead_id: actualLeadId,
-  });
-  if (!extractedValues) {
-    return res.status(404).json({ error: "Extracted values not found" });
-  }
-  const customerName = extractedValues.customer_name;
-
-  const balanceSheet = extractedValues.balanceSheet;
-  const profitAndLoss =
-    extractedValues.profitLoss || extractedValues.profitAndLoss;
-  const cashFlows = extractedValues.cashFlow || extractedValues.cashFlows;
-
-  const ratioCalculator = new FinancialRatioCalculator();
-  const ratios = ratioCalculator.computeRatiosFromSchema({
-    balanceSheet,
-    profitAndLoss,
-    cashFlows,
-  });
-
-  const isExists = await Ratios.findOne({
-    customer_name: customerName,
-    lead_id: actualLeadId,
-  });
-
-  if (isExists) {
-    console.info("Updating existing ratios...");
-    await Ratios.findOneAndUpdate(
-      {
-        customer_name: customerName,
-        lead_id: actualLeadId,
-      },
-      {
-        ...ratios,
-      }
-    );
-  } else {
-    console.info("Creating new ratios...");
-    await Ratios.create({
-      customer_name: customerName,
-      lead_id: actualLeadId,
-      ...ratios,
-    });
-  }
-  return {
-    success: true,
-    message: "Ratios calculated successfully",
-    ratios: ratios,
-  };
-};
 
 router.post("/:leadId/ratios", async (req, res) => {
   try {
@@ -777,44 +662,6 @@ router.post("/:leadId/ratios", async (req, res) => {
 
 // -------------------- CALCULATE RISK --------------------
 
-const calculateRisk = async (actualLeadId) => {
-  const ratios = await Ratios.findOne({
-    lead_id: actualLeadId,
-  });
-  if (!ratios) {
-    throw new Error("Ratios not found");
-  }
-  const customerName = ratios.customer_name;
-  const riskCalculator = new RiskRatioCalculator();
-  const risk = riskCalculator.calculateRiskScores(ratios);
-  const isExists = await Risk.findOne({
-    customer_name: customerName,
-    lead_id: actualLeadId,
-  });
-  if (isExists) {
-    console.info("Updating existing risk...");
-    await Risk.findOneAndUpdate(
-      {
-        customer_name: customerName,
-        lead_id: actualLeadId,
-      },
-      risk
-    );
-  } else {
-    console.info("Creating new risk...");
-    await Risk.create({
-      lead_id: actualLeadId,
-      customer_name: customerName,
-      ...risk,
-    });
-  }
-  return {
-    success: true,
-    message: "Risk calculated successfully",
-    risk: risk,
-  };
-};
-
 router.post("/:leadId/risk", async (req, res) => {
   try {
     const actualLeadId = req.params.leadId;
@@ -829,77 +676,6 @@ router.post("/:leadId/risk", async (req, res) => {
 });
 
 // -------------------- CALCULATE SUMMARY --------------------
-
-const calculateSummary = async (actualLeadId) => {
-  const extractedValues = await ExtractedValues.findOne({
-    lead_id: actualLeadId,
-  });
-  if (!extractedValues) {
-    throw new Error("Extracted values not found");
-  }
-
-  const customerName = extractedValues.customer_name;
-
-  const ratios = await Ratios.findOne({
-    lead_id: actualLeadId,
-  });
-  if (!ratios) {
-    throw new Error("Ratios not found");
-  }
-
-  const risk = await Risk.findOne({
-    lead_id: actualLeadId,
-  });
-  if (!risk) {
-    throw new Error("Risk not found");
-  }
-  const summary = await getSummaries({
-    extractedValues: extractedValues,
-    ratios: ratios,
-    riskRating: risk,
-  });
-  const summaryJson = JSON.parse(summary.output_text);
-
-  const isExists = await Summary.findOne({
-    customer_name: customerName,
-    lead_id: actualLeadId,
-  });
-  if (isExists) {
-    console.info("Updating existing summary...");
-    await Summary.findOneAndUpdate(
-      { customer_name: customerName, lead_id: actualLeadId },
-      {
-        customer_name: customerName,
-        lead_id: actualLeadId,
-
-        executive_summary: summaryJson["executive_summary"],
-        "financial_summary_&_ratios": summaryJson["financial_summary_&_ratios"],
-        loan_purpose: summaryJson["loan_purpose"],
-        recommendation: summaryJson["recommendation"],
-        security_offered: summaryJson["security_offered"],
-        swot_analysis: summaryJson["swot_analysis"],
-      }
-    );
-  } else {
-    console.info("Creating new summary...");
-    await Summary.create({
-      customer_name: customerName,
-      lead_id: actualLeadId,
-      "financial_summary_&_ratios": summaryJson["financial_summary_&_ratios"],
-      executive_summary: summaryJson["executive_summary"],
-      loan_purpose: summaryJson["loan_purpose"],
-      swot_analysis: summaryJson["swot_analysis"],
-      security_offered: summaryJson["security_offered"],
-      recommendation: summaryJson["recommendation"],
-    });
-  }
-  return {
-    success: true,
-    message: "Summary calculated successfully",
-    summary: summary,
-  };
-};
-
 router.post("/:leadId/summary", async (req, res) => {
   try {
     const actualLeadId = req.params.leadId;
