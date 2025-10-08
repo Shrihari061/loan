@@ -24,7 +24,7 @@ const upload = multer({ storage });
 // -------------------- GET ALL LEADS --------------------
 router.get("/", async (req, res) => {
   try {
-    const leads = await Lead.find({}).sort({ created_date: -1 });
+    const leads = await Lead.find({}).sort({ created_date: -1 }).select('-financialDocuments');
     res.json(leads);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch leads" });
@@ -34,7 +34,7 @@ router.get("/", async (req, res) => {
 // -------------------- GET LEAD BY ID --------------------
 router.get("/:id", async (req, res) => {
   try {
-    const lead = await Lead.findById(req.params.id);
+    const lead = await Lead.findById(req.params.id).select('-financialDocuments');
     if (!lead) {
       return res.status(404).json({ error: "Lead not found" });
     }
@@ -261,7 +261,7 @@ router.put("/:id/approve", async (req, res) => {
     console.info(`🚀 Approving lead ${req.params.id} with hasChanges: ${hasChanges}`);
 
     // First check if lead exists
-    const leadExists = await Lead.findById(req.params.id);
+    const leadExists = await Lead.findById(req.params.id).select('-financialDocuments');
     if (!leadExists) {
       console.info(`❌ Lead not found for ID: ${req.params.id}`);
       return res.status(404).json({ error: "Customer not found" });
@@ -368,7 +368,7 @@ router.put("/:id/reject", async (req, res) => {
 router.post("/:id/analyze", async (req, res) => {
   try {
     const recordId = req.params.id; // Mongo _id of the record
-    const lead = await Lead.findById(recordId);
+    const lead = await Lead.findById(recordId).select('-financialDocuments');
 
     if (!lead) {
       return res.status(404).json({ error: "Lead not found" });
