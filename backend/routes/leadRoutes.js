@@ -24,7 +24,9 @@ const upload = multer({ storage });
 // -------------------- GET ALL LEADS --------------------
 router.get("/", async (req, res) => {
   try {
-    const leads = await Lead.find({}).sort({ created_date: -1 }).select('-financialDocuments');
+    const leads = await Lead.find({})
+      .sort({ created_date: -1 })
+      .select("-financialDocuments");
     res.json(leads);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch leads" });
@@ -34,7 +36,9 @@ router.get("/", async (req, res) => {
 // -------------------- GET LEAD BY ID --------------------
 router.get("/:id", async (req, res) => {
   try {
-    const lead = await Lead.findById(req.params.id).select('-financialDocuments');
+    const lead = await Lead.findById(req.params.id).select(
+      "-financialDocuments"
+    );
     if (!lead) {
       return res.status(404).json({ error: "Lead not found" });
     }
@@ -258,16 +262,24 @@ async function triggerRatioGeneration(leadId, customerName, hasChanges) {
 router.put("/:id/approve", async (req, res) => {
   try {
     const { hasChanges } = req.body;
-    console.info(`🚀 Approving lead ${req.params.id} with hasChanges: ${hasChanges}`);
+    console.info(
+      `🚀 Approving lead ${req.params.id} with hasChanges: ${hasChanges}`
+    );
 
     // First check if lead exists
-    const leadExists = await Lead.findById(req.params.id).select('-financialDocuments');
+    const leadExists = await Lead.findById(req.params.id).select(
+      "-financialDocuments"
+    );
     if (!leadExists) {
       console.info(`❌ Lead not found for ID: ${req.params.id}`);
       return res.status(404).json({ error: "Customer not found" });
     }
-    
-    console.info(`✅ Lead found: ${leadExists.business_name || leadExists.customer_name || 'Unknown'}`);
+
+    console.info(
+      `✅ Lead found: ${
+        leadExists.business_name || leadExists.customer_name || "Unknown"
+      }`
+    );
 
     // Update lead status
     const updated = await Lead.findByIdAndUpdate(
@@ -287,7 +299,9 @@ router.put("/:id/approve", async (req, res) => {
     console.info(`👤 Processing approval for ${customerName} (${leadId})`);
 
     // Check if Ratios, Risk, and Summary documents exist
-    console.info(`🔍 Checking existing ratios/risk/summaries for ${customerName}...`);
+    console.info(
+      `🔍 Checking existing ratios/risk/summaries for ${customerName}...`
+    );
     const ratiosExist = await Ratios.findOne({
       customer_name: customerName,
       lead_id: leadId,
@@ -301,13 +315,17 @@ router.put("/:id/approve", async (req, res) => {
       lead_id: leadId,
     });
 
-    console.info(`📊 Existing documents - Ratios: ${!!ratiosExist}, Risk: ${!!riskExist}, Summary: ${!!summaryExist}`);
+    console.info(
+      `📊 Existing documents - Ratios: ${!!ratiosExist}, Risk: ${!!riskExist}, Summary: ${!!summaryExist}`
+    );
 
     const needsGeneration =
       hasChanges || !ratiosExist || !riskExist || !summaryExist;
 
     if (needsGeneration) {
-      console.info(`🔄 Ratio generation needed for ${customerName} (hasChanges: ${hasChanges})`);
+      console.info(
+        `🔄 Ratio generation needed for ${customerName} (hasChanges: ${hasChanges})`
+      );
       // Trigger ratio generation asynchronously
       triggerRatioGeneration(leadId, customerName, hasChanges)
         .then((result) => {
@@ -317,7 +335,10 @@ router.put("/:id/approve", async (req, res) => {
           );
         })
         .catch((error) => {
-          console.error(`❌ Ratio generation failed for ${customerName}:`, error);
+          console.error(
+            `❌ Ratio generation failed for ${customerName}:`,
+            error
+          );
         });
 
       res.json({
@@ -327,7 +348,9 @@ router.put("/:id/approve", async (req, res) => {
         ratioGeneration: "initiated",
       });
     } else {
-      console.info(`⏭️ Skipping ratio generation for ${customerName} - all documents exist and no changes`);
+      console.info(
+        `⏭️ Skipping ratio generation for ${customerName} - all documents exist and no changes`
+      );
       res.json({
         message: "Customer approved successfully",
         record: updated,
@@ -344,7 +367,7 @@ router.put("/:id/approve", async (req, res) => {
 router.put("/:id/reject", async (req, res) => {
   try {
     console.info(`🚫 Rejecting lead ${req.params.id}`);
-    
+
     const updated = await Lead.findByIdAndUpdate(
       req.params.id,
       { status: "Rejected" },
@@ -368,7 +391,7 @@ router.put("/:id/reject", async (req, res) => {
 router.post("/:id/analyze", async (req, res) => {
   try {
     const recordId = req.params.id; // Mongo _id of the record
-    const lead = await Lead.findById(recordId).select('-financialDocuments');
+    const lead = await Lead.findById(recordId).select("-financialDocuments");
 
     if (!lead) {
       return res.status(404).json({ error: "Lead not found" });
@@ -629,6 +652,10 @@ router.post("/:id/analyze", async (req, res) => {
         analysis_date: new Date().toISOString(),
       });
     }
+
+    triggerRatioGeneration(actualLeadId, customerName, true).then(() => {
+      console.info("Ratios generated successfully");
+    });
 
     return res.json({
       success: true,
