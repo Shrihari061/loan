@@ -391,7 +391,7 @@ router.put("/:id/reject", async (req, res) => {
 router.post("/:id/analyze", async (req, res) => {
   try {
     const recordId = req.params.id; // Mongo _id of the record
-    const lead = await Lead.findById(recordId).select("-financialDocuments");
+    const lead = await Lead.findById(recordId);
 
     if (!lead) {
       return res.status(404).json({ error: "Lead not found" });
