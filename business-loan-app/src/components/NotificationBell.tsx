@@ -188,7 +188,7 @@ const NotificationBell: React.FC = () => {
             }}
           >
             <h3 style={{ margin: 0, fontSize: '16px', fontWeight: '600' }}>
-              Notifications
+            Lead Reminder
             </h3>
             {unreadCount > 0 && (
               <button
@@ -218,7 +218,7 @@ const NotificationBell: React.FC = () => {
                 No notifications
               </div>
             ) : (
-              notifications.map((notification) => (
+              notifications.map((notification, index) => (
                 <div
                   key={notification._id}
                   style={{
@@ -242,16 +242,16 @@ const NotificationBell: React.FC = () => {
                       style={{
                         width: '8px',
                         height: '8px',
-                        borderRadius: '50%',
-                        backgroundColor: getPriorityColor(notification.priority),
-                        marginTop: '6px',
+                        // borderRadius: '50%',
+                        // backgroundColor: getPriorityColor(notification.priority),
+                        // marginTop: '6px',
                         flexShrink: 0
                       }}
-                    />
-                    
+                    >{index + 1}.
+                    </div>
                     <div style={{ flex: 1 }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                        <h4
+                        {/* <h4
                           style={{
                             margin: '0 0 4px 0',
                             fontSize: '14px',
@@ -260,7 +260,18 @@ const NotificationBell: React.FC = () => {
                           }}
                         >
                           {notification.title}
-                        </h4>
+                   
+                        </h4> */}
+                          <p
+                        style={{
+                          margin: 0,
+                          fontSize: '13px',
+                          color: '#6b7280',
+                          lineHeight: '1.4'
+                        }}
+                      >
+                        {notification.message}
+                      </p>
                         <span
                           style={{
                             fontSize: '12px',
@@ -272,16 +283,6 @@ const NotificationBell: React.FC = () => {
                           {formatTimeAgo(notification.created_at)}
                         </span>
                       </div>
-                      <p
-                        style={{
-                          margin: 0,
-                          fontSize: '13px',
-                          color: '#6b7280',
-                          lineHeight: '1.4'
-                        }}
-                      >
-                        {notification.message}
-                      </p>
                     </div>
                   </div>
                 </div>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactDOM from "react-dom";
 import { FigtreeContainer, FigtreeTableContainer, FigtreeTableCell, FigtreeTable, NonSortableHeader } from './ReusableComponents';
+import { toast } from "sonner";
 
 interface DocumentStatus {
   status: "Pending" | "Approved" | "Declined";
@@ -128,6 +129,7 @@ const QCTable: React.FC = () => {
               entry._id === id ? { ...entry, status: "In progress" } : entry
             )
           );
+          toast.success("QC entry reverted successfully");
         } else {
           console.error("Failed to revert entry");
         }

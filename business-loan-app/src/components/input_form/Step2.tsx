@@ -1,5 +1,6 @@
 import { useState, type ChangeEvent } from "react";
 import axios from "axios";
+import { toast } from "sonner";
 
 const documentTypes = [
   { label: "Balance Sheet", audited: true, icon: "📊" },
@@ -212,26 +213,23 @@ export default function Step2({
 
         // Fetch results
         try {
-          const [riskResponse, summaryResponse] = await Promise.all([
-            axios.get(`http://localhost:5000/risk?lead_id=${response.data._id}`),
-            axios.get(`http://localhost:5000/summary?lead_id=${response.data._id}`),
-          ]);
+          // const [riskResponse, summaryResponse] = await Promise.all([
+          //   axios.get(`http://localhost:5000/risk?lead_id=${response.data._id}`),
+          //   axios.get(`http://localhost:5000/summary?lead_id=${response.data._id}`),
+          // ]);
 
-          const riskData = riskResponse.data[0];
-          const summaryData = summaryResponse.data[0];
+          // const riskData = riskResponse.data[0];
+          // const summaryData = summaryResponse.data[0];
 
-          const riskRating = riskData?.risk_bucket?.["2025"] || "N/A";
-          const executiveSummary = summaryData?.executive_summary || "Analysis completed";
+          // const riskRating = riskData?.risk_bucket?.["2025"] || "N/A";
+          // const executiveSummary = summaryData?.executive_summary || "Analysis completed";
 
-          alert(
-            `Application submitted successfully!\n\nFinancial Analysis Results:\n- Risk Rating: ${riskRating}\n- Executive Summary: ${executiveSummary.substring(
-              0,
-              100
-            )}...\n- Analysis Status: Completed`
+          toast.success(
+            `Application submitted successfully!\n\nFinancial Analysis Results:\n- Risk Rating: In Progress\n- Executive Summary: In Progress\n- Analysis Status: Completed`
           );
         } catch (fetchError) {
           console.error("Error fetching analysis results:", fetchError);
-          alert(
+          toast.error(
             "Application submitted successfully!\n\nFinancial analysis completed. Results are being processed."
           );
         }
@@ -239,7 +237,7 @@ export default function Step2({
         console.error("BFSI-LOS analysis failed:", analysisError);
         setAnalysisStatus("Financial analysis failed");
 
-        alert(
+        toast.info(
           "Application submitted successfully, but financial analysis failed. Please contact administrator."
         );
       } finally {
@@ -247,7 +245,7 @@ export default function Step2({
       }
     } catch (error) {
       console.error("Error submitting lead:", error);
-      alert("Failed to submit application. Check console for details.");
+      toast.error("Failed to submit application. Check console for details.");
       setIsAnalyzing(false);
       setAnalysisStatus("");
     }

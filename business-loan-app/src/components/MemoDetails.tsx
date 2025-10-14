@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import axios from "axios";
+import { toast } from "sonner";
 
 export default function MemoDetails() {
   const { id } = useParams<{ id: string }>();
@@ -24,10 +25,10 @@ export default function MemoDetails() {
         status: "Approved",
       });
       setMemo((prev) => (prev ? { ...prev, status: "Approved" } : null));
-      alert("Memo approved successfully!");
+      toast.success("Memo approved successfully!");
     } catch (error) {
       console.error("Error approving memo:", error);
-      alert("Failed to approve memo. Please try again.");
+      toast.error("Failed to approve memo. Please try again.");
       setIsActionDisabled(false);
     }
   };
@@ -40,10 +41,10 @@ export default function MemoDetails() {
         status: "Declined",
       });
       setMemo((prev) => (prev ? { ...prev, status: "Declined" } : null));
-      alert("Memo declined successfully!");
+      toast.success("Memo declined successfully!");
     } catch (error) {
       console.error("Error declining memo:", error);
-      alert("Failed to decline memo. Please try again.");
+      toast.error("Failed to decline memo. Please try again.");
       setIsActionDisabled(false);
     }
   };

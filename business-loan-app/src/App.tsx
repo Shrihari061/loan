@@ -24,6 +24,7 @@ import Input from './components/input_form/Input';
 import unityBankLogo from './assets/unity-bank-logo.svg';
 import NotificationBell from './components/NotificationBell';
 import Group50Icon from './assets/Group50.svg';
+import { Toaster } from 'sonner';
 
 // Add new nav item here
 const navItems = [
@@ -214,7 +215,7 @@ const Layout: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <div className="ml-[220px] p-8 w-full" style={{ 
+      <div className="ml-[220px] p-8 w-full font-figtree" style={{ 
         backgroundColor: '#f8f6f1', 
         marginTop: '60px', 
         minHeight: '100vh',
@@ -246,6 +247,7 @@ const Layout: React.FC = () => {
 const App: React.FC = () => (
   <Router>
     <Layout />
+    <Toaster richColors closeButton position="top-center" duration={3000} />
   </Router>
 );
 

@@ -12,7 +12,8 @@ import {
   Cell,
   Legend,
   BarChart,
-  Bar
+  Bar,
+  Label
 } from 'recharts';
 import { TrendingUp, FileText, CheckCircle, XCircle, Coins } from 'lucide-react';
 import { FigtreeContainer, FigtreeCard, FigtreeHeading } from './ReusableComponents';
@@ -232,6 +233,7 @@ const Dashboard: React.FC = () => {
                   tick={{ fontSize: 13 }}
                   tickMargin={10}
                   width={40}
+                  label={{ value: '₹ Crores', position: 'left', angle: -90 }}
                 />
                 <Tooltip />
                 <Line type="monotone" dataKey="value" stroke="#1D4ED8" strokeWidth={2} />
@@ -261,7 +263,17 @@ const Dashboard: React.FC = () => {
                 <YAxis
                   tick={{ fontSize: 13 }}
                   tickMargin={15}
-                />
+                  label={ <Label
+                    className="custom-position"
+                    offset={5}
+                    position={{
+                      x: 15,
+                      y: 75
+                    }}
+                    value="No. of Applications"
+                    angle={-90}
+                  />}
+                />           
                 <Tooltip />
                 <Bar dataKey="value" fill="#1D4ED8" barSize={12} radius={[4, 4, 0, 0]} />
               </BarChart>
@@ -281,7 +293,7 @@ const Dashboard: React.FC = () => {
             boxShadow: '0 4px 13px 2px rgba(0, 0, 0, 0.07)',
             padding: '24px'
           }}>
-            <h2 className="text-lg font-semibold mb-4 text-center" style={{ color: '#1F1F1F' }}>Risk Ratio</h2>
+            <h2 className="text-lg font-semibold mb-4 text-center" style={{ color: '#1F1F1F' }}>Portfolio Distribution</h2>
             <p className="text-sm text-center mb-4" style={{ color: '#6B7280' }}>
               (Approved Applications)
             </p>
@@ -324,7 +336,7 @@ const Dashboard: React.FC = () => {
             width: '450px',
             height: '501px'
           }}>
-            <h2 className="text-lg font-semibold" style={{ color: '#1F1F1F' }}>Pending</h2>
+            <h2 className="text-lg font-semibold" style={{ color: '#1F1F1F' }}>Number of Applications Pending</h2>
             <div className="space-y-6 w-full">
               {pendingProgressData.map((item, idx) => (
                 <div key={idx} className="w-full">
@@ -415,7 +427,7 @@ const Dashboard: React.FC = () => {
               color: '#1F1F1F',
               margin: 0
             }}>
-              Monthly Breakdown
+              Month-wise Breakdown
             </h3>
             <button style={{
               width: '32px',
