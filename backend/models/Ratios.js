@@ -27,7 +27,8 @@ const RatiosSchema = new mongoose.Schema(
     "EBITDA Margin": { type: RatioDetailSchema, required: true },
     "Accounts Receivable Days": { type: RatioDetailSchema, required: true },
     "Accounts payable days": { type: RatioDetailSchema, required: true },
-    "Asset Turnover Ratio": { type: RatioDetailSchema, required: true }
+    "Asset Turnover Ratio": { type: RatioDetailSchema, required: true },
+    "Net Worth": { type: RatioDetailSchema, required: true },
   },
   { timestamps: true }
 );

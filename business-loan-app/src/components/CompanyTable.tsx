@@ -8,6 +8,7 @@ import {
   FigtreeTableCell,
   FigtreeTable,
 } from "./ReusableComponents";
+import {  round,  toNumber } from "lodash";
 
 type CompanyData = {
   _id: string;
@@ -129,12 +130,15 @@ const CompanyTable: React.FC = () => {
               }
             }
 
+            const netWorth = ratioDoc?.ratios.find((r) => r.name === "Net Worth")?.value_2025 ?? "0";
+
             return {
               ...company,
               leadObjId : leadDoc?._id,
-              debt_to_equity: debtToEquity,
-              dscr: dscr,
-              ratio_health: ratioHealth,
+              debt_to_equity:  round(toNumber(debtToEquity), 2),
+              dscr: round(toNumber(dscr), 2),
+              ratio_health: round(toNumber(ratioHealth),2),
+              net_worth: round(toNumber(netWorth),2),
             };
           });
 

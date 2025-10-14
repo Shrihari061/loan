@@ -24,7 +24,7 @@ const CompanyRatioAnalysis: React.FC = () => {
         const data = await res.json();
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const transformed: RatioItem[] = data.map((r: any) => ({
+        const transformed: RatioItem[] = data.filter((r: any) => r.name !== "Net Worth").map((r: any) => ({
           name: r.name,
           threshold: r.threshold,
           value_2023: r.value_2023 ?? null,

@@ -14,6 +14,7 @@ class FinancialRatioCalculator {
       "Accounts Receivable Days",
       "Accounts payable days",
       "Asset Turnover Ratio",
+      "Net Worth",
     ];
     this.years = [2025, 2024, 2023];
 
@@ -75,6 +76,11 @@ class FinancialRatioCalculator {
         value: 1.0,
         condition: "less_than",
         description: "<1.0",
+      },
+      "Net Worth": {
+        value: 0.0,
+        condition: "less_than",
+        description: "<0.0",
       },
     };
   }
@@ -671,6 +677,23 @@ class FinancialRatioCalculator {
     return totalAssets === 0 ? 0 : revenue / totalAssets;
   }
 
+  _calculateNetWorth(data, year) {
+    const totalAssets = this.getValue(data, "balanceSheet.totalAssets", year);
+    const currentLiabilities = this.getValue(
+      data,
+      "balanceSheet.equityAndLiabilities.currentLiabilities.total",
+      year
+    );
+    const nonCurrentLiabilities = this.getValue(
+      data,
+      "balanceSheet.equityAndLiabilities.nonCurrentLiabilities.total",
+      year
+    );
+    const totalLiabilities = currentLiabilities + nonCurrentLiabilities;
+    const netWorth = totalAssets - totalLiabilities;
+    return netWorth;
+  }
+
   // --- MAIN PUBLIC METHOD (Updated with Flagging Logic) ---
 
   computeRatiosFromSchema(schemaData) {
@@ -725,6 +748,9 @@ class FinancialRatioCalculator {
             break;
           case "Asset Turnover Ratio":
             value = this._calculateAssetTurnover(schemaData, year);
+            break;
+          case "Net Worth":
+            value = this._calculateNetWorth(schemaData, year);
             break;
         }
 

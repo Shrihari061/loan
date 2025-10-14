@@ -121,7 +121,7 @@ const calculateRatios = async (actualLeadId) => {
     lead_id: actualLeadId,
   });
   if (!extractedValues) {
-    return res.status(404).json({ error: "Extracted values not found" });
+    throw new Error("Extracted values not found");
   }
   const customerName = extractedValues.customer_name;
 
