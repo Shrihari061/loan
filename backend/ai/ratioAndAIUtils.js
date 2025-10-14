@@ -52,7 +52,8 @@ const calculateSummary = async (actualLeadId) => {
         "financial_summary_&_ratios": summaryJson["financial_summary_&_ratios"],
         loan_purpose: summaryJson["loan_purpose"],
         recommendation: summaryJson["recommendation"],
-        security_offered: summaryJson["security_offered"],
+        security_offered:
+          "security_offered: Primary Security: , Collateral Security: , Personal Guarantees:",
         swot_analysis: summaryJson["swot_analysis"],
       }
     );
@@ -65,7 +66,8 @@ const calculateSummary = async (actualLeadId) => {
       executive_summary: summaryJson["executive_summary"],
       loan_purpose: summaryJson["loan_purpose"],
       swot_analysis: summaryJson["swot_analysis"],
-      security_offered: summaryJson["security_offered"],
+      security_offered:
+        "security_offered: Primary Security: , Collateral Security: , Personal Guarantees:",
       recommendation: summaryJson["recommendation"],
     });
   }

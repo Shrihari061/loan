@@ -16,6 +16,7 @@ const {
   calculateRatios,
 } = require("../ai/ratioAndAIUtils");
 const { ObjectId } = require("mongodb");
+const cinData = require("../data/cinData.json");
 
 // Multer setup - store files in memory to save directly in MongoDB
 const storage = multer.memoryStorage();
@@ -48,32 +49,58 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// -------------------- GET DATA BY LEAD ID (mock JSON) --------------------
-router.get("/:id/data", async (req, res) => {
+// -------------------- GET DATA BY CIN (mock JSON) --------------------
+router.get("/:cinId/data", async (req, res) => {
+
+  const STATIC_CONTACT_PERSONS = [
+    {
+      name: "Ashwini Shekhawat",
+      phone: "+91-98765-43210",
+      designation: "RM",
+    },
+    { name: "Sarah Johnson", phone: "+91-91234-56780", designation: "BM" },
+    { name: "Shrihari Rao", phone: "+91-87654-32109", designation: "RM" },
+    { name: "Emily Davis", phone: "+91-92345-67890", designation: "BM" },
+    { name: "Rajesh Kumar", phone: "+91-76543-21098", designation: "RM" },
+    { name: "Lisa Anderson", phone: "+91-93456-78901", designation: "BM" },
+    { name: "Robert Taylor", phone: "+91-94567-89012", designation: "RM" },
+    {
+      name: "Jennifer Martinez",
+      phone: "+91-95678-90123",
+      designation: "BM",
+    },
+    { name: "David Schwimmer", phone: "+91-96789-01234", designation: "RM" },
+    { name: "Monica Geller", phone: "+91-97890-12345", designation: "BM" },
+    { name: "Phoebe Buffay", phone: "+91-98901-23456", designation: "RM" },
+    { name: "Joey Tribbiani", phone: "+91-99012-34567", designation: "BM" },
+    { name: "Chandler Bing", phone: "+91-90123-45678", designation: "RM" },
+    { name: "Rachel Green", phone: "+91-91234-56789", designation: "BM" },
+  ];
+
+  const STATIC_LOAN_TYPES = ["Term Loan", "OD/CC", "LC", "BG"];
+
   try {
-    const recordId = req.params.id;
+    // Define the static data to be merged into every response
 
-    // Load JSON file
-    const mockDataPath = path.join(__dirname, "../data/mockData.json");
-    const raw = fs.readFileSync(mockDataPath, "utf8");
-    const mockData = JSON.parse(raw);
+    const cinId = req.params.cinId; // Capture the CIN from the URL path
 
-    // Verify CIN in the JSON
-    if (!mockData.company || !mockData.company.cin) {
-      return res.status(500).json({ error: "Mock data is missing CIN field" });
-    }
+    const companyData = cinData[cinId];
 
-    // Here, treat recordId as CIN (or adapt if your ID is Mongo _id)
-    if (recordId !== mockData.company.cin) {
+    // 2. Check if data exists for the provided CIN
+    if (!companyData) {
       return res.status(404).json({ error: "No data found for this CIN" });
     }
 
+    // 3. If found, merge dynamic company data with the static lists
     res.json({
       success: true,
-      company: mockData.company,
-      directors: mockData.directors,
-      contactPersons: mockData.contactPersons,
-      loanTypes: mockData.loanTypes,
+      // Dynamic Data from cinData
+      company: companyData.company,
+      directors: companyData.directors,
+
+      // Static Data injected from constants
+      contactPersons: STATIC_CONTACT_PERSONS,
+      loanTypes: STATIC_LOAN_TYPES,
     });
   } catch (err) {
     console.error("Error fetching mock data:", err);

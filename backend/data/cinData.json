@@ -1,0 +1,120 @@
+{
+  "U12345MH2020PLC123456": {
+    "company": {
+      "name": "Infosys",
+      "registrationNo": "U12345MH2020PLC123456",
+      "incorporatedDate": "02-07-1981",
+      "email": "askus@infosys.com",
+      "address": {
+        "line1": "No. 44/97 A, Next to SBI Bank, Hosur Road, Electronic City",
+        "city": "Bengaluru",
+        "state": "Karnataka-560100",
+        "country": "India"
+      }
+    },
+    "directors": [
+      { "din": "00041245", "firstName": "Nandan", "lastName": "Nilekani" },
+      { "din": "01876159", "firstName": "Salil", "lastName": "Parekh" },
+      { "din": "00019437", "firstName": "Bobby", "lastName": "Parekh" }
+    ]
+  },
+
+  "L74899DL1995PLC070609": {
+    "company": {
+      "name": "Bharti Airtel Limited (Airtel)",
+      "registrationNo": "L74899DL1995PLC070609",
+      "incorporatedDate": "07-07-1995",
+      "email": "compliance.officer@bharti.in / ir@bharti.in",
+      "address": {
+        "line1": "Bharti Crescent, 1 Nelson Mandela Road, Vasant Kunj, Phase II",
+        "city": "New Delhi",
+        "state": "Delhi-110070",
+        "country": "India"
+      }
+    },
+    "directors": [
+      { "din": "08624055", "firstName": "Arjan Kumar", "lastName": "Sikri" },
+      { "din": "00121638", "firstName": "Douglas Anderson", "lastName": "Baillie" }
+    ]
+  },
+
+  "L23201MH1959GOI011388": {
+    "company": {
+      "name": "Indian Oil Corporation Limited (IndianOil)",
+      "registrationNo": "L23201MH1959GOI011388",
+      "incorporatedDate": "30-06-1959",
+      "email": "investors@indianoil.in",
+      "address": {
+        "line1": "IndianOil Bhavan, G-9, Ali Yavar Jung Marg, Bandra (East)",
+        "city": "Mumbai",
+        "state": "Maharashtra-400051",
+        "country": "India"
+      }
+    },
+    "directors": [
+      { "din": "10531397", "firstName": "Rashmi", "lastName": "Govil" },
+      { "din": "09224177", "firstName": "Arvind", "lastName": "Kumar" }
+    ]
+  },
+
+  "L29308MH1954PLC009371": {
+    "company": {
+      "name": "Voltas Limited",
+      "registrationNo": "L29308MH1954PLC009371",
+      "incorporatedDate": "06-12-1954",
+      "email": "vcare@voltas.com",
+      "address": {
+        "line1": "Voltas House ‘A’, Dr. Babasaheb Ambedkar Road, Chinchpokli",
+        "city": "Mumbai",
+        "state": "Maharashtra-400033",
+        "country": "India"
+      }
+    },
+    "directors": [
+      { "din": "00024713", "firstName": "Noel Naval", "lastName": "Tata" },
+      { "din": "00026206", "firstName": "Zubin Soli", "lastName": "Dubash" },
+      { "din": "00036827", "firstName": "Vinayak Kashinath", "lastName": "Deshpande" },
+      { "din": "02144558", "firstName": "Saurabh Mahesh", "lastName": "Agrawal" }
+    ]
+  },
+
+  "L24239MH1944PLC007330": {
+    "company": {
+      "name": "Abbott India Limited",
+      "registrationNo": "L24239MH1944PLC007330",
+      "incorporatedDate": "22-08-1944",
+      "email": "investorrelations.india@abbott.com",
+      "address": {
+        "line1": "Unit No.3, Corporate Park, Sion-Trombay Road, Chembur",
+        "city": "Mumbai",
+        "state": "Maharashtra-400071",
+        "country": "India"
+      }
+    },
+    "directors": [
+      { "din": "10658884", "firstName": "Alison", "lastName": "Davies" },
+      { "din": "06943493", "firstName": "Anisha", "lastName": "Motwani" },
+      { "din": "07900178", "firstName": "Rajiv Balkrishna", "lastName": "Sonalker" },
+      { "din": "08753233", "firstName": "Anil", "lastName": "Joseph" }
+    ]
+  },
+
+  "L27203OR1981GOI000920": {
+    "company": {
+      "name": "National Aluminium Company Limited (NALCO)",
+      "registrationNo": "L27203OR1981GOI000920",
+      "incorporatedDate": "07-01-1981",
+      "email": "cmd@nalcoindia.co.in",
+      "address": {
+        "line1": "NALCO Bhawan, P/1, Nayapalli",
+        "city": "Bhubaneswar",
+        "state": "Odisha-751013",
+        "country": "India"
+      }
+    },
+    "directors": [
+      { "din": "08665585", "firstName": "Brijendra Pratap", "lastName": "Singh" },
+      { "din": "08130130", "firstName": "Sadashiv", "lastName": "Samantaray" }
+    ]
+  }
+}
