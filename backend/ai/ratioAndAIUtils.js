@@ -53,7 +53,7 @@ const calculateSummary = async (actualLeadId) => {
         loan_purpose: summaryJson["loan_purpose"],
         recommendation: summaryJson["recommendation"],
         security_offered:
-          "security_offered: Primary Security: , Collateral Security: , Personal Guarantees:",
+          "Primary Security: , Collateral Security: , Personal Guarantees:",
         swot_analysis: summaryJson["swot_analysis"],
       }
     );
@@ -67,7 +67,7 @@ const calculateSummary = async (actualLeadId) => {
       loan_purpose: summaryJson["loan_purpose"],
       swot_analysis: summaryJson["swot_analysis"],
       security_offered:
-        "security_offered: Primary Security: , Collateral Security: , Personal Guarantees:",
+        "Primary Security: , Collateral Security: , Personal Guarantees:",
       recommendation: summaryJson["recommendation"],
     });
   }
