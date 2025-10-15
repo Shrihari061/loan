@@ -58,8 +58,8 @@ const RenderRow: React.FC<RenderRowProps> = ({
 
   // Helper function to render value cell
   const renderValueCell = (value: string) => {
-    const cellClass = `px-4 py-2 text-sm border-b text-right min-w-[140px] ${
-      isBold ? "bg-blue-50 border-t border-blue-200" : ""
+    const cellClass = `px-4 py-2 text-sm border-b border-gray-200 text-right min-w-[140px] ${
+      isBold ? "bg-blue-50 border-t border-gray-200" : ""
     }`;
 
     if (isReadOnly) {
@@ -88,7 +88,7 @@ const RenderRow: React.FC<RenderRowProps> = ({
   return (
     <tr className="hover:bg-gray-50">
       <td
-        className={`py-2 text-sm border-b text-left ${
+        className={`py-2 text-sm border-b border-gray-200 text-left ${
           isBold ? "font-bold text-gray-900" : "text-gray-900"
         }`}
         style={{ paddingLeft: `${16 + indentLevel * 24}px` }}
