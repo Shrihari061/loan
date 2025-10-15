@@ -1,7 +1,7 @@
 import React from "react";
 import { get } from "lodash";
 import type { AnalysisData, FieldValue } from "./types";
-import { formatValue, getValueColor } from "./utils";
+import { formatValue, formatValueForFrontend, getValueColor, normalizeValueForBackend } from "./utils";
 
 interface RenderRowProps {
   fieldPath: string;
@@ -58,14 +58,13 @@ const RenderRow: React.FC<RenderRowProps> = ({
 
   // Helper function to render value cell
   const renderValueCell = (value: string) => {
-    const cellClass = `px-4 py-2 text-sm border-b border-gray-200 text-right min-w-[140px] ${
-      isBold ? "bg-blue-50 border-t border-gray-200" : ""
-    }`;
+    const cellClass = `px-4 py-2 text-sm border-b border-gray-200 text-right min-w-[140px] ${isBold ? "bg-blue-50 border-t border-gray-200" : ""
+      }`;
 
     if (isReadOnly) {
       return (
         <td className={cellClass} style={{ color: getValueColor(value) }}>
-          {formatValue(value)}
+          {formatValueForFrontend(value)}
         </td>
       );
     } else {
@@ -73,10 +72,11 @@ const RenderRow: React.FC<RenderRowProps> = ({
         <td className={cellClass}>
           <input
             type="text"
-            value={value ?? ""}
-            onChange={(e) =>
-              updateFieldValue?.(fieldPath, selectedYear || "", e.target.value)
-            }
+            value={formatValueForFrontend(value) ?? ""}
+            onChange={(e) => {
+              const normalized = normalizeValueForBackend(value, e.target.value);
+              updateFieldValue?.(fieldPath, selectedYear || "", normalized);
+            }}
             className={getValueInputClass?.(value, isBold) || ""}
             placeholder="-"
           />
@@ -88,9 +88,8 @@ const RenderRow: React.FC<RenderRowProps> = ({
   return (
     <tr className="hover:bg-gray-50">
       <td
-        className={`py-2 text-sm border-b border-gray-200 text-left ${
-          isBold ? "font-bold text-gray-900" : "text-gray-900"
-        }`}
+        className={`py-2 text-sm border-b border-gray-200 text-left ${isBold ? "font-bold text-gray-900" : "text-gray-900"
+          }`}
         style={{ paddingLeft: `${16 + indentLevel * 24}px` }}
       >
         {displayLabel}

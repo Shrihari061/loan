@@ -392,7 +392,7 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
             />
 
             {/* Payments to acquire investments */}
-            <RenderHeading
+            {/* <RenderHeading
               label="Payments to acquire investments"
               indentLevel={1}
               isMultiYear={isMultiYear}
@@ -406,10 +406,10 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               getValueInputClass={getValueInputClass}
               isMultiYear={isMultiYear}
               isReadOnly={isReadOnly}
-            />
+            /> */}
 
             {/* Proceeds on sale of investments */}
-            <RenderHeading
+            {/* <RenderHeading
               label="Proceeds on sale of investments"
               indentLevel={1}
               isMultiYear={isMultiYear}
@@ -423,7 +423,7 @@ const renderCashFlow: React.FC<RenderCashFlowProps> = ({
               getValueInputClass={getValueInputClass}
               isMultiYear={isMultiYear}
               isReadOnly={isReadOnly}
-            />
+            /> */}
 
             <RenderRow
               fieldPath="cashFlow.netCashUsedInInvestingActivities"

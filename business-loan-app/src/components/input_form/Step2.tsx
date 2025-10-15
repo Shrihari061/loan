@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 
@@ -66,6 +66,17 @@ export default function Step2({
       return updated;
     });
 
+    // Clear auditor verification for the removed year
+    setAuditorVerified((prev) => {
+      const updated = { ...prev };
+      documentTypes.forEach((doc) => {
+        if (doc.audited) {
+          updated[`${doc.label}_${yearToRemove}`] = false;
+        }
+      });
+      return updated;
+    });
+
     if (currentDisplayYear === yearToRemove) {
       if (updatedYears.length > 0) {
         setCurrentDisplayYear(updatedYears[updatedYears.length - 1]);
@@ -93,6 +104,12 @@ export default function Step2({
       setUploadedFiles((prev) => {
         const currentFiles = prev[selectedDocument]?.[selectedYear] || [];
         const filesToKeep = currentFiles.filter((file) => !filesAddedInSession.includes(file));
+        if (filesToKeep.length === 0) {
+          setAuditorVerified((prevAud) => ({
+            ...prevAud,
+            [`${selectedDocument}_${selectedYear}`]: false,
+          }));
+        }
         return {
           ...prev,
           [selectedDocument]: {
@@ -126,6 +143,12 @@ export default function Step2({
     setUploadedFiles((prev) => {
       const updated = [...(prev[docLabel]?.[year] || [])];
       updated.splice(index, 1);
+      if (updated.length === 0) {
+        setAuditorVerified((prevAud) => ({
+          ...prevAud,
+          [`${docLabel}_${year}`]: false,
+        }));
+      }
       return {
         ...prev,
         [docLabel]: {
@@ -143,6 +166,10 @@ export default function Step2({
         ...(prev[docLabel] || {}),
         [year]: [],
       },
+    }));
+    setAuditorVerified((prev) => ({
+      ...prev,
+      [`${docLabel}_${year}`]: false,
     }));
   };
 
@@ -201,7 +228,7 @@ export default function Step2({
 
       // Step 2: Trigger BFSI-LOS pipeline
       setIsAnalyzing(true);
-      setAnalysisStatus("Starting financial analysis...");
+      setAnalysisStatus("Uploading the above files...");
 
       try {
         const analysisResponse = await axios.post(
@@ -209,7 +236,7 @@ export default function Step2({
         );
 
         console.log("BFSI-LOS analysis completed:", analysisResponse.data);
-        setAnalysisStatus("Financial analysis completed successfully!");
+        setAnalysisStatus("Files uploaded successfully!");
 
         // Fetch results
         try {
@@ -225,12 +252,12 @@ export default function Step2({
           // const executiveSummary = summaryData?.executive_summary || "Analysis completed";
 
           toast.success(
-            `Application submitted successfully!\n\nFinancial Analysis Results:\n- Risk Rating: In Progress\n- Executive Summary: In Progress\n- Analysis Status: Completed`
+            `Application submitted successfully!`
           );
         } catch (fetchError) {
           console.error("Error fetching analysis results:", fetchError);
           toast.error(
-            "Application submitted successfully!\n\nFinancial analysis completed. Results are being processed."
+            "Application submitted successfully!"
           );
         }
       } catch (analysisError) {
@@ -238,7 +265,7 @@ export default function Step2({
         setAnalysisStatus("Financial analysis failed");
 
         toast.info(
-          "Application submitted successfully, but financial analysis failed. Please contact administrator."
+          "Application submitted successfully!"
         );
       } finally {
         setIsAnalyzing(false);
@@ -367,7 +394,8 @@ export default function Step2({
                             <label className="flex items-center">
                               <input
                                 type="checkbox"
-                                checked={auditorVerified[`${doc.label}_${year}`] || false}
+                                checked={(uploadedFiles[doc.label]?.[year]?.length > 0) && (auditorVerified[`${doc.label}_${year}`] || false)}
+                                disabled={!(uploadedFiles[doc.label]?.[year]?.length > 0)}
                                 onChange={(e) =>
                                   setAuditorVerified((prev) => ({
                                     ...prev,
@@ -590,7 +618,7 @@ export default function Step2({
                 ></path>
               </svg>
             )}
-            {isAnalyzing ? "Analyzing..." : "Submit Application"}
+            {isAnalyzing ? "Uploading..." : "Submit Application"}
           </button>
 
           {!allAuditorsVerified && !isAnalyzing && (

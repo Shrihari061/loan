@@ -89,3 +89,60 @@ export const getValueInputClass = (
   } ${emphasize ? 'font-semibold' : ''}`;
 };
 
+/**
+ * Formats any number for frontend display
+ * Always shows negative numbers in parentheses
+ */
+export const formatValueForFrontend = (
+  value: string | number | null | undefined
+): string => {
+  if (value === null || value === undefined || value === '') return '-';
+
+  let numValue: number;
+
+  const strVal = String(value).trim();
+
+  // If it's in parentheses like "(123)" → parse as negative number
+  if (/^\(.*\)$/.test(strVal)) {
+    numValue = Number(strVal.replace(/[(), ]/g, '')) * -1;
+  } else {
+    numValue = Number(strVal.replace(/[, ]/g, ''));
+  }
+
+  if (isNaN(numValue)) return strVal;
+
+  // Always display negative numbers in parentheses
+  if (numValue < 0) {
+    return `(${Math.abs(numValue).toLocaleString('en-IN')})`;
+  }
+
+  return numValue.toLocaleString('en-IN'); // positive number
+};
+
+/**
+ * Converts edited frontend value to backend value
+ * Preserves original format (minus sign or parentheses)
+ */
+export const normalizeValueForBackend = (
+  originalBackendValue: string | number | null | undefined,
+  editedFrontendValue: string
+): string => {
+  if (!editedFrontendValue) return '';
+
+  const editedNum = Number(editedFrontendValue.replace(/[(), ]/g, ''));
+  if (isNaN(editedNum)) return editedFrontendValue;
+
+  const originalStr = String(originalBackendValue ?? '').trim();
+
+  // Determine original backend style
+  const usesParentheses = /^\(.*\)$/.test(originalStr);
+
+  // Update numeric value, preserve original sign/format
+  if (usesParentheses) {
+    return `(${Math.abs(editedNum).toLocaleString('en-IN')})`; // parentheses format
+  } else if (typeof originalBackendValue === 'number' && originalBackendValue < 0) {
+    return String(-Math.abs(editedNum)); // negative sign
+  } else {
+    return String(editedNum); // positive
+  }
+};

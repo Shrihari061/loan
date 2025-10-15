@@ -8,7 +8,7 @@ import {
   FigtreeTableCell,
   FigtreeTable,
 } from "./ReusableComponents";
-import {  round,  toNumber } from "lodash";
+import { round, toNumber } from "lodash";
 
 type CompanyData = {
   _id: string;
@@ -134,11 +134,11 @@ const CompanyTable: React.FC = () => {
 
             return {
               ...company,
-              leadObjId : leadDoc?._id,
-              debt_to_equity:  round(toNumber(debtToEquity), 2),
+              leadObjId: leadDoc?._id,
+              debt_to_equity: round(toNumber(debtToEquity), 2),
               dscr: round(toNumber(dscr), 2),
-              ratio_health: round(toNumber(ratioHealth),2),
-              net_worth: round(toNumber(netWorth),2),
+              ratio_health: round(toNumber(ratioHealth), 2),
+              net_worth: round(toNumber(netWorth), 2),
             };
           });
 
@@ -164,7 +164,16 @@ const CompanyTable: React.FC = () => {
     if (value === null || value === undefined || value === "N/A") return "N/A";
     const num = Number(value);
     if (isNaN(num)) return value;
-    return num.toLocaleString("en-IN");
+    
+    // Convert to localized format (Indian)
+    const formatted = num.toLocaleString("en-IN");
+
+    // ✅ If number has no decimal part, append ".00"
+    if (Number.isInteger(num)) {
+      return `${formatted}.00`;
+    }
+
+    return formatted;
   };
 
   return (
@@ -192,7 +201,7 @@ const CompanyTable: React.FC = () => {
               {[
                 "Company Name",
                 "Lead ID",
-                "Net Worth",
+                "Net Worth (in ₹ Cr)",
                 "Debt to Equity",
                 "DSCR",
                 "Year Ending",
@@ -202,7 +211,6 @@ const CompanyTable: React.FC = () => {
               <NonSortableHeader>Actions</NonSortableHeader>
             </tr>
           </thead>
-
           <tbody>
             {data.map((company) => (
               <tr
@@ -220,11 +228,11 @@ const CompanyTable: React.FC = () => {
               >
                 <FigtreeTableCell>{company.company_name}</FigtreeTableCell>
                 <FigtreeTableCell>{company.lead_id}</FigtreeTableCell>
-                <FigtreeTableCell>
+                <FigtreeTableCell style={{ textAlign: "right" }}>
                   {formatNumber(company.net_worth)}
                 </FigtreeTableCell>
-                <FigtreeTableCell>{company.debt_to_equity}</FigtreeTableCell>
-                <FigtreeTableCell>{company.dscr}</FigtreeTableCell>
+                <FigtreeTableCell style={{ textAlign: "right" }}>{company.debt_to_equity}</FigtreeTableCell>
+                <FigtreeTableCell style={{ textAlign: "right" }}>{company.dscr}</FigtreeTableCell>
                 <FigtreeTableCell>2025</FigtreeTableCell>
                 <FigtreeTableCell>
                   <button
