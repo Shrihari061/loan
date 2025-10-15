@@ -62,7 +62,7 @@ const RenderFlexibleGroup: React.FC<RenderFlexibleGroupProps> = ({
         // Helper function to render value cell
         const renderValueCell = (value: string) => {
           const cellClass =
-            "px-4 py-2 text-sm border-b text-right min-w-[140px]";
+            "px-4 py-2 text-sm border-b border-gray-200 text-right min-w-[140px]";
 
           if (isReadOnly) {
             return (
@@ -95,7 +95,7 @@ const RenderFlexibleGroup: React.FC<RenderFlexibleGroupProps> = ({
         return (
           <tr key={`${parentPath}-${index}`} className="hover:bg-gray-50">
             <td
-              className="py-2 text-sm border-b text-left text-gray-900"
+              className="py-2 text-sm border-b border-gray-200 text-left text-gray-900"
               style={{ paddingLeft: `${16 + indentLevel * 24}px` }}
             >
               {item.fieldName}
