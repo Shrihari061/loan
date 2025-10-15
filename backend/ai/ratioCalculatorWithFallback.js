@@ -296,7 +296,7 @@ class FinancialRatioCalculator {
       year
     );
     const numerator = profitForTheYear + depreciation + financeCost;
-    const denominator = financeCost + leasePayments * -1; // Lease payments are negative in CF
+    const denominator = financeCost + Math.abs(leasePayments); // Lease payments are negative in CF
     return denominator === 0 ? 0 : numerator / denominator;
   }
 
@@ -368,7 +368,7 @@ class FinancialRatioCalculator {
       year
     );
 
-    return revenue === 0 ? 0 : pat / revenue;
+    return revenue === 0 ? 0 : (pat / revenue) * 100;
   }
 
   _calculateCurrentRatio(data, year) {
@@ -492,7 +492,7 @@ class FinancialRatioCalculator {
       year
     );
 
-    return totalAssets === 0 ? 0 : pat / totalAssets;
+    return totalAssets === 0 ? 0 : (pat / totalAssets) * 100;
   }
 
   _calculateROE(data, year) {
@@ -517,7 +517,7 @@ class FinancialRatioCalculator {
       year
     );
 
-    return totalEquity === 0 ? 0 : pat / totalEquity;
+    return totalEquity === 0 ? 0 : (pat / totalEquity) * 100;
   }
 
   _calculateEBITDAMargin(data, year) {
@@ -551,7 +551,7 @@ class FinancialRatioCalculator {
       year
     );
 
-    return revenue === 0 ? 0 : (pbt + depreciation) / revenue;
+    return revenue === 0 ? 0 : ((pbt + depreciation) / revenue) * 100;
   }
 
   _calculateARDays(data, year) {
