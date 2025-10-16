@@ -233,7 +233,7 @@ const CompanyTable: React.FC = () => {
                 </FigtreeTableCell>
                 <FigtreeTableCell style={{ textAlign: "right" }}>{company.debt_to_equity}</FigtreeTableCell>
                 <FigtreeTableCell style={{ textAlign: "right" }}>{company.dscr}</FigtreeTableCell>
-                <FigtreeTableCell>2025</FigtreeTableCell>
+                <FigtreeTableCell style={{ textAlign: "right" }}>2025</FigtreeTableCell>
                 <FigtreeTableCell>
                   <button
                     onClick={() => handleAction("View Data", company)}
