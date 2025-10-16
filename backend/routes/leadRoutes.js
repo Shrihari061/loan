@@ -392,10 +392,10 @@ router.put("/:id/approve", async (req, res) => {
 // 🔹 Reject a CQ record (set status = "rejected")
 router.put("/:leadId/reject", async (req, res) => {
   try {
-    console.info(`🚫 Rejecting lead ${req.params.id}`);
+    console.info(`🚫 Rejecting lead ${req.params.leadId}`);
 
     const updated = await Lead.findByIdAndUpdate(
-      req.params.id,
+      req.params.leadId,
       { status: "Rejected" },
       { new: true }
     );
