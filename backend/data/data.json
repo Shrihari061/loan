@@ -1,0 +1,3347 @@
+{
+  "infosys": {
+    "companyName": "Infosys Limited",
+    "balanceSheet": {
+      "fileGroup": "BALANCE_SHEET",
+      "sourceFiles": ["BS-2024.pdf", "BS-2023.pdf"],
+      "totalAssets": {
+        "value_2025": 124936,
+        "value_2024": 114950,
+        "value_2023": 101337,
+        "source": "bs",
+        "unit": "₹ crore",
+        "fieldName": "Total assets"
+      },
+      "totalEquityAndLiabilities": {
+        "value_2025": 124936,
+        "value_2024": 114950,
+        "value_2023": 101337,
+        "source": "bs",
+        "unit": "₹ crore",
+        "fieldName": "Total equity and liabilities"
+      },
+      "nonCurrentAssets": {
+        "total": {
+          "value_2025": 47768,
+          "value_2024": 43998,
+          "value_2023": 49255,
+          "source": "bs",
+          "unit": "₹ crore",
+          "fieldName": "Total non-current assets"
+        },
+        "propertyPlantAndEquipment": {
+          "value_2025": 10070,
+          "value_2024": 10813,
+          "value_2023": 11656,
+          "source": "bs",
+          "unit": "₹ crore",
+          "fieldName": "Property, plant and equipment"
+        },
+        "rightOfUseAssets": {
+          "value_2025": 3078,
+          "value_2024": 3303,
+          "value_2023": 3561,
+          "source": "bs",
+          "unit": "₹ crore",
+          "fieldName": "Right-of-use assets"
+        },
+        "capitalWorkInProgress": {
+          "value_2025": 778,
+          "value_2024": 277,
+          "value_2023": 275,
+          "source": "bs",
+          "unit": "₹ crore",
+          "fieldName": "Capital work-in-progress"
+        },
+        "goodwill": {
+          "value_2025": 211,
+          "value_2024": 211,
+          "value_2023": 211,
+          "source": "bs",
+          "unit": "₹ crore",
+          "fieldName": "Goodwill"
+        },
+        "financialAssetsInvestments": {
+          "value_2025": 27371,
+          "value_2024": 23352,
+          "value_2023": 23686,
+          "source": "bs",
+          "unit": "₹ crore",
+          "fieldName": "Investments"
+        },
+        "financialAssetsLoans": {
+          "value_2025": 26,
+          "value_2024": 34,
+          "value_2023": 39,
+          "source": "bs",
+          "unit": "₹ crore",
+          "fieldName": "Loans"
+        },
+        "otherFinancialAssets": {
+          "value_2025": 2350,
+          "value_2024": 1756,
+          "value_2023": 1341,
+          "source": "bs",
+          "unit": "₹ crore",
+          "fieldName": "Other financial assets"
+        },
+        "deferredTaxAssetsNet": {
+          "value_2025": 497,
+          "value_2024": null,
+          "value_2023": 779,
+          "source": "bs",
+          "unit": "₹ crore",
+          "fieldName": "Deferred tax assets (net)"
+        },
+        "incomeTaxAssetsNet": {
+          "value_2025": 1164,
+          "value_2024": 2583,
+          "value_2023": 5916,
+          "source": "bs",
+          "unit": "₹ crore",
+          "fieldName": "Income tax assets (net)"
+        },
+        "otherNonCurrentAssets": {
+          "value_2025": 2223,
+          "value_2024": 1669,
+          "value_2023": 1788,
+          "source": "bs",
+          "unit": "₹ crore",
+          "fieldName": "Other non-current assets"
+        },
+        "intangibleAssets": {
+          "value_2025": null,
+          "value_2024": null,
+          "value_2023": 3,
+          "source": "bs",
+          "unit": "₹ crore",
+          "fieldName": "Other intangible assets"
+        },
+        "flexibleGroupItems": []
+      },
+      "currentAssets": {
+        "total": {
+          "value_2025": 77168,
+          "value_2024": 70952,
+          "value_2023": 52082,
+          "source": "bs",
+          "unit": "₹ crore",
+          "fieldName": "Total current assets"
+        },
+        "financialAssetsInvestments": {
+          "value_2025": 11147,
+          "value_2024": 11307,
+          "value_2023": 4476,
+          "source": "bs",
+          "unit": "₹ crore",
+          "fieldName": "Investments"
+        },
+        "tradeReceivables": {
+          "value_2025": 26413,
+          "value_2024": 25152,
+          "value_2023": 20773,
+          "source": "bs",
+          "unit": "₹ crore",
+          "fieldName": "Trade receivables"
+        },
+        "cashAndCashEquivalents": {
+          "value_2025": 14265,
+          "value_2024": 8191,
+          "value_2023": 6534,
+          "source": "bs",
+          "unit": "₹ crore",
+          "fieldName": "Cash and cash equivalents"
+        },
+        "financialAssetsLoans": {
+          "value_2025": 207,
+          "value_2024": 208,
+          "value_2023": 291,
+          "source": "bs",
+          "unit": "₹ crore",
+          "fieldName": "Loans"
+        },
+        "otherFinancialAssets": {
+          "value_2025": 12569,
+          "value_2024": 10129,
+          "value_2023": 9088,
+          "source": "bs",
+          "unit": "₹ crore",
+          "fieldName": "Other financial assets"
+        },
+        "incomeTaxAssetsNet": {
+          "value_2025": 2949,
+          "value_2024": 6329,
+          "value_2023": null,
+          "source": "bs",
+          "unit": "₹ crore",
+          "fieldName": "Income tax assets (net)"
+        },
+        "otherCurrentAssets": {
+          "value_2025": 9618,
+          "value_2024": 9636,
+          "value_2023": 10920,
+          "source": "bs",
+          "unit": "₹ crore",
+          "fieldName": "Other current assets"
+        },
+        "flexibleGroupItems": []
+      },
+      "equityAndLiabilities": {
+        "totalEquity": {
+          "value_2025": 87332,
+          "value_2024": 81176,
+          "value_2023": 67745,
+          "source": "bs",
+          "unit": "₹ crore",
+          "fieldName": "Total equity"
+        },
+        "equityShareCapital": {
+          "value_2025": 2076,
+          "value_2024": 2075,
+          "value_2023": 2074,
+          "source": "bs",
+          "unit": "₹ crore",
+          "fieldName": "Equity share capital"
+        },
+        "otherEquity": {
+          "value_2025": 85256,
+          "value_2024": 79101,
+          "value_2023": 65671,
+          "source": "bs",
+          "unit": "₹ crore",
+          "fieldName": "Other equity"
+        },
+        "nonCurrentLiabilities": {
+          "total": {
+            "value_2025": 5842,
+            "value_2024": 6688,
+            "value_2023": 6150,
+            "source": "bs",
+            "unit": "₹ crore",
+            "fieldName": "Total non-current liabilities"
+          },
+          "financialLiabilitiesBorrowings": {
+            "value_2025": null,
+            "value_2024": null,
+            "value_2023": null,
+            "source": "bs",
+            "unit": "₹ crore",
+            "fieldName": "Not Found"
+          },
+          "financialLiabilitiesLease": {
+            "value_2025": 2694,
+            "value_2024": 3088,
+            "value_2023": 3553,
+            "source": "bs",
+            "unit": "₹ crore",
+            "fieldName": "Lease liabilities"
+          },
+          "otherFinancialLiabilities": {
+            "value_2025": 1991,
+            "value_2024": 1941,
+            "value_2023": 1317,
+            "source": "bs",
+            "unit": "₹ crore",
+            "fieldName": "Other financial liabilities"
+          },
+          "deferredTaxLiabilitiesNet": {
+            "value_2025": 1062,
+            "value_2024": 1509,
+            "value_2023": 866,
+            "source": "bs",
+            "unit": "₹ crore",
+            "fieldName": "Deferred tax liabilities (net)"
+          },
+          "otherNonCurrentLiabilities": {
+            "value_2025": 95,
+            "value_2024": 150,
+            "value_2023": 414,
+            "source": "bs",
+            "unit": "₹ crore",
+            "fieldName": "Other non-current liabilities"
+          },
+          "flexibleGroupItems": []
+        },
+        "currentLiabilities": {
+          "total": {
+            "value_2025": 31762,
+            "value_2024": 27086,
+            "value_2023": 27442,
+            "source": "bs",
+            "unit": "₹ crore",
+            "fieldName": "Total current liabilities"
+          },
+          "financialLiabilitiesBorrowings": {
+            "value_2025": null,
+            "value_2024": null,
+            "value_2023": null,
+            "source": "bs",
+            "unit": "₹ crore",
+            "fieldName": "Not Found"
+          },
+          "financialLiabilitiesLease": {
+            "value_2025": 765,
+            "value_2024": 678,
+            "value_2023": 713,
+            "source": "bs",
+            "unit": "₹ crore",
+            "fieldName": "Lease liabilities"
+          },
+          "tradePayablesMicroAndSmall": {
+            "value_2025": 8,
+            "value_2024": 92,
+            "value_2023": 97,
+            "source": "bs",
+            "unit": "₹ crore",
+            "fieldName": "Total outstanding dues of micro enterprises and small enterprises"
+          },
+          "tradePayablesOtherCreditors": {
+            "value_2025": 2720,
+            "value_2024": 2401,
+            "value_2023": 2329,
+            "source": "bs",
+            "unit": "₹ crore",
+            "fieldName": "Total outstanding dues of creditors other than micro enterprises and small enterprises"
+          },
+          "otherFinancialLiabilities": {
+            "value_2025": 14101,
+            "value_2024": 11808,
+            "value_2023": 12697,
+            "source": "bs",
+            "unit": "₹ crore",
+            "fieldName": "Other financial liabilities"
+          },
+          "otherCurrentLiabilities": {
+            "value_2025": 9159,
+            "value_2024": 7681,
+            "value_2023": 7609,
+            "source": "bs",
+            "unit": "₹ crore",
+            "fieldName": "Other current liabilities"
+          },
+          "provisionsCurrent": {
+            "value_2025": 993,
+            "value_2024": 1464,
+            "value_2023": 1163,
+            "source": "bs",
+            "unit": "₹ crore",
+            "fieldName": "Provisions"
+          },
+          "incomeTaxLiabilitiesNet": {
+            "value_2025": 4016,
+            "value_2024": 2962,
+            "value_2023": 2834,
+            "source": "bs",
+            "unit": "₹ crore",
+            "fieldName": "Income tax liabilities (net)"
+          },
+          "flexibleGroupItems": []
+        },
+        "flexibleGroupItems": []
+      },
+      "flexibleGroupItems": []
+    },
+    "profitAndLoss": {
+      "fileGroup": "PROFIT_AND_LOSS",
+      "sourceFiles": ["PL-2024.pdf", "PL-2023.pdf"],
+      "totalIncome": {
+        "value_2025": 141374,
+        "value_2024": 136350,
+        "value_2023": 127873,
+        "source": "pl",
+        "unit": "₹ crore",
+        "fieldName": "Total income"
+      },
+      "revenueFromOperations": {
+        "value_2025": 136592,
+        "value_2024": 128933,
+        "value_2023": 124014,
+        "source": "pl",
+        "unit": "₹ crore",
+        "fieldName": "Revenue from operations"
+      },
+      "otherIncomeNet": {
+        "value_2025": 4782,
+        "value_2024": 7417,
+        "value_2023": 3859,
+        "source": "pl",
+        "unit": "₹ crore",
+        "fieldName": "Other income, net"
+      },
+      "coreOperatingCosts": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "pl",
+        "unit": "₹ crore",
+        "fieldName": "Not Found"
+      },
+      "exceptionalItemsNet": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "pl",
+        "unit": "₹ crore",
+        "fieldName": "Not Found"
+      },
+      "totalExpenses": {
+        "value_2025": 105933,
+        "value_2024": 100397,
+        "value_2023": 96230,
+        "source": "pl",
+        "unit": "₹ crore",
+        "fieldName": "Total expenses"
+      },
+      "employeeBenefitExpenses": {
+        "value_2025": 67466,
+        "value_2024": 65139,
+        "value_2023": 62764,
+        "source": "pl",
+        "unit": "₹ crore",
+        "fieldName": "Employee benefit expenses"
+      },
+      "depreciationAndAmortizationExpenses": {
+        "value_2025": 2619,
+        "value_2024": 2944,
+        "value_2023": 2753,
+        "source": "pl",
+        "unit": "₹ crore",
+        "fieldName": "Depreciation and amortization expenses"
+      },
+      "financeCost": {
+        "value_2025": 221,
+        "value_2024": 277,
+        "value_2023": 157,
+        "source": "pl",
+        "unit": "₹ crore",
+        "fieldName": "Finance cost"
+      },
+      "costOfTechnicalSubContractors": {
+        "value_2025": 19353,
+        "value_2024": 18638,
+        "value_2023": 19096,
+        "source": "pl",
+        "unit": "₹ crore",
+        "fieldName": "Cost of technical sub-contractors"
+      },
+      "travelExpenses": {
+        "value_2025": 1467,
+        "value_2024": 1372,
+        "value_2023": 1227,
+        "source": "pl",
+        "unit": "₹ crore",
+        "fieldName": "Travel expenses"
+      },
+      "communicationExpenses": {
+        "value_2025": 448,
+        "value_2024": 489,
+        "value_2023": 502,
+        "source": "pl",
+        "unit": "₹ crore",
+        "fieldName": "Communication expenses"
+      },
+      "consultancyAndProfessionalCharges": {
+        "value_2025": 1245,
+        "value_2024": 1059,
+        "value_2023": 1236,
+        "source": "pl",
+        "unit": "₹ crore",
+        "fieldName": "Consultancy and professional charges"
+      },
+      "otherExpensesAggregated": {
+        "value_2025": 3497,
+        "value_2024": 3588,
+        "value_2023": 3281,
+        "source": "pl",
+        "unit": "₹ crore",
+        "fieldName": "Other expenses"
+      },
+      "profitBeforeTax": {
+        "value_2025": 35441,
+        "value_2024": 35953,
+        "value_2023": 31643,
+        "source": "pl",
+        "unit": "₹ crore",
+        "fieldName": "Profit before tax"
+      },
+      "profitForTheYear": {
+        "value_2025": 25568,
+        "value_2024": 27234,
+        "value_2023": 23268,
+        "source": "pl",
+        "unit": "₹ crore",
+        "fieldName": "Profit for the year"
+      },
+      "currentTax": {
+        "value_2025": 10836,
+        "value_2024": 7306,
+        "value_2023": 8167,
+        "source": "pl",
+        "unit": "₹ crore",
+        "fieldName": "Current tax"
+      },
+      "deferredTax": {
+        "value_2025": -963,
+        "value_2024": 1413,
+        "value_2023": 208,
+        "source": "pl",
+        "unit": "₹ crore",
+        "fieldName": "Deferred tax"
+      },
+      "totalComprehensiveIncomeForTheYear": {
+        "value_2025": 25673,
+        "value_2024": 27521,
+        "value_2023": 23000,
+        "source": "pl",
+        "unit": "₹ crore",
+        "fieldName": "Total comprehensive income for the year"
+      },
+      "earningsPerShare": {
+        "basic": {
+          "value_2025": 61.58,
+          "value_2024": 65.62,
+          "value_2023": 55.48,
+          "source": "pl",
+          "unit": "₹ per share",
+          "fieldName": "Basic (in ₹ per share)"
+        },
+        "diluted": {
+          "value_2025": 61.46,
+          "value_2024": 65.56,
+          "value_2023": 55.42,
+          "source": "pl",
+          "unit": "₹ per share",
+          "fieldName": "Diluted (in ₹ per share)"
+        }
+      },
+      "flexibleGroupItems": [
+        {
+          "fieldName": "Cost of software packages and others",
+          "value_2025": 9617,
+          "value_2024": 6891,
+          "value_2023": 5214,
+          "source": "pl",
+          "unit": "₹ crore"
+        }
+      ]
+    },
+    "cashFlows": {
+      "fileGroup": "CASH_FLOW",
+      "sourceFiles": ["CF-2024.pdf", "CF-2023.pdf"],
+      "netCashGeneratedByOperatingActivities": {
+        "value_2025": 29409,
+        "value_2024": 20787,
+        "value_2023": 19169,
+        "source": "cf",
+        "unit": "₹ crore",
+        "fieldName": "Net cash generated by operating activities"
+      },
+      "netCashUsedInInvestingActivities": {
+        "value_2025": -1943,
+        "value_2024": -3261,
+        "value_2023": 821,
+        "source": "cf",
+        "unit": "₹ crore",
+        "fieldName": "Net cash (used in) / generated from investing activities"
+      },
+      "netCashUsedInFinancingActivities": {
+        "value_2025": -21379,
+        "value_2024": -15825,
+        "value_2023": -25857,
+        "source": "cf",
+        "unit": "₹ crore",
+        "fieldName": "Net cash used in financing activities"
+      },
+      "cashGeneratedFromOperations": {
+        "value_2025": 34010,
+        "value_2024": 29022,
+        "value_2023": 26976,
+        "source": "cf",
+        "unit": "₹ crore",
+        "fieldName": "Cash generated from operations"
+      },
+      "profitForTheYear": {
+        "value_2025": 25568,
+        "value_2024": 27234,
+        "value_2023": 23268,
+        "source": "cf",
+        "unit": "₹ crore",
+        "fieldName": "Profit for the year"
+      },
+      "incomeTaxesPaid": {
+        "value_2025": -4601,
+        "value_2024": -8235,
+        "value_2023": -7807,
+        "source": "cf",
+        "unit": "₹ crore",
+        "fieldName": "Income taxes paid"
+      },
+      "adjustmentsToReconcileNetProfitToNetCashProvidedByOperatingActivities": {
+        "depreciationAndAmortization": {
+          "value_2025": 2619,
+          "value_2024": 2944,
+          "value_2023": 2753,
+          "source": "cf",
+          "unit": "₹ crore",
+          "fieldName": "Depreciation and Amortization"
+        },
+        "incomeTaxExpense": {
+          "value_2025": 9873,
+          "value_2024": 8719,
+          "value_2023": 8375,
+          "source": "cf",
+          "unit": "₹ crore",
+          "fieldName": "Income tax expense"
+        },
+        "impairmentLossRecognizedReversed": {
+          "value_2025": -7,
+          "value_2024": 130,
+          "value_2023": 183,
+          "source": "cf",
+          "unit": "₹ crore",
+          "fieldName": "Impairment loss recognized / (reversed) under expected credit loss model"
+        },
+        "financeCost": {
+          "value_2025": 221,
+          "value_2024": 277,
+          "value_2023": 157,
+          "source": "cf",
+          "unit": "₹ crore",
+          "fieldName": "Finance cost"
+        },
+        "interestAndDividendIncome": {
+          "value_2025": -3699,
+          "value_2024": -4670,
+          "value_2023": -3028,
+          "source": "cf",
+          "unit": "₹ crore",
+          "fieldName": "Interest and dividend income"
+        },
+        "stockCompensationExpense": {
+          "value_2025": 712,
+          "value_2024": 575,
+          "value_2023": 460,
+          "source": "cf",
+          "unit": "₹ crore",
+          "fieldName": "Stock compensation expense"
+        },
+        "otherAdjustments": {
+          "value_2025": 165,
+          "value_2024": 235,
+          "value_2023": 34,
+          "source": "cf",
+          "unit": "₹ crore",
+          "fieldName": "Other adjustments"
+        },
+        "flexibleGroupItems": [
+          {
+            "fieldName": "Provision for post-sale client support",
+            "value_2025": -114,
+            "value_2024": 77,
+            "value_2023": 121,
+            "source": "cf",
+            "unit": "₹ crore"
+          },
+          {
+            "fieldName": "Exchange differences on translation of assets and liabilities, net",
+            "value_2025": 170,
+            "value_2024": 63,
+            "value_2023": -116,
+            "source": "cf",
+            "unit": "₹ crore"
+          },
+          {
+            "fieldName": "Interest receivable on income tax refund",
+            "value_2025": -327,
+            "value_2024": -1934,
+            "value_2023": null,
+            "source": "cf",
+            "unit": "₹ crore"
+          }
+        ]
+      },
+      "changesInAssetsAndLiabilities": {
+        "tradeReceivablesAndUnbilledRevenue": {
+          "value_2025": -2994,
+          "value_2024": -2933,
+          "value_2023": -5065,
+          "source": "cf",
+          "unit": "₹ crore",
+          "fieldName": "Trade receivables and unbilled revenue"
+        },
+        "loansOtherFinancialAssetsAndOtherAssets": {
+          "value_2025": -1942,
+          "value_2024": -1645,
+          "value_2023": -2171,
+          "source": "cf",
+          "unit": "₹ crore",
+          "fieldName": "Loans, other financial assets and other assets"
+        },
+        "tradePayables": {
+          "value_2025": 236,
+          "value_2024": 67,
+          "value_2023": -243,
+          "source": "cf",
+          "unit": "₹ crore",
+          "fieldName": "Trade payables"
+        },
+        "otherFinancialLiabilitiesOtherLiabilitiesAndProvisions": {
+          "value_2025": 3529,
+          "value_2024": -117,
+          "value_2023": 2248,
+          "source": "cf",
+          "unit": "₹ crore",
+          "fieldName": "Other financial liabilities, other liabilities and provisions"
+        },
+        "flexibleGroupItems": []
+      },
+      "expenditureOnPropertyPlantAndEquipment": {
+        "value_2025": -1587,
+        "value_2024": -1832,
+        "value_2023": -2130,
+        "source": "cf",
+        "unit": "₹ crore",
+        "fieldName": "Expenditure on property, plant and equipment"
+      },
+      "depositsPlacedWithCorporation": {
+        "value_2025": -1026,
+        "value_2024": -688,
+        "value_2023": -634,
+        "source": "cf",
+        "unit": "₹ crore",
+        "fieldName": "Deposits placed with corporation"
+      },
+      "redemptionOfDepositsPlacedWithCorporation": {
+        "value_2025": 593,
+        "value_2024": 522,
+        "value_2023": 482,
+        "source": "cf",
+        "unit": "₹ crore",
+        "fieldName": "Redemption of deposits placed with corporation"
+      },
+      "interestAndDividendReceived": {
+        "value_2025": 1672,
+        "value_2024": 1441,
+        "value_2023": 1299,
+        "source": "cf",
+        "unit": "₹ crore",
+        "fieldName": "Interest and dividend received"
+      },
+      "dividendReceivedFromSubsidiary": {
+        "value_2025": 1522,
+        "value_2024": 2976,
+        "value_2023": 1463,
+        "source": "cf",
+        "unit": "₹ crore",
+        "fieldName": "Dividend received from subsidiary"
+      },
+      "loanGivenToSubsidiaries": {
+        "value_2025": -10,
+        "value_2024": null,
+        "value_2023": -427,
+        "source": "cf",
+        "unit": "₹ crore",
+        "fieldName": "Loan given to subsidiaries"
+      },
+      "loanRepaidBySubsidiaries": {
+        "value_2025": null,
+        "value_2024": 4,
+        "value_2023": 393,
+        "source": "cf",
+        "unit": "₹ crore",
+        "fieldName": "Loan repaid by subsidiaries"
+      },
+      "investmentInSubsidiaries": {
+        "value_2025": -4361,
+        "value_2024": -63,
+        "value_2023": -1530,
+        "source": "cf",
+        "unit": "₹ crore",
+        "fieldName": "Investment in subsidiaries"
+      },
+      "paymentTowardsAcquisitionOfEntities": {
+        "value_2025": -184,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "cf",
+        "unit": "₹ crore",
+        "fieldName": "Payment towards acquisition of entities"
+      },
+      "receiptPaymentTowardsBusinessTransferForEntitiesUnderCommonControl": {
+        "value_2025": null,
+        "value_2024": 35,
+        "value_2023": 19,
+        "source": "cf",
+        "unit": "₹ crore",
+        "fieldName": "Receipt / (payment) towards business transfer for entities under common control"
+      },
+      "receiptPaymentFromEntitiesUnderLiquidation": {
+        "value_2025": null,
+        "value_2024": 80,
+        "value_2023": null,
+        "source": "cf",
+        "unit": "₹ crore",
+        "fieldName": "Receipt / (payment) from entities under liquidation"
+      },
+      "otherReceipts": {
+        "value_2025": 2,
+        "value_2024": 123,
+        "value_2023": 61,
+        "source": "cf",
+        "unit": "₹ crore",
+        "fieldName": "Other receipts"
+      },
+      "paymentsToAcquireInvestments": {
+        "flexibleGroupItems": [
+          {
+            "fieldName": "Liquid mutual fund units",
+            "value_2025": -66637,
+            "value_2024": -57606,
+            "value_2023": -62952,
+            "source": "cf",
+            "unit": "₹ crore"
+          },
+          {
+            "fieldName": "Commercial papers",
+            "value_2025": -6058,
+            "value_2024": -9405,
+            "value_2023": -2485,
+            "source": "cf",
+            "unit": "₹ crore"
+          },
+          {
+            "fieldName": "Certificates of deposit",
+            "value_2025": -6138,
+            "value_2024": -7011,
+            "value_2023": -8909,
+            "source": "cf",
+            "unit": "₹ crore"
+          },
+          {
+            "fieldName": "Non-convertible debentures",
+            "value_2025": -3240,
+            "value_2024": -1526,
+            "value_2023": null,
+            "source": "cf",
+            "unit": "₹ crore"
+          },
+          {
+            "fieldName": "Other investments",
+            "value_2025": -25,
+            "value_2024": -2,
+            "value_2023": -4,
+            "source": "cf",
+            "unit": "₹ crore"
+          },
+          {
+            "fieldName": "Target maturity fund units",
+            "value_2025": null,
+            "value_2024": null,
+            "value_2023": -400,
+            "source": "cf",
+            "unit": "₹ crore"
+          },
+          {
+            "fieldName": "Tax-free bonds and government bonds",
+            "value_2025": null,
+            "value_2024": null,
+            "value_2023": -14,
+            "source": "cf",
+            "unit": "₹ crore"
+          },
+          {
+            "fieldName": "Government securities",
+            "value_2025": null,
+            "value_2024": null,
+            "value_2023": -1370,
+            "source": "cf",
+            "unit": "₹ crore"
+          }
+        ]
+      },
+      "proceedsOnSaleOfInvestments": {
+        "flexibleGroupItems": [
+          {
+            "fieldName": "Tax-free bonds and government bonds",
+            "value_2025": 105,
+            "value_2024": 150,
+            "value_2023": 213,
+            "source": "cf",
+            "unit": "₹ crore"
+          },
+          {
+            "fieldName": "Liquid mutual fund units",
+            "value_2025": 67597,
+            "value_2024": 56124,
+            "value_2023": 64168,
+            "source": "cf",
+            "unit": "₹ crore"
+          },
+          {
+            "fieldName": "Non-convertible debentures",
+            "value_2025": 2376,
+            "value_2024": 955,
+            "value_2023": 395,
+            "source": "cf",
+            "unit": "₹ crore"
+          },
+          {
+            "fieldName": "Certificates of deposit",
+            "value_2025": 5984,
+            "value_2024": 6962,
+            "value_2023": 9454,
+            "source": "cf",
+            "unit": "₹ crore"
+          },
+          {
+            "fieldName": "Commercial papers",
+            "value_2025": 7260,
+            "value_2024": 5475,
+            "value_2023": 2098,
+            "source": "cf",
+            "unit": "₹ crore"
+          },
+          {
+            "fieldName": "Government securities",
+            "value_2025": 200,
+            "value_2024": 5,
+            "value_2023": 1532,
+            "source": "cf",
+            "unit": "₹ crore"
+          },
+          {
+            "fieldName": "Other investments",
+            "value_2025": 12,
+            "value_2024": 20,
+            "value_2023": 99,
+            "source": "cf",
+            "unit": "₹ crore"
+          }
+        ]
+      },
+      "paymentOfLeaseLiabilities": {
+        "value_2025": -859,
+        "value_2024": -850,
+        "value_2023": -694,
+        "source": "cf",
+        "unit": "₹ crore",
+        "fieldName": "Payment of lease liabilities"
+      },
+      "sharesIssuedOnExerciseOfEmployeeStockOptions": {
+        "value_2025": 3,
+        "value_2024": 1,
+        "value_2023": 30,
+        "source": "cf",
+        "unit": "₹ crore",
+        "fieldName": "Shares issued on exercise of employee stock options"
+      },
+      "otherPayments": {
+        "value_2025": -186,
+        "value_2024": -243,
+        "value_2023": -64,
+        "source": "cf",
+        "unit": "₹ crore",
+        "fieldName": "Other payments"
+      },
+      "paymentOfDividends": {
+        "value_2025": -20337,
+        "value_2024": -14733,
+        "value_2023": -13674,
+        "source": "cf",
+        "unit": "₹ crore",
+        "fieldName": "Payment of dividends"
+      },
+      "netIncreaseDecreaseInCashAndCashEquivalents": {
+        "value_2025": 6087,
+        "value_2024": 1701,
+        "value_2023": -5867,
+        "source": "cf",
+        "unit": "₹ crore",
+        "fieldName": "Net increase / (decrease) in cash and cash equivalents"
+      },
+      "effectOfExchangeDifferencesOnTranslationOfForeignCurrencyCashAndCashEquivalents": {
+        "value_2025": -13,
+        "value_2024": -44,
+        "value_2023": 131,
+        "source": "cf",
+        "unit": "₹ crore",
+        "fieldName": "Effect of exchange differences on translation of foreign currency cash and cash equivalents"
+      },
+      "cashAndCashEquivalentsAtTheBeginningOfTheYear": {
+        "value_2025": 8191,
+        "value_2024": 6534,
+        "value_2023": 12270,
+        "source": "cf",
+        "unit": "₹ crore",
+        "fieldName": "Cash and cash equivalents at the beginning of the year"
+      },
+      "cashAndCashEquivalentsAtTheEndOfTheYear": {
+        "value_2025": 14265,
+        "value_2024": 8191,
+        "value_2023": 6534,
+        "source": "cf",
+        "unit": "₹ crore",
+        "fieldName": "Cash and cash equivalents at the end of the year"
+      },
+      "flexibleGroupItems": [
+        {
+          "fieldName": "Buyback of equity shares, including transaction costs and tax on buyback",
+          "value_2025": null,
+          "value_2024": null,
+          "value_2023": -11499,
+          "source": "cf",
+          "unit": "₹ crore"
+        },
+        {
+          "fieldName": "Other receipts",
+          "value_2025": null,
+          "value_2024": null,
+          "value_2023": 44,
+          "source": "cf",
+          "unit": "₹ crore"
+        },
+        {
+          "fieldName": "Escrow and other deposits pertaining to buyback",
+          "value_2025": null,
+          "value_2024": null,
+          "value_2023": -483,
+          "source": "cf",
+          "unit": "₹ crore"
+        },
+        {
+          "fieldName": "Redemption of escrow and other deposits pertaining to buyback",
+          "value_2025": null,
+          "value_2024": null,
+          "value_2023": 483,
+          "source": "cf",
+          "unit": "₹ crore"
+        }
+      ]
+    },
+    "flexibleGroupItems": []
+  },
+  "nalco": {
+    "companyName": "National Aluminium Company Limited",
+    "balanceSheet": {
+      "fileGroup": "BALANCE_SHEET",
+      "sourceFiles": ["nalco_2024_bs.pdf", "nalco_2023_bs.pdf"],
+      "totalAssets": {
+        "value_2025": 23122.48,
+        "value_2024": 19418.6,
+        "value_2023": 17738.69,
+        "source": "bs",
+        "unit": "₹ Crore",
+        "fieldName": "Total assets"
+      },
+      "totalEquityAndLiabilities": {
+        "value_2025": 23122.48,
+        "value_2024": 19418.6,
+        "value_2023": 17738.69,
+        "source": "bs",
+        "unit": "₹ Crore",
+        "fieldName": "Total equity and liabilities"
+      },
+      "nonCurrentAssets": {
+        "total": {
+          "value_2025": 13983.16,
+          "value_2024": 13287.12,
+          "value_2023": 12437.55,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Total non-current assets"
+        },
+        "propertyPlantAndEquipment": {
+          "value_2025": 6799.04,
+          "value_2024": 7020.24,
+          "value_2023": 6916.39,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Property, plant and equipment"
+        },
+        "rightOfUseAssets": {
+          "value_2025": null,
+          "value_2024": null,
+          "value_2023": null,
+          "source": "bs",
+          "unit": "",
+          "fieldName": "Not Found"
+        },
+        "capitalWorkInProgress": {
+          "value_2025": 4934.67,
+          "value_2024": 3961.49,
+          "value_2023": 2744.95,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Capital work-in-progress"
+        },
+        "goodwill": {
+          "value_2025": null,
+          "value_2024": null,
+          "value_2023": null,
+          "source": "bs",
+          "unit": "",
+          "fieldName": "Not Found"
+        },
+        "financialAssetsInvestments": {
+          "value_2025": 499.61,
+          "value_2024": 352.25,
+          "value_2023": 325.25,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Investments"
+        },
+        "financialAssetsLoans": {
+          "value_2025": 80.67,
+          "value_2024": 79.4,
+          "value_2023": 82.39,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Loans"
+        },
+        "otherFinancialAssets": {
+          "value_2025": 19.72,
+          "value_2024": 17.81,
+          "value_2023": 21.55,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Other financial assets"
+        },
+        "deferredTaxAssetsNet": {
+          "value_2025": null,
+          "value_2024": null,
+          "value_2023": null,
+          "source": "bs",
+          "unit": "",
+          "fieldName": "Not Found"
+        },
+        "incomeTaxAssetsNet": {
+          "value_2025": 165.93,
+          "value_2024": 260.11,
+          "value_2023": 634.49,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Current tax assets (Net)"
+        },
+        "otherNonCurrentAssets": {
+          "value_2025": 532.79,
+          "value_2024": 621.74,
+          "value_2023": 802.12,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Other non-current assets"
+        },
+        "intangibleAssets": {
+          "value_2025": 949.2,
+          "value_2024": 362.49,
+          "value_2023": 386.44,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Intangible assets"
+        },
+        "flexibleGroupItems": [
+          {
+            "fieldName": "Intangible assets under development",
+            "value_2025": 1.53,
+            "value_2024": 611.59,
+            "value_2023": 523.97,
+            "source": "bs",
+            "unit": "₹ Crore"
+          },
+          {
+            "fieldName": "Trade receivables",
+            "value_2025": 0,
+            "value_2024": 0,
+            "value_2023": 0,
+            "source": "bs",
+            "unit": "₹ Crore"
+          }
+        ]
+      },
+      "currentAssets": {
+        "total": {
+          "value_2025": 9139.32,
+          "value_2024": 6129.88,
+          "value_2023": 5300.5,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Total current assets"
+        },
+        "financialAssetsInvestments": {
+          "value_2025": 514.92,
+          "value_2024": 172.91,
+          "value_2023": 145.58,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Investments"
+        },
+        "tradeReceivables": {
+          "value_2025": 186.39,
+          "value_2024": 153.5,
+          "value_2023": 91.33,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Trade receivables"
+        },
+        "cashAndCashEquivalents": {
+          "value_2025": 121.4,
+          "value_2024": 43.49,
+          "value_2023": 63.29,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Cash and cash equivalents"
+        },
+        "financialAssetsLoans": {
+          "value_2025": 26.58,
+          "value_2024": 28.05,
+          "value_2023": 33.31,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Loans"
+        },
+        "otherFinancialAssets": {
+          "value_2025": 66.65,
+          "value_2024": 78.4,
+          "value_2023": 49.58,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Other financial assets"
+        },
+        "incomeTaxAssetsNet": {
+          "value_2025": 153.37,
+          "value_2024": 238.69,
+          "value_2023": 28.49,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Current tax assets (Net)"
+        },
+        "otherCurrentAssets": {
+          "value_2025": 855.85,
+          "value_2024": 1053.46,
+          "value_2023": 994.49,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Other current assets"
+        },
+        "flexibleGroupItems": [
+          {
+            "fieldName": "Inventories",
+            "value_2025": 1908.83,
+            "value_2024": 1829.72,
+            "value_2023": 1840.22,
+            "source": "bs",
+            "unit": "₹ Crore"
+          },
+          {
+            "fieldName": "Bank balances other than (iii) above",
+            "value_2025": 5305.33,
+            "value_2024": 2531.66,
+            "value_2023": 2054.21,
+            "source": "bs",
+            "unit": "₹ Crore"
+          }
+        ]
+      },
+      "equityAndLiabilities": {
+        "totalEquity": {
+          "value_2025": 18045.76,
+          "value_2024": 14571.66,
+          "value_2023": 13238.45,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Total equity"
+        },
+        "equityShareCapital": {
+          "value_2025": 918.32,
+          "value_2024": 918.32,
+          "value_2023": 918.32,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Equity share capital"
+        },
+        "otherEquity": {
+          "value_2025": 17127.44,
+          "value_2024": 13653.34,
+          "value_2023": 12320.13,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Other equity"
+        },
+        "nonCurrentLiabilities": {
+          "total": {
+            "value_2025": 1578.52,
+            "value_2024": 1669.26,
+            "value_2023": 1614.59,
+            "source": "bs",
+            "unit": "₹ Crore",
+            "fieldName": "Total non-current liabilities"
+          },
+          "financialLiabilitiesBorrowings": {
+            "value_2025": null,
+            "value_2024": null,
+            "value_2023": null,
+            "source": "bs",
+            "unit": "",
+            "fieldName": "Not Found"
+          },
+          "financialLiabilitiesLease": {
+            "value_2025": 50.94,
+            "value_2024": 51.0,
+            "value_2023": 50.99,
+            "source": "bs",
+            "unit": "₹ Crore",
+            "fieldName": "Lease liabilities"
+          },
+          "otherFinancialLiabilities": {
+            "value_2025": 242.66,
+            "value_2024": 286.71,
+            "value_2023": 180.0,
+            "source": "bs",
+            "unit": "₹ Crore",
+            "fieldName": "Other financial liabilities"
+          },
+          "deferredTaxLiabilitiesNet": {
+            "value_2025": 791.14,
+            "value_2024": 841.43,
+            "value_2023": 957.77,
+            "source": "bs",
+            "unit": "₹ Crore",
+            "fieldName": "Deferred tax liabilities (Net)"
+          },
+          "otherNonCurrentLiabilities": {
+            "value_2025": 230.5,
+            "value_2024": 301.24,
+            "value_2023": 314.02,
+            "source": "bs",
+            "unit": "₹ Crore",
+            "fieldName": "Other non-current liabilities"
+          },
+          "flexibleGroupItems": [
+            {
+              "fieldName": "Provisions",
+              "value_2025": 252.14,
+              "value_2024": 170.57,
+              "value_2023": 100.83,
+              "source": "bs",
+              "unit": "₹ Crore"
+            },
+            {
+              "fieldName": "Trade payables - Dues of micro and small enterprises",
+              "value_2025": 0,
+              "value_2024": 0,
+              "value_2023": 0,
+              "source": "bs",
+              "unit": "₹ Crore"
+            },
+            {
+              "fieldName": "Trade payables - Dues of creditors other than micro and small enterprises",
+              "value_2025": 11.14,
+              "value_2024": 18.31,
+              "value_2023": 10.98,
+              "source": "bs",
+              "unit": "₹ Crore"
+            }
+          ]
+        },
+        "currentLiabilities": {
+          "total": {
+            "value_2025": 3498.2,
+            "value_2024": 3177.68,
+            "value_2023": 2885.65,
+            "source": "bs",
+            "unit": "₹ Crore",
+            "fieldName": "Total current liabilities"
+          },
+          "financialLiabilitiesBorrowings": {
+            "value_2025": 124.22,
+            "value_2024": 39.16,
+            "value_2023": 47.75,
+            "source": "bs",
+            "unit": "₹ Crore",
+            "fieldName": "Borrowings"
+          },
+          "financialLiabilitiesLease": {
+            "value_2025": 6.58,
+            "value_2024": 6.22,
+            "value_2023": 5.87,
+            "source": "bs",
+            "unit": "₹ Crore",
+            "fieldName": "Lease liabilities"
+          },
+          "tradePayablesMicroAndSmall": {
+            "value_2025": 122.45,
+            "value_2024": 175.29,
+            "value_2023": 145.47,
+            "source": "bs",
+            "unit": "₹ Crore",
+            "fieldName": "Dues of micro and small enterprises"
+          },
+          "tradePayablesOtherCreditors": {
+            "value_2025": 615.65,
+            "value_2024": 1320.96,
+            "value_2023": 1117.87,
+            "source": "bs",
+            "unit": "₹ Crore",
+            "fieldName": "Dues of creditors other than micro and small enterprises"
+          },
+          "otherFinancialLiabilities": {
+            "value_2025": 1720.81,
+            "value_2024": 735.79,
+            "value_2023": 620.41,
+            "source": "bs",
+            "unit": "₹ Crore",
+            "fieldName": "Other financial liabilities"
+          },
+          "otherCurrentLiabilities": {
+            "value_2025": 632.92,
+            "value_2024": 672.89,
+            "value_2023": 769.32,
+            "source": "bs",
+            "unit": "₹ Crore",
+            "fieldName": "Other current liabilities"
+          },
+          "provisionsCurrent": {
+            "value_2025": 235.91,
+            "value_2024": 173.39,
+            "value_2023": 146.89,
+            "source": "bs",
+            "unit": "₹ Crore",
+            "fieldName": "Provisions"
+          },
+          "incomeTaxLiabilitiesNet": {
+            "value_2025": 39.66,
+            "value_2024": 53.98,
+            "value_2023": 32.07,
+            "source": "bs",
+            "unit": "₹ Crore",
+            "fieldName": "Current tax liabilities (Net)"
+          },
+          "flexibleGroupItems": []
+        },
+        "flexibleGroupItems": []
+      },
+      "flexibleGroupItems": [
+        {
+          "fieldName": "Non-Current assets held for sale",
+          "value_2025": null,
+          "value_2024": 1.6,
+          "value_2023": 0.64,
+          "source": "bs",
+          "unit": "₹ Crore"
+        }
+      ]
+    },
+    "profitAndLoss": {
+      "fileGroup": "PROFIT_AND_LOSS",
+      "sourceFiles": ["nalco_2024_pl.pdf", "nalco_2023_pl.pdf"],
+      "totalIncome": {
+        "value_2025": 17144.64,
+        "value_2024": 13399.86,
+        "value_2023": 14490.49,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Total Income (I + II)"
+      },
+      "revenueFromOperations": {
+        "value_2025": 16787.63,
+        "value_2024": 13149.15,
+        "value_2023": 14256.85,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Revenue from operations"
+      },
+      "otherIncomeNet": {
+        "value_2025": 357.01,
+        "value_2024": 250.71,
+        "value_2023": 233.64,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Other Income"
+      },
+      "coreOperatingCosts": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "pl",
+        "unit": "",
+        "fieldName": "Not Found"
+      },
+      "exceptionalItemsNet": {
+        "value_2025": 0,
+        "value_2024": -426.81,
+        "value_2023": null,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Exceptional Items"
+      },
+      "totalExpenses": {
+        "value_2025": 10009.54,
+        "value_2024": 11043.1,
+        "value_2023": 12535.5,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Total expenses (IV)"
+      },
+      "employeeBenefitExpenses": {
+        "value_2025": 1786.47,
+        "value_2024": 2034.06,
+        "value_2023": 1832.06,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Employee benefits expense"
+      },
+      "depreciationAndAmortizationExpenses": {
+        "value_2025": 727.58,
+        "value_2024": 749.65,
+        "value_2023": 715.8,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Depreciation, amortisation and impairment expenses"
+      },
+      "financeCost": {
+        "value_2025": 58.97,
+        "value_2024": 17.21,
+        "value_2023": 12.92,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Finance costs"
+      },
+      "costOfTechnicalSubContractors": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "pl",
+        "unit": "",
+        "fieldName": "Not Found"
+      },
+      "travelExpenses": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "pl",
+        "unit": "",
+        "fieldName": "Not Found"
+      },
+      "communicationExpenses": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "pl",
+        "unit": "",
+        "fieldName": "Not Found"
+      },
+      "consultancyAndProfessionalCharges": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "pl",
+        "unit": "",
+        "fieldName": "Not Found"
+      },
+      "otherExpensesAggregated": {
+        "value_2025": 2297.46,
+        "value_2024": 2048.64,
+        "value_2023": 2125.57,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Other expenses"
+      },
+      "profitBeforeTax": {
+        "value_2025": 7135.1,
+        "value_2024": 2783.57,
+        "value_2023": 1954.99,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Profit before tax (V - VI)"
+      },
+      "profitForTheYear": {
+        "value_2025": 5324.67,
+        "value_2024": 2059.95,
+        "value_2023": 1544.49,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Profit for the year (VII - VIII)"
+      },
+      "currentTax": {
+        "value_2025": 1860.71,
+        "value_2024": 839.71,
+        "value_2023": 294.41,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Current tax"
+      },
+      "deferredTax": {
+        "value_2025": -50.28,
+        "value_2024": -116.09,
+        "value_2023": 116.09,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Deferred tax"
+      },
+      "totalComprehensiveIncomeForTheYear": {
+        "value_2025": 5310.74,
+        "value_2024": 2067.86,
+        "value_2023": 1602.14,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Total comprehensive income for the year (IX+X) [comprising profit and other comprehensive income for the period]"
+      },
+      "earningsPerShare": {
+        "basic": {
+          "value_2025": 28.99,
+          "value_2024": 11.22,
+          "value_2023": 8.41,
+          "source": "pl",
+          "unit": "₹",
+          "fieldName": "Basic (in ₹)"
+        },
+        "diluted": {
+          "value_2025": 28.99,
+          "value_2024": 11.22,
+          "value_2023": 8.41,
+          "source": "pl",
+          "unit": "₹",
+          "fieldName": "Diluted (in ₹)"
+        }
+      },
+      "flexibleGroupItems": [
+        {
+          "fieldName": "Cost of raw materials consumed",
+          "value_2025": 2063.32,
+          "value_2024": 2791.89,
+          "value_2023": 3172.12,
+          "source": "pl",
+          "unit": "₹ Crore"
+        },
+        {
+          "fieldName": "Cost of power and fuel consumed",
+          "value_2025": 3165.94,
+          "value_2024": 3547.7,
+          "value_2023": 4693.69,
+          "source": "pl",
+          "unit": "₹ Crore"
+        },
+        {
+          "fieldName": "Changes in inventories of finished goods and work-in-progress",
+          "value_2025": -90.2,
+          "value_2024": -146.05,
+          "value_2023": -16.66,
+          "source": "pl",
+          "unit": "₹ Crore"
+        },
+        {
+          "fieldName": "Property Plant and Equipment - Depreciation",
+          "value_2025": 650.0,
+          "value_2024": 728.69,
+          "value_2023": 584.24,
+          "source": "pl",
+          "unit": "₹ Crore"
+        },
+        {
+          "fieldName": "Property Plant and Equipment - Impairment",
+          "value_2025": 28.52,
+          "value_2024": -11.62,
+          "value_2023": 100.31,
+          "source": "pl",
+          "unit": "₹ Crore"
+        },
+        {
+          "fieldName": "Intangible Assets - Amortisation",
+          "value_2025": 49.06,
+          "value_2024": 32.58,
+          "value_2023": 31.25,
+          "source": "pl",
+          "unit": "₹ Crore"
+        },
+        {
+          "fieldName": "Profit before exceptional items and tax (III - IV)",
+          "value_2025": 7135.1,
+          "value_2024": 2356.76,
+          "value_2023": 1954.99,
+          "source": "pl",
+          "unit": "₹ Crore"
+        },
+        {
+          "fieldName": "Remeasurement gains / (losses) on defined benefit plans",
+          "value_2025": -13.94,
+          "value_2024": 7.66,
+          "value_2023": 31.15,
+          "source": "pl",
+          "unit": "₹ Crore"
+        },
+        {
+          "fieldName": "Income tax relating to items that will not be reclassified to profit or loss",
+          "value_2025": 0.01,
+          "value_2024": 0.25,
+          "value_2023": 26.5,
+          "source": "pl",
+          "unit": "₹ Crore"
+        },
+        {
+          "fieldName": "Other comprehensive income for the year (net of tax) (X)",
+          "value_2025": -13.93,
+          "value_2024": 7.91,
+          "value_2023": 57.65,
+          "source": "pl",
+          "unit": "₹ Crore"
+        }
+      ]
+    },
+    "cashFlows": {
+      "fileGroup": "CASH_FLOW",
+      "sourceFiles": ["nalco_2024_cf.pdf", "nalco_2023_cf.pdf"],
+      "netCashGeneratedByOperatingActivities": {
+        "value_2025": 5806.11,
+        "value_2024": 2719.32,
+        "value_2023": 908.24,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Net cash flow from operating activities"
+      },
+      "netCashUsedInInvestingActivities": {
+        "value_2025": -3970.54,
+        "value_2024": -2000.47,
+        "value_2023": -334.25,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Net cash flow from investing activities"
+      },
+      "netCashUsedInFinancingActivities": {
+        "value_2025": -1757.66,
+        "value_2024": -738.65,
+        "value_2023": -923.5,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Net cash flow from financing activities"
+      },
+      "cashGeneratedFromOperations": {
+        "value_2025": 7525.19,
+        "value_2024": 3354.08,
+        "value_2023": 1654.94,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Cash (used in) / generated from operations"
+      },
+      "profitForTheYear": {
+        "value_2025": 5324.67,
+        "value_2024": 2059.95,
+        "value_2023": 1544.49,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Profit for the year"
+      },
+      "incomeTaxesPaid": {
+        "value_2025": -1719.09,
+        "value_2024": -634.76,
+        "value_2023": -746.69,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Income taxes paid"
+      },
+      "adjustmentsToReconcileNetProfitToNetCashProvidedByOperatingActivities": {
+        "depreciationAndAmortization": {
+          "value_2025": 727.58,
+          "value_2024": 749.65,
+          "value_2023": 715.8,
+          "source": "cf",
+          "unit": "₹ Crore",
+          "fieldName": "Depreciation, amortisation and impairment of non-current assets"
+        },
+        "incomeTaxExpense": {
+          "value_2025": 1810.43,
+          "value_2024": 723.62,
+          "value_2023": 410.5,
+          "source": "cf",
+          "unit": "₹ Crore",
+          "fieldName": "Income tax expense recognised in profit or loss"
+        },
+        "impairmentLossRecognizedReversed": {
+          "value_2025": -9.42,
+          "value_2024": 16.56,
+          "value_2023": 36.45,
+          "source": "cf",
+          "unit": "₹ Crore",
+          "fieldName": "Impairment loss recognised on other assets"
+        },
+        "financeCost": {
+          "value_2025": 58.97,
+          "value_2024": 17.21,
+          "value_2023": 12.92,
+          "source": "cf",
+          "unit": "₹ Crore",
+          "fieldName": "Finance costs recognised in profit or loss"
+        },
+        "interestAndDividendIncome": {
+          "value_2025": -317.88,
+          "value_2024": -202.74,
+          "value_2023": -204.41,
+          "source": "cf",
+          "unit": "₹ Crore",
+          "fieldName": "Interest income recognised in profit or loss and Dividend income recognised in profit or loss"
+        },
+        "stockCompensationExpense": {
+          "value_2025": null,
+          "value_2024": null,
+          "value_2023": null,
+          "source": "cf",
+          "unit": "",
+          "fieldName": "Not Found"
+        },
+        "otherAdjustments": {
+          "value_2025": null,
+          "value_2024": null,
+          "value_2023": null,
+          "source": "cf",
+          "unit": "",
+          "fieldName": "Not Found"
+        },
+        "flexibleGroupItems": [
+          {
+            "fieldName": "Net (gain) / loss on disposal of property, plant and equipment",
+            "value_2025": 0.61,
+            "value_2024": 0.51,
+            "value_2023": 2.56,
+            "source": "cf",
+            "unit": "₹ Crore"
+          },
+          {
+            "fieldName": "Net (gain) / loss arising on financial assets mandatorily measured at fair value through profit or loss",
+            "value_2025": -4.91,
+            "value_2024": -8.34,
+            "value_2023": -0.57,
+            "source": "cf",
+            "unit": "₹ Crore"
+          },
+          {
+            "fieldName": "Inventories of stores, spares written off",
+            "value_2025": 6.75,
+            "value_2024": 4.17,
+            "value_2023": 3.26,
+            "source": "cf",
+            "unit": "₹ Crore"
+          },
+          {
+            "fieldName": "Unrealised foreign exchange (gain)/loss (Net)",
+            "value_2025": 3.67,
+            "value_2024": 1.86,
+            "value_2023": 16.45,
+            "source": "cf",
+            "unit": "₹ Crore"
+          },
+          {
+            "fieldName": "Operating profit before working capital changes",
+            "value_2025": 7600.47,
+            "value_2024": 3362.45,
+            "value_2023": 2537.45,
+            "source": "cf",
+            "unit": "₹ Crore"
+          }
+        ]
+      },
+      "changesInAssetsAndLiabilities": {
+        "tradeReceivablesAndUnbilledRevenue": {
+          "value_2025": -32.89,
+          "value_2024": -70.76,
+          "value_2023": 11.0,
+          "source": "cf",
+          "unit": "₹ Crore",
+          "fieldName": "(Increase) / decrease in trade receivables"
+        },
+        "loansOtherFinancialAssetsAndOtherAssets": {
+          "value_2025": 220.83,
+          "value_2024": -231.49,
+          "value_2023": -109.51,
+          "source": "cf",
+          "unit": "₹ Crore",
+          "fieldName": "(Increase) / decrease in loans and other financial asset and (Increase) / decrease in other assets"
+        },
+        "tradePayables": {
+          "value_2025": 6.3,
+          "value_2024": 238.38,
+          "value_2023": -222.84,
+          "source": "cf",
+          "unit": "₹ Crore",
+          "fieldName": "Increase / (decrease) in trade payables"
+        },
+        "otherFinancialLiabilitiesOtherLiabilitiesAndProvisions": {
+          "value_2025": -185.26,
+          "value_2024": 45.06,
+          "value_2023": -355.83,
+          "source": "cf",
+          "unit": "₹ Crore",
+          "fieldName": "Increase / (decrease) in other financial liabilities, other liabilities and provisions"
+        },
+        "flexibleGroupItems": [
+          {
+            "fieldName": "(Increase) / decrease in inventories",
+            "value_2025": -84.26,
+            "value_2024": 10.44,
+            "value_2023": -205.04,
+            "source": "cf",
+            "unit": "₹ Crore"
+          }
+        ]
+      },
+      "expenditureOnPropertyPlantAndEquipment": {
+        "value_2025": -1175.58,
+        "value_2024": -1560.53,
+        "value_2023": -1305.39,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Payments for property, plant and equipment (including capital advances)"
+      },
+      "depositsPlacedWithCorporation": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "cf",
+        "unit": "",
+        "fieldName": "Not Found"
+      },
+      "redemptionOfDepositsPlacedWithCorporation": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "cf",
+        "unit": "",
+        "fieldName": "Not Found"
+      },
+      "interestAndDividendReceived": {
+        "value_2025": 234.0,
+        "value_2024": 201.82,
+        "value_2023": 71.68,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Interest received from banks and others and Dividends received from other investments"
+      },
+      "dividendReceivedFromSubsidiary": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "cf",
+        "unit": "",
+        "fieldName": "Not Found"
+      },
+      "loanGivenToSubsidiaries": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "cf",
+        "unit": "",
+        "fieldName": "Not Found"
+      },
+      "loanRepaidBySubsidiaries": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "cf",
+        "unit": "",
+        "fieldName": "Not Found"
+      },
+      "investmentInSubsidiaries": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "cf",
+        "unit": "",
+        "fieldName": "Not Found"
+      },
+      "paymentTowardsAcquisitionOfEntities": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "cf",
+        "unit": "",
+        "fieldName": "Not Found"
+      },
+      "receiptPaymentTowardsBusinessTransferForEntitiesUnderCommonControl": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "cf",
+        "unit": "",
+        "fieldName": "Not Found"
+      },
+      "receiptPaymentFromEntitiesUnderLiquidation": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "cf",
+        "unit": "",
+        "fieldName": "Not Found"
+      },
+      "otherReceipts": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "cf",
+        "unit": "",
+        "fieldName": "Not Found"
+      },
+      "paymentsToAcquireInvestments": {
+        "flexibleGroupItems": [
+          {
+            "fieldName": "Payments to acquire financial assets",
+            "value_2025": -346.0,
+            "value_2024": -28.0,
+            "value_2023": -81.0,
+            "source": "cf",
+            "unit": "₹ Crore"
+          },
+          {
+            "fieldName": "Payments to acquire equity in joint ventures and associates",
+            "value_2025": 0,
+            "value_2024": -27.0,
+            "value_2023": -12.0,
+            "source": "cf",
+            "unit": "₹ Crore"
+          },
+          {
+            "fieldName": "(Investment in) / redemption of term deposits with banks",
+            "value_2025": -2693.0,
+            "value_2024": -521.36,
+            "value_2023": 1211.32,
+            "source": "cf",
+            "unit": "₹ Crore"
+          },
+          {
+            "fieldName": "Payments for other intangible assets",
+            "value_2025": -25.71,
+            "value_2024": -96.25,
+            "value_2023": -228.6,
+            "source": "cf",
+            "unit": "₹ Crore"
+          }
+        ]
+      },
+      "proceedsOnSaleOfInvestments": {
+        "flexibleGroupItems": [
+          {
+            "fieldName": "Proceeds from sale of financial assets",
+            "value_2025": 0,
+            "value_2024": 18.49,
+            "value_2023": 0.59,
+            "source": "cf",
+            "unit": "₹ Crore"
+          },
+          {
+            "fieldName": "Proceeds from disposal of property, plant and equipment",
+            "value_2025": 35.76,
+            "value_2024": 12.36,
+            "value_2023": 9.15,
+            "source": "cf",
+            "unit": "₹ Crore"
+          }
+        ]
+      },
+      "paymentOfLeaseLiabilities": {
+        "value_2025": -3.78,
+        "value_2024": -3.72,
+        "value_2023": -3.65,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Payment of lease liability"
+      },
+      "sharesIssuedOnExerciseOfEmployeeStockOptions": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "cf",
+        "unit": "",
+        "fieldName": "Not Found"
+      },
+      "otherPayments": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "cf",
+        "unit": "",
+        "fieldName": "Not Found"
+      },
+      "paymentOfDividends": {
+        "value_2025": -1836.64,
+        "value_2024": -734.65,
+        "value_2023": -918.32,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Dividends paid on equity shares"
+      },
+      "netIncreaseDecreaseInCashAndCashEquivalents": {
+        "value_2025": 77.91,
+        "value_2024": -19.8,
+        "value_2023": -349.51,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Net increase or (decrease) in cash or cash equivalents"
+      },
+      "effectOfExchangeDifferencesOnTranslationOfForeignCurrencyCashAndCashEquivalents": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "cf",
+        "unit": "",
+        "fieldName": "Not Found"
+      },
+      "cashAndCashEquivalentsAtTheBeginningOfTheYear": {
+        "value_2025": 43.49,
+        "value_2024": 63.29,
+        "value_2023": 412.8,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Cash and cash equivalents at the beginning of the year"
+      },
+      "cashAndCashEquivalentsAtTheEndOfTheYear": {
+        "value_2025": 121.4,
+        "value_2024": 43.49,
+        "value_2023": 63.29,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Cash and cash equivalents at the end of the year"
+      },
+      "flexibleGroupItems": [
+        {
+          "fieldName": "Proceeds from / (Payment towards) short term borrowings",
+          "value_2025": 85.06,
+          "value_2024": -8.59,
+          "value_2023": null,
+          "source": "cf",
+          "unit": "₹ Crore"
+        },
+        {
+          "fieldName": "Finance cost paid",
+          "value_2025": -2.3,
+          "value_2024": -0.28,
+          "value_2023": -1.53,
+          "source": "cf",
+          "unit": "₹ Crore"
+        }
+      ]
+    },
+    "flexibleGroupItems": []
+  },
+  "voltas": {
+    "companyName": "Voltas Limited",
+    "balanceSheet": {
+      "fileGroup": "BALANCE_SHEET",
+      "sourceFiles": ["voltas_2024_bs.pdf", "voltas_2023_bs.pdf"],
+      "totalAssets": {
+        "value_2025": 12711.68,
+        "value_2024": 11769.96,
+        "value_2023": 10042.26,
+        "source": "bs",
+        "unit": "₹ Crore",
+        "fieldName": "TOTAL ASSETS"
+      },
+      "totalEquityAndLiabilities": {
+        "value_2025": 12711.68,
+        "value_2024": 11769.96,
+        "value_2023": 10042.26,
+        "source": "bs",
+        "unit": "₹ Crore",
+        "fieldName": "TOTAL EQUITY AND LIABILITIES"
+      },
+      "nonCurrentAssets": {
+        "total": {
+          "value_2025": 6321.45,
+          "value_2024": 6166.59,
+          "value_2023": 5532.72,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Total non-current assets"
+        },
+        "propertyPlantAndEquipment": {
+          "value_2025": 806.49,
+          "value_2024": 374.35,
+          "value_2023": 350.72,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Property, plant and equipment"
+        },
+        "rightOfUseAssets": {
+          "value_2025": 30.0,
+          "value_2024": 30.72,
+          "value_2023": 31.38,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Right-of-use assets"
+        },
+        "capitalWorkInProgress": {
+          "value_2025": 82.35,
+          "value_2024": 367.51,
+          "value_2023": 98.25,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Capital work-in-progress"
+        },
+        "goodwill": {
+          "value_2025": null,
+          "value_2024": null,
+          "value_2023": null,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Not Found"
+        },
+        "financialAssetsInvestments": {
+          "value_2025": 5086.82,
+          "value_2024": 5049.09,
+          "value_2023": 4655.23,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Investments"
+        },
+        "financialAssetsLoans": {
+          "value_2025": 0.07,
+          "value_2024": 0.07,
+          "value_2023": 0.08,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Loans"
+        },
+        "otherFinancialAssets": {
+          "value_2025": 203.58,
+          "value_2024": 205.39,
+          "value_2023": 261.21,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Other financial assets"
+        },
+        "deferredTaxAssetsNet": {
+          "value_2025": null,
+          "value_2024": null,
+          "value_2023": null,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Not Found"
+        },
+        "incomeTaxAssetsNet": {
+          "value_2025": 4.43,
+          "value_2024": 10.48,
+          "value_2023": 10.14,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Income tax assets (net)"
+        },
+        "otherNonCurrentAssets": {
+          "value_2025": 60.91,
+          "value_2024": 79.15,
+          "value_2023": 70.71,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Other non-current assets"
+        },
+        "intangibleAssets": {
+          "value_2025": 2.86,
+          "value_2024": 4.9,
+          "value_2023": 5.59,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Other intangible assets"
+        },
+        "flexibleGroupItems": [
+          {
+            "fieldName": "Investment properties",
+            "value_2025": 43.94,
+            "value_2024": 44.93,
+            "value_2023": 49.41,
+            "source": "bs",
+            "unit": "₹ Crore"
+          }
+        ]
+      },
+      "currentAssets": {
+        "total": {
+          "value_2025": 6390.23,
+          "value_2024": 5603.37,
+          "value_2023": 4509.54,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Total current assets"
+        },
+        "financialAssetsInvestments": {
+          "value_2025": 303.02,
+          "value_2024": 320.58,
+          "value_2023": 307.16,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Investments"
+        },
+        "tradeReceivables": {
+          "value_2025": 1690.16,
+          "value_2024": 1716.27,
+          "value_2023": 1289.15,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Trade receivables"
+        },
+        "cashAndCashEquivalents": {
+          "value_2025": 472.11,
+          "value_2024": 492.17,
+          "value_2023": 373.82,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Cash and cash equivalents"
+        },
+        "financialAssetsLoans": {
+          "value_2025": 0.69,
+          "value_2024": 0.64,
+          "value_2023": 0.43,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Loans"
+        },
+        "otherFinancialAssets": {
+          "value_2025": 757.84,
+          "value_2024": 586.46,
+          "value_2023": 381.27,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Other financial assets"
+        },
+        "incomeTaxAssetsNet": {
+          "value_2025": null,
+          "value_2024": null,
+          "value_2023": null,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Not Found"
+        },
+        "otherCurrentAssets": {
+          "value_2025": 247.35,
+          "value_2024": 170.79,
+          "value_2023": 221.56,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Other current assets"
+        },
+        "flexibleGroupItems": [
+          {
+            "fieldName": "Inventories",
+            "value_2025": 2635.37,
+            "value_2024": 2077.52,
+            "value_2023": 1547.02,
+            "source": "bs",
+            "unit": "₹ Crore"
+          },
+          {
+            "fieldName": "Contract assets",
+            "value_2025": 267.48,
+            "value_2024": 226.92,
+            "value_2023": 373.47,
+            "source": "bs",
+            "unit": "₹ Crore"
+          },
+          {
+            "fieldName": "Other balances with banks",
+            "value_2025": 16.21,
+            "value_2024": 12.02,
+            "value_2023": 15.66,
+            "source": "bs",
+            "unit": "₹ Crore"
+          }
+        ]
+      },
+      "equityAndLiabilities": {
+        "totalEquity": {
+          "value_2025": 8132.21,
+          "value_2024": 7498.4,
+          "value_2023": 6773.1,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Total Equity"
+        },
+        "equityShareCapital": {
+          "value_2025": 33.08,
+          "value_2024": 33.08,
+          "value_2023": 33.08,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Equity share capital"
+        },
+        "otherEquity": {
+          "value_2025": 8099.13,
+          "value_2024": 7465.32,
+          "value_2023": 6740.02,
+          "source": "bs",
+          "unit": "₹ Crore",
+          "fieldName": "Other equity"
+        },
+        "nonCurrentLiabilities": {
+          "total": {
+            "value_2025": 572.3,
+            "value_2024": 398.32,
+            "value_2023": 139.2,
+            "source": "bs",
+            "unit": "₹ Crore",
+            "fieldName": "Total non-current liabilities"
+          },
+          "financialLiabilitiesBorrowings": {
+            "value_2025": 382.28,
+            "value_2024": 228.0,
+            "value_2023": 21.15,
+            "source": "bs",
+            "unit": "₹ Crore",
+            "fieldName": "Borrowings"
+          },
+          "financialLiabilitiesLease": {
+            "value_2025": 13.96,
+            "value_2024": 17.07,
+            "value_2023": 21.34,
+            "source": "bs",
+            "unit": "₹ Crore",
+            "fieldName": "Lease liabilities"
+          },
+          "otherFinancialLiabilities": {
+            "value_2025": 34.31,
+            "value_2024": 8.28,
+            "value_2023": 11.46,
+            "source": "bs",
+            "unit": "₹ Crore",
+            "fieldName": "Other financial liabilities"
+          },
+          "deferredTaxLiabilitiesNet": {
+            "value_2025": 58.32,
+            "value_2024": 58.88,
+            "value_2023": 5.28,
+            "source": "bs",
+            "unit": "₹ Crore",
+            "fieldName": "Deferred tax liabilities (net)"
+          },
+          "otherNonCurrentLiabilities": {
+            "value_2025": 2.82,
+            "value_2024": 3.49,
+            "value_2023": 4.17,
+            "source": "bs",
+            "unit": "₹ Crore",
+            "fieldName": "Other non-current liabilities"
+          },
+          "flexibleGroupItems": [
+            {
+              "fieldName": "Contract liabilities",
+              "value_2025": 7.89,
+              "value_2024": 7.06,
+              "value_2023": 6.33,
+              "source": "bs",
+              "unit": "₹ Crore"
+            },
+            {
+              "fieldName": "Provisions",
+              "value_2025": 72.72,
+              "value_2024": 75.54,
+              "value_2023": 69.47,
+              "source": "bs",
+              "unit": "₹ Crore"
+            }
+          ]
+        },
+        "currentLiabilities": {
+          "total": {
+            "value_2025": 4007.17,
+            "value_2024": 3873.24,
+            "value_2023": 3129.96,
+            "source": "bs",
+            "unit": "₹ Crore",
+            "fieldName": "Total current liabilities"
+          },
+          "financialLiabilitiesBorrowings": {
+            "value_2025": 182.88,
+            "value_2024": 176.6,
+            "value_2023": 264.13,
+            "source": "bs",
+            "unit": "₹ Crore",
+            "fieldName": "Borrowings"
+          },
+          "financialLiabilitiesLease": {
+            "value_2025": 10.13,
+            "value_2024": 8.82,
+            "value_2023": 8.39,
+            "source": "bs",
+            "unit": "₹ Crore",
+            "fieldName": "Lease liabilities"
+          },
+          "tradePayablesMicroAndSmall": {
+            "value_2025": 158.04,
+            "value_2024": 122.02,
+            "value_2023": 112.94,
+            "source": "bs",
+            "unit": "₹ Crore",
+            "fieldName": "Total outstanding dues of micro and small enterprises"
+          },
+          "tradePayablesOtherCreditors": {
+            "value_2025": 2441.68,
+            "value_2024": 2602.32,
+            "value_2023": 2096.85,
+            "source": "bs",
+            "unit": "₹ Crore",
+            "fieldName": "Total outstanding dues of creditors other than micro and small enterprises"
+          },
+          "otherFinancialLiabilities": {
+            "value_2025": 333.43,
+            "value_2024": 227.2,
+            "value_2023": 117.77,
+            "source": "bs",
+            "unit": "₹ Crore",
+            "fieldName": "Other financial liabilities"
+          },
+          "otherCurrentLiabilities": {
+            "value_2025": 294.39,
+            "value_2024": 205.33,
+            "value_2023": 140.84,
+            "source": "bs",
+            "unit": "₹ Crore",
+            "fieldName": "Other current liabilities"
+          },
+          "provisionsCurrent": {
+            "value_2025": 203.08,
+            "value_2024": 179.63,
+            "value_2023": 142.62,
+            "source": "bs",
+            "unit": "₹ Crore",
+            "fieldName": "Provisions"
+          },
+          "incomeTaxLiabilitiesNet": {
+            "value_2025": 70.7,
+            "value_2024": 43.23,
+            "value_2023": 39.67,
+            "source": "bs",
+            "unit": "₹ Crore",
+            "fieldName": "Income tax liabilities (net)"
+          },
+          "flexibleGroupItems": [
+            {
+              "fieldName": "Contract liabilities",
+              "value_2025": 312.84,
+              "value_2024": 308.09,
+              "value_2023": 206.75,
+              "source": "bs",
+              "unit": "₹ Crore"
+            }
+          ]
+        },
+        "flexibleGroupItems": []
+      },
+      "flexibleGroupItems": []
+    },
+    "profitAndLoss": {
+      "fileGroup": "PROFIT_AND_LOSS",
+      "sourceFiles": ["voltas_2024_pl.pdf", "voltas_2023_pl.pdf"],
+      "totalIncome": {
+        "value_2025": 11696.13,
+        "value_2024": 8987.76,
+        "value_2023": 7850.12,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Total income (I + II)"
+      },
+      "revenueFromOperations": {
+        "value_2025": 11295.54,
+        "value_2024": 8687.63,
+        "value_2023": 7674.92,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Revenue from operations"
+      },
+      "otherIncomeNet": {
+        "value_2025": 400.59,
+        "value_2024": 300.13,
+        "value_2023": 175.2,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Other income"
+      },
+      "coreOperatingCosts": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Not Found"
+      },
+      "exceptionalItemsNet": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": 975.18,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Exceptional Items"
+      },
+      "totalExpenses": {
+        "value_2025": 10660.38,
+        "value_2024": 8229.56,
+        "value_2023": 7297.13,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Total expenses"
+      },
+      "employeeBenefitExpenses": {
+        "value_2025": 544.86,
+        "value_2024": 458.26,
+        "value_2023": 436.68,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Employee benefits expenses"
+      },
+      "depreciationAndAmortizationExpenses": {
+        "value_2025": 56.17,
+        "value_2024": 42.82,
+        "value_2023": 36.33,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Depreciation and amortisation expenses"
+      },
+      "financeCost": {
+        "value_2025": 34.67,
+        "value_2024": 20.88,
+        "value_2023": 12.46,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Finance costs"
+      },
+      "costOfTechnicalSubContractors": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Not Found"
+      },
+      "travelExpenses": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Not Found"
+      },
+      "communicationExpenses": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Not Found"
+      },
+      "consultancyAndProfessionalCharges": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Not Found"
+      },
+      "otherExpensesAggregated": {
+        "value_2025": 1143.21,
+        "value_2024": 815.01,
+        "value_2023": 699.33,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Other expenses"
+      },
+      "profitBeforeTax": {
+        "value_2025": 1035.75,
+        "value_2024": 758.2,
+        "value_2023": 1528.17,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Profit before tax (V + VI)"
+      },
+      "profitForTheYear": {
+        "value_2025": 776.76,
+        "value_2024": 604.26,
+        "value_2023": 1405.31,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Net Profit for the year (VII - VIII)"
+      },
+      "currentTax": {
+        "value_2025": 271.2,
+        "value_2024": 144.4,
+        "value_2023": 111.8,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Current tax"
+      },
+      "deferredTax": {
+        "value_2025": -10.51,
+        "value_2024": 22.74,
+        "value_2023": 12.01,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Deferred tax charge/(credit)"
+      },
+      "totalComprehensiveIncomeForTheYear": {
+        "value_2025": 815.8,
+        "value_2024": 865.93,
+        "value_2023": 1348.43,
+        "source": "pl",
+        "unit": "₹ Crore",
+        "fieldName": "Total Comprehensive Income for the year [net of tax] (VII + VIII)"
+      },
+      "earningsPerShare": {
+        "basic": {
+          "value_2025": 23.48,
+          "value_2024": 18.26,
+          "value_2023": 42.47,
+          "source": "pl",
+          "unit": "₹ per share",
+          "fieldName": "Basic and Diluted (`) (Face value ` 1/- per share)"
+        },
+        "diluted": {
+          "value_2025": 23.48,
+          "value_2024": 18.26,
+          "value_2023": 42.47,
+          "source": "pl",
+          "unit": "₹ per share",
+          "fieldName": "Basic and Diluted (`) (Face value ` 1/- per share)"
+        }
+      },
+      "flexibleGroupItems": [
+        {
+          "fieldName": "Consumption of materials, cost of jobs and services",
+          "value_2025": 5280.94,
+          "value_2024": 4100.95,
+          "value_2023": 3603.32,
+          "source": "pl",
+          "unit": "₹ Crore"
+        },
+        {
+          "fieldName": "Purchases of stock-in-trade",
+          "value_2025": 3758.14,
+          "value_2024": 3165.81,
+          "value_2023": 2200.7,
+          "source": "pl",
+          "unit": "₹ Crore"
+        },
+        {
+          "fieldName": "Changes in inventories of finished goods, stock-in-trade and work-in-progress",
+          "value_2025": -157.61,
+          "value_2024": -374.17,
+          "value_2023": 308.31,
+          "source": "pl",
+          "unit": "₹ Crore"
+        },
+        {
+          "fieldName": "Profit before exceptional items and tax (III - IV)",
+          "value_2025": null,
+          "value_2024": 758.2,
+          "value_2023": 552.99,
+          "source": "pl",
+          "unit": "₹ Crore"
+        },
+        {
+          "fieldName": "Adjustment of tax relating to earlier periods",
+          "value_2025": -1.7,
+          "value_2024": -13.2,
+          "value_2023": -0.95,
+          "source": "pl",
+          "unit": "₹ Crore"
+        },
+        {
+          "fieldName": "Total tax expense",
+          "value_2025": 258.99,
+          "value_2024": 153.94,
+          "value_2023": 122.86,
+          "source": "pl",
+          "unit": "₹ Crore"
+        }
+      ]
+    },
+    "cashFlows": {
+      "fileGroup": "CASH_FLOW",
+      "sourceFiles": ["voltas_2024_cf.pdf", "voltas_2023_cf.pdf"],
+      "netCashGeneratedByOperatingActivities": {
+        "value_2025": 23.67,
+        "value_2024": 419.31,
+        "value_2023": 35.29,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "NET CASH FLOW FROM OPERATING ACTIVITIES (A)"
+      },
+      "netCashUsedInInvestingActivities": {
+        "value_2025": 17.49,
+        "value_2024": -244.22,
+        "value_2023": -71.64,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "NET CASH FLOW (USED IN) / FROM INVESTING ACTIVITIES (B)"
+      },
+      "netCashUsedInFinancingActivities": {
+        "value_2025": -61.59,
+        "value_2024": -56.49,
+        "value_2023": -41.94,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "NET CASH FLOW USED IN FINANCING ACTIVITIES (C)"
+      },
+      "cashGeneratedFromOperations": {
+        "value_2025": 260.75,
+        "value_2024": 547.3,
+        "value_2023": 150.85,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Cash generated from operations"
+      },
+      "profitForTheYear": {
+        "value_2025": 1035.75,
+        "value_2024": 758.2,
+        "value_2023": 1528.17,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Profit before tax"
+      },
+      "incomeTaxesPaid": {
+        "value_2025": -237.08,
+        "value_2024": -127.99,
+        "value_2023": -115.56,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Income tax paid (net of refunds)"
+      },
+      "adjustmentsToReconcileNetProfitToNetCashProvidedByOperatingActivities": {
+        "depreciationAndAmortization": {
+          "value_2025": 56.17,
+          "value_2024": 42.82,
+          "value_2023": 36.33,
+          "source": "cf",
+          "unit": "₹ Crore",
+          "fieldName": "Depreciation and amortisation expenses"
+        },
+        "incomeTaxExpense": {
+          "value_2025": null,
+          "value_2024": null,
+          "value_2023": null,
+          "source": "cf",
+          "unit": "₹ Crore",
+          "fieldName": "Not Found"
+        },
+        "impairmentLossRecognizedReversed": {
+          "value_2025": 46.39,
+          "value_2024": 24.94,
+          "value_2023": 150.03,
+          "source": "cf",
+          "unit": "₹ Crore",
+          "fieldName": "Allowance for doubtful debts and advances"
+        },
+        "financeCost": {
+          "value_2025": 34.67,
+          "value_2024": 20.88,
+          "value_2023": 12.46,
+          "source": "cf",
+          "unit": "₹ Crore",
+          "fieldName": "Finance costs"
+        },
+        "interestAndDividendIncome": {
+          "value_2025": null,
+          "value_2024": null,
+          "value_2023": null,
+          "source": "cf",
+          "unit": "₹ Crore",
+          "fieldName": "Not Found"
+        },
+        "stockCompensationExpense": {
+          "value_2025": null,
+          "value_2024": null,
+          "value_2023": null,
+          "source": "cf",
+          "unit": "₹ Crore",
+          "fieldName": "Not Found"
+        },
+        "otherAdjustments": {
+          "value_2025": null,
+          "value_2024": null,
+          "value_2023": null,
+          "source": "cf",
+          "unit": "₹ Crore",
+          "fieldName": "Not Found"
+        },
+        "flexibleGroupItems": [
+          {
+            "fieldName": "Unrealised foreign exchange (gain) / loss (net)",
+            "value_2025": -10.07,
+            "value_2024": 1.48,
+            "value_2023": -3.34,
+            "source": "cf",
+            "unit": "₹ Crore"
+          },
+          {
+            "fieldName": "(Gain) / Loss on disposal of property, plant and equipment",
+            "value_2025": -15.77,
+            "value_2024": 0.39,
+            "value_2023": 1.31,
+            "source": "cf",
+            "unit": "₹ Crore"
+          },
+          {
+            "fieldName": "Interest income",
+            "value_2025": -73.92,
+            "value_2024": -56.02,
+            "value_2023": -44.34,
+            "source": "cf",
+            "unit": "₹ Crore"
+          },
+          {
+            "fieldName": "Dividend income",
+            "value_2025": -79.88,
+            "value_2024": -47.61,
+            "value_2023": -9.26,
+            "source": "cf",
+            "unit": "₹ Crore"
+          },
+          {
+            "fieldName": "Gain arising on financial assets measured at Fair Value through Profit or Loss (FVTPL) (net)",
+            "value_2025": -151.34,
+            "value_2024": -128.57,
+            "value_2023": -63.24,
+            "source": "cf",
+            "unit": "₹ Crore"
+          },
+          {
+            "fieldName": "Corporate Guarantee Income",
+            "value_2025": -19.0,
+            "value_2024": -2.7,
+            "value_2023": -3.72,
+            "source": "cf",
+            "unit": "₹ Crore"
+          },
+          {
+            "fieldName": "Unclaimed credit balances written back",
+            "value_2025": -5.14,
+            "value_2024": -4.37,
+            "value_2023": -7.57,
+            "source": "cf",
+            "unit": "₹ Crore"
+          },
+          {
+            "fieldName": "Rental income",
+            "value_2025": -36.52,
+            "value_2024": -34.13,
+            "value_2023": -29.27,
+            "source": "cf",
+            "unit": "₹ Crore"
+          },
+          {
+            "fieldName": "Reversal of provision for diminution in value of investments",
+            "value_2025": null,
+            "value_2024": null,
+            "value_2023": -32.57,
+            "source": "cf",
+            "unit": "₹ Crore"
+          },
+          {
+            "fieldName": "Gain on transfer of business (Refer Note 57)",
+            "value_2025": null,
+            "value_2024": null,
+            "value_2023": -1049.04,
+            "source": "cf",
+            "unit": "₹ Crore"
+          },
+          {
+            "fieldName": "Operating profit before working capital changes",
+            "value_2025": 781.34,
+            "value_2024": 575.31,
+            "value_2023": 485.95,
+            "source": "cf",
+            "unit": "₹ Crore"
+          }
+        ]
+      },
+      "changesInAssetsAndLiabilities": {
+        "tradeReceivablesAndUnbilledRevenue": {
+          "value_2025": -6.42,
+          "value_2024": -460.14,
+          "value_2023": -161.63,
+          "source": "cf",
+          "unit": "₹ Crore",
+          "fieldName": "Trade receivables"
+        },
+        "loansOtherFinancialAssetsAndOtherAssets": {
+          "value_2025": null,
+          "value_2024": null,
+          "value_2023": null,
+          "source": "cf",
+          "unit": "₹ Crore",
+          "fieldName": "Not Found"
+        },
+        "tradePayables": {
+          "value_2025": -56.33,
+          "value_2024": 521.01,
+          "value_2023": -114.28,
+          "source": "cf",
+          "unit": "₹ Crore",
+          "fieldName": "Trade payables"
+        },
+        "otherFinancialLiabilitiesOtherLiabilitiesAndProvisions": {
+          "value_2025": null,
+          "value_2024": null,
+          "value_2023": null,
+          "source": "cf",
+          "unit": "₹ Crore",
+          "fieldName": "Not Found"
+        },
+        "flexibleGroupItems": [
+          {
+            "fieldName": "Inventories",
+            "value_2025": -557.85,
+            "value_2024": -530.5,
+            "value_2023": 65.64,
+            "source": "cf",
+            "unit": "₹ Crore"
+          },
+          {
+            "fieldName": "Contract assets",
+            "value_2025": -46.09,
+            "value_2024": 152.86,
+            "value_2023": 3.76,
+            "source": "cf",
+            "unit": "₹ Crore"
+          },
+          {
+            "fieldName": "Other financial assets",
+            "value_2025": -6.67,
+            "value_2024": -6.41,
+            "value_2023": -153.03,
+            "source": "cf",
+            "unit": "₹ Crore"
+          },
+          {
+            "fieldName": "Other non-financial assets",
+            "value_2025": -73.77,
+            "value_2024": 52.94,
+            "value_2023": -47.57,
+            "source": "cf",
+            "unit": "₹ Crore"
+          },
+          {
+            "fieldName": "Contract liabilities",
+            "value_2025": 5.58,
+            "value_2024": 102.07,
+            "value_2023": 7.58,
+            "source": "cf",
+            "unit": "₹ Crore"
+          },
+          {
+            "fieldName": "Other financial liabilities",
+            "value_2025": 105.06,
+            "value_2024": 49.82,
+            "value_2023": 2.9,
+            "source": "cf",
+            "unit": "₹ Crore"
+          },
+          {
+            "fieldName": "Other non-financial liabilities",
+            "value_2025": 88.39,
+            "value_2024": 63.82,
+            "value_2023": 63.58,
+            "source": "cf",
+            "unit": "₹ Crore"
+          },
+          {
+            "fieldName": "Provisions",
+            "value_2025": 27.51,
+            "value_2024": 26.52,
+            "value_2023": -2.05,
+            "source": "cf",
+            "unit": "₹ Crore"
+          }
+        ]
+      },
+      "expenditureOnPropertyPlantAndEquipment": {
+        "value_2025": -205.63,
+        "value_2024": -283.15,
+        "value_2023": -175.77,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Purchase of property, plant and equipment and intangible assets (including capital advances and capital work-in-progress)"
+      },
+      "depositsPlacedWithCorporation": {
+        "value_2025": -449.99,
+        "value_2024": -308.28,
+        "value_2023": -186.06,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Investment in fixed deposits"
+      },
+      "redemptionOfDepositsPlacedWithCorporation": {
+        "value_2025": 394.5,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Proceeds from maturity of fixed deposits"
+      },
+      "interestAndDividendReceived": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Not Found"
+      },
+      "dividendReceivedFromSubsidiary": {
+        "value_2025": 72.7,
+        "value_2024": 37.26,
+        "value_2023": 2.35,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Subsidiaries, associates and joint ventures"
+      },
+      "loanGivenToSubsidiaries": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Not Found"
+      },
+      "loanRepaidBySubsidiaries": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Not Found"
+      },
+      "investmentInSubsidiaries": {
+        "value_2025": -177.47,
+        "value_2024": -45.48,
+        "value_2023": -1190.0,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Investment in equity shares of subsidiary"
+      },
+      "paymentTowardsAcquisitionOfEntities": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Not Found"
+      },
+      "receiptPaymentTowardsBusinessTransferForEntitiesUnderCommonControl": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": 1190.0,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Proceeds from transfer of business (Refer Note 57)"
+      },
+      "receiptPaymentFromEntitiesUnderLiquidation": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Not Found"
+      },
+      "otherReceipts": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Not Found"
+      },
+      "paymentsToAcquireInvestments": {
+        "flexibleGroupItems": [
+          {
+            "fieldName": "Purchase of investments",
+            "value_2025": -1980.47,
+            "value_2024": -1172.0,
+            "value_2023": -1575.34,
+            "source": "cf",
+            "unit": "₹ Crore"
+          }
+        ]
+      },
+      "proceedsOnSaleOfInvestments": {
+        "flexibleGroupItems": [
+          {
+            "fieldName": "Proceeds from sale of investments",
+            "value_2025": 2321.15,
+            "value_2024": 1359.33,
+            "value_2023": 2094.85,
+            "source": "cf",
+            "unit": "₹ Crore"
+          }
+        ]
+      },
+      "paymentOfLeaseLiabilities": {
+        "value_2025": -6.62,
+        "value_2024": -14.31,
+        "value_2023": -6.73,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Payment of principal portion of lease liabilities"
+      },
+      "sharesIssuedOnExerciseOfEmployeeStockOptions": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Not Found"
+      },
+      "otherPayments": {
+        "value_2025": null,
+        "value_2024": null,
+        "value_2023": null,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Not Found"
+      },
+      "paymentOfDividends": {
+        "value_2025": -181.94,
+        "value_2024": -140.62,
+        "value_2023": -181.99,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Dividend paid"
+      },
+      "netIncreaseDecreaseInCashAndCashEquivalents": {
+        "value_2025": -20.43,
+        "value_2024": 118.6,
+        "value_2023": -78.29,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "NET INCREASE / (DECREASE) IN CASH AND CASH EQUIVALENTS (A+B+C)"
+      },
+      "effectOfExchangeDifferencesOnTranslationOfForeignCurrencyCashAndCashEquivalents": {
+        "value_2025": 0.52,
+        "value_2024": 0.89,
+        "value_2023": 0.64,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "Effect of exchange difference on restatement of foreign currency cash and cash equivalents"
+      },
+      "cashAndCashEquivalentsAtTheBeginningOfTheYear": {
+        "value_2025": 493.06,
+        "value_2024": 374.46,
+        "value_2023": 452.75,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "CASH AND CASH EQUIVALENTS AT THE BEGINNING OF THE YEAR"
+      },
+      "cashAndCashEquivalentsAtTheEndOfTheYear": {
+        "value_2025": 472.63,
+        "value_2024": 493.06,
+        "value_2023": 374.46,
+        "source": "cf",
+        "unit": "₹ Crore",
+        "fieldName": "CASH AND CASH EQUIVALENTS AT THE END OF THE YEAR"
+      },
+      "flexibleGroupItems": [
+        {
+          "fieldName": "Proceeds from disposal of property, plant and equipment",
+          "value_2025": 16.78,
+          "value_2024": 4.59,
+          "value_2023": 3.08,
+          "source": "cf",
+          "unit": "₹ Crore"
+        },
+        {
+          "fieldName": "Investment in equity shares of joint venture",
+          "value_2025": -102.41,
+          "value_2024": -108.78,
+          "value_2023": -122.5,
+          "source": "cf",
+          "unit": "₹ Crore"
+        },
+        {
+          "fieldName": "Proceeds from sale of equity shares of subsidiaries",
+          "value_2025": 111.84,
+          "value_2024": null,
+          "value_2023": null,
+          "source": "cf",
+          "unit": "₹ Crore"
+        },
+        {
+          "fieldName": "Investment in inter corporate deposits",
+          "value_2025": -94.95,
+          "value_2024": null,
+          "value_2023": -185.0,
+          "source": "cf",
+          "unit": "₹ Crore"
+        },
+        {
+          "fieldName": "Proceeds from maturity of inter corporate deposits",
+          "value_2025": null,
+          "value_2024": 185.0,
+          "value_2023": null,
+          "source": "cf",
+          "unit": "₹ Crore"
+        },
+        {
+          "fieldName": "Interest received",
+          "value_2025": 60.65,
+          "value_2024": 39.23,
+          "value_2023": 35.63,
+          "source": "cf",
+          "unit": "₹ Crore"
+        },
+        {
+          "fieldName": "Corporate guarantee income received",
+          "value_2025": 8.2,
+          "value_2024": null,
+          "value_2023": null,
+          "source": "cf",
+          "unit": "₹ Crore"
+        },
+        {
+          "fieldName": "Dividend received - Others",
+          "value_2025": 7.19,
+          "value_2024": 10.35,
+          "value_2023": 6.91,
+          "source": "cf",
+          "unit": "₹ Crore"
+        },
+        {
+          "fieldName": "Rent received",
+          "value_2025": 35.63,
+          "value_2024": 33.37,
+          "value_2023": 30.0,
+          "source": "cf",
+          "unit": "₹ Crore"
+        },
+        {
+          "fieldName": "Rental Deposits (repaid) / received",
+          "value_2025": -0.23,
+          "value_2024": 4.34,
+          "value_2023": 0.21,
+          "source": "cf",
+          "unit": "₹ Crore"
+        },
+        {
+          "fieldName": "Repayment of borrowings",
+          "value_2025": -339.22,
+          "value_2024": -471.0,
+          "value_2023": -40.72,
+          "source": "cf",
+          "unit": "₹ Crore"
+        },
+        {
+          "fieldName": "Proceeds from borrowings",
+          "value_2025": 499.77,
+          "value_2024": 590.32,
+          "value_2023": 199.96,
+          "source": "cf",
+          "unit": "₹ Crore"
+        },
+        {
+          "fieldName": "Interest paid",
+          "value_2025": -26.36,
+          "value_2024": -17.68,
+          "value_2023": -9.68,
+          "source": "cf",
+          "unit": "₹ Crore"
+        },
+        {
+          "fieldName": "Payment of interest portion of lease liabilities",
+          "value_2025": -7.22,
+          "value_2024": -3.2,
+          "value_2023": -2.78,
+          "source": "cf",
+          "unit": "₹ Crore"
+        }
+      ]
+    },
+    "flexibleGroupItems": []
+  }
+}

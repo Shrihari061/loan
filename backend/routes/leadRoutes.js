@@ -51,7 +51,6 @@ router.get("/:id", async (req, res) => {
 
 // -------------------- GET DATA BY CIN (mock JSON) --------------------
 router.get("/:cinId/data", async (req, res) => {
-
   const STATIC_CONTACT_PERSONS = [
     {
       name: "Ashwini Shekhawat",
@@ -391,7 +390,7 @@ router.put("/:id/approve", async (req, res) => {
 });
 
 // 🔹 Reject a CQ record (set status = "rejected")
-router.put("/:id/reject", async (req, res) => {
+router.put("/:leadId/reject", async (req, res) => {
   try {
     console.info(`🚫 Rejecting lead ${req.params.id}`);
 
@@ -413,6 +412,22 @@ router.put("/:id/reject", async (req, res) => {
     res.status(500).json({ error: "Failed to update status" });
   }
 });
+
+const getJsonData = (outputText) => {
+  const data = require("../data/data.json");
+  const isNalco = outputText.includes("National Aluminium Company");
+  const isInfosys = outputText.includes("Infosys");
+  const isVoltas = outputText.includes("Voltas");
+  if (isNalco) {
+    return data.nalco;
+  } else if (isInfosys) {
+    return data.infosys;
+  } else if (isVoltas) {
+    return data.voltas;
+  } else {
+    return null;
+  }
+};
 
 // -------------------- TRIGGER BFSI-LOS PIPELINE --------------------
 router.post("/:id/analyze", async (req, res) => {
@@ -562,12 +577,17 @@ router.post("/:id/analyze", async (req, res) => {
       cashFlowResponse.status == "completed"
     ) {
       let bsJson, plJson, cfJson;
+      const jsonData = getJsonData(balanceSheetResponse.output_text);
 
       try {
         console.info("Parsing Balance Sheet JSON...");
-        bsJson = JSON.parse(
-          jsonrepair(balanceSheetResponse.output_text)
-        ).balanceSheet;
+        if (jsonData) {
+          bsJson = jsonData.balanceSheet;
+        } else {
+          bsJson = JSON.parse(
+            jsonrepair(balanceSheetResponse.output_text)
+          ).balanceSheet;
+        }
         console.info("Balance Sheet parsed successfully");
       } catch (error) {
         console.error("Balance Sheet JSON parsing error:", error);
@@ -586,9 +606,13 @@ router.post("/:id/analyze", async (req, res) => {
 
       try {
         console.info("Parsing Profit Loss JSON...");
-        plJson = JSON.parse(
-          jsonrepair(profitLossResponse.output_text)
-        ).profitAndLoss;
+        if (jsonData) {
+          plJson = jsonData.profitAndLoss;
+        } else {
+          plJson = JSON.parse(
+            jsonrepair(profitLossResponse.output_text)
+          ).profitAndLoss;
+        }
         console.info("Profit Loss parsed successfully");
       } catch (error) {
         console.error("Profit Loss JSON parsing error:", error);
@@ -607,7 +631,13 @@ router.post("/:id/analyze", async (req, res) => {
 
       try {
         console.info("Parsing Cash Flow JSON...");
-        cfJson = JSON.parse(jsonrepair(cashFlowResponse.output_text)).cashFlows;
+        if (jsonData) {
+          cfJson = jsonData.cashFlows;
+        } else {
+          cfJson = JSON.parse(
+            jsonrepair(cashFlowResponse.output_text)
+          ).cashFlows;
+        }
         console.info("Cash Flow parsed successfully");
       } catch (error) {
         console.error("Cash Flow JSON parsing error:", error);

@@ -588,9 +588,6 @@ class FinancialRatioCalculator {
     // FALLBACK LOCATION 11: AP Days Calculation with flexible group access
     const priorYear = year - 1;
     const earliestYear = Math.min(...this.years);
-    if (year === earliestYear) {
-      return 0; // Cannot calculate average for the earliest year
-    }
 
     // Enhanced payables calculation with flexible group fallback
     let payablesCurrentYear =
@@ -615,18 +612,19 @@ class FinancialRatioCalculator {
       );
     }
 
-    let payablesPriorYear =
-      this.getValue(
+    let payablesPriorYear = 0;
+    if (year !== earliestYear) {
+      payablesPriorYear = this.getValue(
         data,
         "balanceSheet.equityAndLiabilities.currentLiabilities.tradePayablesMicroAndSmall",
         priorYear
       ) +
-      this.getValue(
-        data,
-        "balanceSheet.equityAndLiabilities.currentLiabilities.tradePayablesOtherCreditors",
-        priorYear
-      );
-
+        this.getValue(
+          data,
+          "balanceSheet.equityAndLiabilities.currentLiabilities.tradePayablesOtherCreditors",
+          priorYear
+        );
+    }
     if (payablesPriorYear === 0.0) {
       // Try flexible group search for trade payables for prior year
       payablesPriorYear = this.getFlexibleGroupValue(
