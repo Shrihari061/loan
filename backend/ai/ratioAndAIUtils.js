@@ -2,19 +2,36 @@ const ExtractedValues = require("../models/ExtractedValues");
 const Ratios = require("../models/Ratios");
 const Risk = require("../models/Risk");
 const Summary = require("../models/Summary");
+const Lead = require("../models/Lead")
 const { getSummaries } = require("./summariesPrompt");
 const { RiskRatioCalculator } = require("./riskRatioCalculator");
 const { FinancialRatioCalculator } = require("./ratioCalculatorWithFallback");
 
+const loanTypeValues = {
+  "Term Loan": "Capital Expenditure/Project Funding",
+  "OD/CC": "Working Capital",
+}
+
 const calculateSummary = async (actualLeadId) => {
+
   const extractedValues = await ExtractedValues.findOne({
     lead_id: actualLeadId,
   });
+
+  const lead = await Lead.findOne({
+    lead_id: actualLeadId,
+  });
+
+  if (!lead) {
+    throw new Error("Lead not found");
+  }
+
   if (!extractedValues) {
     throw new Error("Extracted values not found");
   }
 
   const customerName = extractedValues.customer_name;
+  const loanType = lead.loan_type;
 
   const ratios = await Ratios.findOne({
     lead_id: actualLeadId,
@@ -50,7 +67,7 @@ const calculateSummary = async (actualLeadId) => {
 
         executive_summary: summaryJson["executive_summary"],
         "financial_summary_&_ratios": summaryJson["financial_summary_&_ratios"],
-        loan_purpose: summaryJson["loan_purpose"],
+        loan_purpose: loanTypeValues[loanType] ?? "Capital Expenditure/Project Funding",
         recommendation: summaryJson["recommendation"],
         security_offered:
           "Primary Security: , Collateral Security: , Personal Guarantees:",
@@ -64,7 +81,7 @@ const calculateSummary = async (actualLeadId) => {
       lead_id: actualLeadId,
       "financial_summary_&_ratios": summaryJson["financial_summary_&_ratios"],
       executive_summary: summaryJson["executive_summary"],
-      loan_purpose: summaryJson["loan_purpose"],
+      loan_purpose: loanTypeValues[loanType] ?? "Capital Expenditure/Project Funding",
       swot_analysis: summaryJson["swot_analysis"],
       security_offered:
         "Primary Security: , Collateral Security: , Personal Guarantees:",
