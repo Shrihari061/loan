@@ -5,7 +5,7 @@ import { FigtreeContainer, FigtreeTableContainer, FigtreeTableCell, FigtreeTable
 import { toast } from "sonner";
 
 interface DocumentStatus {
-  status: "Pending" | "Approved" | "Declined";
+  status: "Pending" | "Approved" | "Rejected";
 }
 
 interface QCEntry {
@@ -13,7 +13,7 @@ interface QCEntry {
   customer_id: string;
   customer_name: string; // we’ll map business_name into this
   lead_id: string;
-  status: "In progress" | "Approved" | "Declined";
+  status: "In progress" | "Approved" | "Rejected";
   documents?: DocumentStatus[];
 }
 
@@ -180,21 +180,21 @@ const QCTable: React.FC = () => {
                 <FigtreeTableCell>{entry.lead_id}</FigtreeTableCell>
                 <FigtreeTableCell>{entry.status}</FigtreeTableCell>
                 <FigtreeTableCell>
-                  {entry.status === "Approved" ? (
+                  {(entry.status === "Approved" || entry.status === "Rejected") ? (
                     <button
                       onClick={() => handleAction("Revert", entry._id)}
                       className="px-3 py-1.5 rounded-md bg-gray-200 text-gray-800 text-sm font-medium hover:bg-gray-300 transition-colors"
                     >
                       Reopen
                     </button>
-                  ) : entry.status !== "Declined" ? (
+                  ) : (
                     <button
                       onClick={() => handleAction("View Data", entry._id)}
                       className="px-3 py-1.5 rounded-md bg-gray-200 text-gray-800 text-sm font-medium hover:bg-gray-300 transition-colors"
                     >
                       View Details
                     </button>
-                  ) : null}
+                  )}
                 </FigtreeTableCell>
               </tr>
             ))}
