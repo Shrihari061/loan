@@ -1,7 +1,7 @@
 import React from "react";
 import { get } from "lodash";
 import type { AnalysisData, FlexibleGroupItem } from "./types";
-import { formatValue, getValueColor } from "./utils";
+import {  formatValueForFrontend, getValueColor, normalizeValueForBackend } from "./utils";
 
 interface RenderFlexibleGroupProps {
   parentPath: string;
@@ -67,7 +67,7 @@ const RenderFlexibleGroup: React.FC<RenderFlexibleGroupProps> = ({
           if (isReadOnly) {
             return (
               <td className={cellClass} style={{ color: getValueColor(value) }}>
-                {formatValue(value)}
+                {formatValueForFrontend(value)}
               </td>
             );
           } else {
@@ -75,13 +75,13 @@ const RenderFlexibleGroup: React.FC<RenderFlexibleGroupProps> = ({
               <td className={cellClass}>
                 <input
                   type="text"
-                  value={value ?? ""}
+                  value={formatValueForFrontend(value) ?? ""}
                   onChange={(e) =>
                     updateFlexibleItem?.(
                       parentPath,
                       index,
                       selectedYear || "",
-                      e.target.value
+                      normalizeValueForBackend(value, e.target.value)
                     )
                   }
                   className={getValueInputClass?.(value, false) || ""}

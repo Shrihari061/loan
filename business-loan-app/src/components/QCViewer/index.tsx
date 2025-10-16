@@ -223,7 +223,7 @@ const QCViewer: React.FC = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/leads/${data._id}/reject`,
+        `http://localhost:5000/leads/${leadId}/reject`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
